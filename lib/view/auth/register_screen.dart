@@ -10,6 +10,7 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/snackbar.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -453,9 +454,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             loading = false;
           });
           print("registered successfully");
+          Dialogs.snackbar(value.message.toString(), context, isError: false);
           // Navigator.pushNamed(context, 'menu_screen');
         } else if(value.status == false){
           print(value.message.toString());
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
           setState(() {
             loading = false;
           });

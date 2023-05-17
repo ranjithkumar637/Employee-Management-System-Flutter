@@ -10,6 +10,7 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/snackbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -273,8 +274,10 @@ class _LoginScreenState extends State<LoginScreen> {
           });
           print(value.message.toString());
           // Navigator.pushNamed(context, 'menu_screen');
+          Dialogs.snackbar(value.message.toString(), context, isError: false);
         } else if(value.status == false){
           print(value.message.toString());
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
           setState(() {
             loading = false;
           });

@@ -455,7 +455,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           });
           print("registered successfully");
           Dialogs.snackbar(value.message.toString(), context, isError: false);
-          // Navigator.pushNamed(context, 'menu_screen');
+          Navigator.pushNamed(context, 'menu_screen');
         } else if(value.status == false){
           print(value.message.toString());
           Dialogs.snackbar(value.message.toString(), context, isError: true);

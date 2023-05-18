@@ -1,8 +1,10 @@
 import 'package:elevens_organizer/providers/auth_provider.dart';
+import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/utils/colours.dart';
 import 'package:elevens_organizer/utils/strings.dart';
 import 'package:elevens_organizer/view/auth/login_screen.dart';
 import 'package:elevens_organizer/view/auth/register_screen.dart';
+import 'package:elevens_organizer/view/menu/menu_screen.dart';
 import 'package:elevens_organizer/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
       child: const MyApp(),
     ),
@@ -44,6 +47,7 @@ class MyApp extends StatelessWidget {
               '/': (context) => const SplashScreen(),
               'login_screen': (context) => const LoginScreen(),
               'register_screen': (context) => const RegisterScreen(),
+              'menu_screen': (context) => const MenuScreen(),
             },
           );
         }

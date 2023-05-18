@@ -273,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
             loading = false;
           });
           print(value.message.toString());
-          // Navigator.pushNamed(context, 'menu_screen');
+          Navigator.pushNamed(context, 'menu_screen');
           Dialogs.snackbar(value.message.toString(), context, isError: false);
         } else if(value.status == false){
           print(value.message.toString());

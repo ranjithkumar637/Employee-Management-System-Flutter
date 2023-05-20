@@ -73,5 +73,12 @@ class Images {
   static const String forgotPasswordImage = 'assets/images/forgot_password_img.svg';
   static const String verifyMobileImage = 'assets/images/phone_verification_img.svg';
 
+  static const String refPointsImage = 'assets/images/referral_points_img.svg';
+  static const String revenueAmountImage = 'assets/images/revenue_amount_image.svg';
+  static const String refDialogImage = 'assets/images/ref_dialog_image.png';
+
+  static const String revenueImage = 'assets/images/revenue_img.svg';
+  static const String referImage = 'assets/images/refer_bg_img.svg';
+
 
 }

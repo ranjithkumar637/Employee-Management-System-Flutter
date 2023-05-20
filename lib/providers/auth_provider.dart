@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/login_model.dart';
 import '../models/registration_model.dart';
+import '../models/response_model.dart';
 import '../utils/app_constants.dart';
 
 class AuthProvider extends ChangeNotifier{
@@ -13,6 +14,7 @@ class AuthProvider extends ChangeNotifier{
   //login
   LoginModel loginModel = LoginModel();
   String token = "";
+  ResponseModel responseModel = ResponseModel();
 
   saveUserData(bool value, String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -20,7 +22,7 @@ class AuthProvider extends ChangeNotifier{
     preferences.setString("access_token", token);
   }
 
-  // captain login
+  // organizer login
   Future<LoginModel> login(String mobile, String password) async {
     var body = jsonEncode({
       'mobile': mobile,
@@ -56,8 +58,40 @@ class AuthProvider extends ChangeNotifier{
     return loginModel;
   }
 
+  // ORGANIZER logout
+  Future<ResponseModel> logout() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.organizerLogout),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        responseModel = ResponseModel.fromJson(decodedJson);
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('organizer logout- Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return responseModel;
+  }
 
-  //register as captain
+
+  //register as organizer
   Future<RegistrationModel> register(String name, String email, String mobile, String password, String companyName) async {
     var body = jsonEncode({
       'name': name,

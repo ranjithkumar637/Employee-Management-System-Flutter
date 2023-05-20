@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:elevens_organizer/view/menu/widgets/bottom_menu_text.dart';
+import 'package:elevens_organizer/view/more/more_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,11 +25,9 @@ class _MenuScreenState extends State<MenuScreen> {
 
   List<Widget> pages = <Widget>[
     const HomeScreen(),
-  Container(),
     Container(),
     Container(),
-    // const MyTeams(),
-    // const PlayVS(),
+    const MoreScreen()
   ];
 
   void _onItemTapped(int index) {

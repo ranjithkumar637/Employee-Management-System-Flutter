@@ -1,15 +1,20 @@
+import 'package:elevens_organizer/view/home/points_revenue_box.dart';
+import 'package:elevens_organizer/view/home/ref_code_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/slot_colour_info.dart';
+import 'custom_date_picker.dart';
 import 'home_grid_options.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   bool loading = false;
+  DateTime deliveryDate = DateTime.now();
 
   setDelay() async {
     if(mounted){
@@ -29,13 +35,22 @@ class _HomeScreenState extends State<HomeScreen> {
         loading = true;
       });
     }
-    getProfile();
-    await Future.delayed(const Duration(seconds: 2));
+    // getProfile();
+    await Future.delayed(const Duration(seconds: 1));
+    showReferralCode();
     if(mounted){
       setState(() {
         loading = false;
       });
     }
+  }
+
+  showReferralCode(){
+    showDialog(context: context,
+        builder: (BuildContext context){
+          return const RefCodeDialog(refCode: "GHYYH1900UI");
+        }
+    );
   }
 
   getProfile(){
@@ -111,10 +126,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   //referral points & revenue aomount
                   Positioned(
-                    bottom: 0.0,
+                    bottom: -90.0,
                     right: 5.w,
                     left: 5.w,
-                    child: const SizedBox(),
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: PointsAndRevenueBox(Images.refPointsImage, "Total Referral\nPoints", "250 pt", 1),
+                        ),
+                        SizedBox(width: 4.w),
+                        const Expanded(
+                          child: PointsAndRevenueBox(Images.revenueAmountImage, "Total Revenue\nAmount", "25000", 2),
+                        ),
+                      ],
+                    ),
                   ),
                   Positioned(
                     top: 5.h,
@@ -128,10 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             height: 10.h,
                             width: 20.w,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              border: Border.all(color: AppColor.imageBorderColor, width: 3.0),
                               color: Colors.white,
-                              image: DecorationImage(
+                              image: const DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage("https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1680345590~exp=1680346190~hmac=eb31a40018f2115d71ee38e25576a27bf9933b85d832af6bb6ece771dc2c4d42"))
                             ),
@@ -139,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(width: 3.w),
                         Expanded(
-                          child: Text("Hello! Ajith",
+                          child: Text("Hello!\nAjith",
                             style: fontMedium.copyWith(
                                 fontSize: 14.sp,
                                 color: AppColor.lightColor
@@ -152,11 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap:(){
                                   Navigator.pushNamed(context, "notification_screen");
                                 },
-                                child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.w,)),
+                                child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.5.w,)),
                             SizedBox(height: 2.h),
                             Bounceable(
                               onTap: (){
-                                openTeamCodesSheet();
+                                Share.share('check out my website https://vishalinfant.carrd.co', subject: 'BHFHDF9800M');
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -164,15 +190,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   vertical: 0.6.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColor.primaryColor,
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
-                                child: Center(
-                                  child: Text("Team code",
-                                    style: fontRegular.copyWith(
-                                        fontSize: 11.sp,
-                                        color: AppColor.textColor
-                                    ),),
+                                child: Row(
+                                  children: [
+                                    Text("BHFHDF9800M",
+                                      style: fontRegular.copyWith(
+                                          fontSize: 10.sp,
+                                          color: AppColor.lightColor
+                                      ),),
+                                    SizedBox(width: 2.w),
+                                    SvgPicture.asset(Images.share, color: AppColor.lightColor, width: 4.w,),
+                                  ],
                                 ),
                               ),
                             ),
@@ -181,29 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  Positioned(
-                    left: 5.w,
-                    top: 17.5.h,
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.pushNamed(context, "add_address");
-                      },
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(Images.location, color: AppColor.locationIconColor, width: 4.5.w,),
-                          SizedBox(width: 2.w),
-                          Text("Chrompet, Chennai 600210",
-                            style: fontRegular.copyWith(
-                                fontSize: 11.sp,
-                                color: AppColor.lightColor
-                            ),),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
-              SizedBox(height: 3.h),
+              SizedBox(height: 10.h),
               Expanded(
                 child: MediaQuery.removePadding(
                   removeTop: true,
@@ -211,7 +220,156 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView(
                     physics: const BouncingScrollPhysics(),
                     children: [
-                      SizedBox(height: 2.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 3.w,
+                          vertical: 1.5.h
+                        ),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 5.w,
+                          vertical: 2.h
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.lightColor,
+                          borderRadius: BorderRadius.circular(15.0),
+                            ),
+                        child: Column(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("This Week Battle",
+                                  style: fontMedium.copyWith(
+                                      color: AppColor.textColor,
+                                      fontSize: 12.sp
+                                  ),),
+                                SizedBox(height: 1.5.h),
+                                CustomDatePicker(
+                                    onDateSelected: (date) {
+                                      setState(() {
+                                        deliveryDate = date;
+                                      });
+                                    },
+                                    itemWidth: 15.w),
+                              ],
+                            ),
+                            SizedBox(height: 2.h),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Slot Time",
+                                  style: fontMedium.copyWith(
+                                      color: AppColor.textColor,
+                                      fontSize: 11.sp
+                                  ),),
+                                SizedBox(height: 1.5.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text("2 left",
+                                            style: fontMedium.copyWith(
+                                                color: AppColor.textColor,
+                                                fontSize: 8.sp
+                                            ),),
+                                          SizedBox(height: 0.5.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 6.w,
+                                              vertical: 0.8.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(30.0),
+                                                color: AppColor.availableSlot
+                                            ),
+                                            child: Text("7:00 AM",
+                                              style: fontRegular.copyWith(
+                                                  color: AppColor.lightColor,
+                                                  fontSize: 10.sp
+                                              ),),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text("2 left",
+                                            style: fontMedium.copyWith(
+                                                color: AppColor.textColor,
+                                                fontSize: 8.sp
+                                            ),),
+                                          SizedBox(height: 0.5.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 6.w,
+                                              vertical: 0.8.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(30.0),
+                                                color: AppColor.selectedSlot
+                                            ),
+                                            child: Text("11:00 AM",
+                                              style: fontRegular.copyWith(
+                                                  color: AppColor.textColor,
+                                                  fontSize: 10.sp
+                                              ),),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text("Full",
+                                            style: fontMedium.copyWith(
+                                                color: AppColor.textColor,
+                                                fontSize: 8.sp
+                                            ),),
+                                          SizedBox(height: 0.5.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 6.w,
+                                              vertical: 0.8.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(30.0),
+                                                color: AppColor.bookedSlot
+                                            ),
+                                            child: Text("2:00 PM",
+                                              style: fontRegular.copyWith(
+                                                  color: AppColor.textColor,
+                                                  fontSize: 10.sp
+                                              ),),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),                         ],
+                            ),
+                            SizedBox(height: 2.h),
+                            InkWell(
+                              onTap: (){
+                                Navigator.pushNamed(context, 'view_opponent_team');
+                              },
+                              child: Center(
+                                child: Text("View (Opponent)",
+                                  style: fontMedium.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.secondaryColor
+                                  ),),
+                              ),
+                            ),
+                            SizedBox(height: 1.h),
+                            const SlotColourInfo(),
+                          ],
+                        ),
+                      ),
                       //6 options
                       const HomeGridOptions(),
                       SizedBox(height: 3.h),
@@ -228,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       SizedBox(height: 2.h),
                       //horizontal listview
-                      // const InTheOffingList(),
                       SizedBox(height: 4.h),
 
                     ],
@@ -241,17 +398,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  void openTeamCodesSheet() {
-    // showModalBottomSheet<void>(
-    //     context: context,
-    //     backgroundColor: Colors.transparent,
-    //     isScrollControlled: true,
-    //     builder: (BuildContext context) {
-    //       return const TeamCodes();
-    //     });
-  }
 }
+
 
 
 

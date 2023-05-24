@@ -80,5 +80,10 @@ class Images {
   static const String revenueImage = 'assets/images/revenue_img.svg';
   static const String referImage = 'assets/images/refer_bg_img.svg';
 
+  static const String inviteImage1 = 'assets/images/invite_step1_img.png';
+  static const String inviteImage2 = 'assets/images/invite_step2_img.png';
+  static const String inviteImage3 = 'assets/images/invite_step3_img.png';
+
+
 
 }

@@ -33,7 +33,11 @@ class HomeGridOptions extends StatelessWidget {
                   },
                   child: const GridItem("Payment\nInformation", Images.gridImage2, Color(0xffF2EBE5)))),
               SizedBox(width: 5.w),
-              const Expanded(child: GridItem("Flip / Call\n(Toss)", Images.gridImage3, Color(0xffE6E6E6))),
+              Expanded(child: Bounceable(
+                  onTap: (){
+                    Navigator.pushNamed(context, "toss");
+                  },
+                  child: const GridItem("Flip / Call\n(Toss)", Images.gridImage3, Color(0xffE6E6E6)))),
             ],
           ),
           SizedBox(height: 2.h),

@@ -10,6 +10,7 @@ import 'package:elevens_organizer/view/notification/notifications_screen.dart';
 import 'package:elevens_organizer/view/refer_and_earn/refer_and_earn_screen.dart';
 import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
 import 'package:elevens_organizer/view/splash_screen.dart';
+import 'package:elevens_organizer/view/toss/toss.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
               'notification_screen': (context) => const Notifications(),
               'revenue_screen': (context) => const RevenueScreen(),
               'refer_and_earn_screen': (context) => const ReferAndEarnScreen(),
+              'toss': (context) => const Toss(),
             },
           );
         }

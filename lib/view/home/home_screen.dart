@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/profile_provider.dart';
@@ -182,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 2.h),
                             Bounceable(
                               onTap: (){
-                                Share.share('check out my website https://vishalinfant.carrd.co', subject: 'BHFHDF9800M');
+                                // Share.share('check out my website https://vishalinfant.carrd.co', subject: 'BHFHDF9800M');
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(

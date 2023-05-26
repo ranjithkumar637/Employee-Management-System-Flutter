@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -180,13 +181,18 @@ class _MatchHistoryState extends State<MatchHistory> {
                       },
                       itemCount: matchHistoryList.length,
                       itemBuilder: (context, index){
-                        return BattlesList(
-                            matchHistoryList[index].groundImage.toString(),
-                            '${matchHistoryList[index].teamAName.toString()} vs ${matchHistoryList[index].teamBName.toString()}',
-                            matchHistoryList[index].bookingDate.toString(),
-                            matchHistoryList[index].bookingSlotStart.toString(),
-                            matchHistoryList[index].groundName.toString(),
-                          "JK organizers",
+                        return Bounceable(
+                          onTap: (){
+
+                          },
+                          child: BattlesList(
+                              matchHistoryList[index].groundImage.toString(),
+                              '${matchHistoryList[index].teamAName.toString()} vs ${matchHistoryList[index].teamBName.toString()}',
+                              matchHistoryList[index].bookingDate.toString(),
+                              matchHistoryList[index].bookingSlotStart.toString(),
+                              matchHistoryList[index].groundName.toString(),
+                            "JK organizers",
+                          ),
                         );
                       },
                     ));

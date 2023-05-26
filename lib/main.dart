@@ -1,11 +1,14 @@
 import 'package:elevens_organizer/providers/auth_provider.dart';
+import 'package:elevens_organizer/providers/booking_provider.dart';
 import 'package:elevens_organizer/providers/profile_provider.dart';
+import 'package:elevens_organizer/providers/team_provider.dart';
 import 'package:elevens_organizer/utils/colours.dart';
 import 'package:elevens_organizer/utils/strings.dart';
 import 'package:elevens_organizer/view/auth/login_screen.dart';
 import 'package:elevens_organizer/view/auth/register_screen.dart';
 import 'package:elevens_organizer/view/menu/menu_screen.dart';
 import 'package:elevens_organizer/view/my_matches/my_matches.dart';
+import 'package:elevens_organizer/view/my_team/create_team.dart';
 import 'package:elevens_organizer/view/notification/notifications_screen.dart';
 import 'package:elevens_organizer/view/refer_and_earn/refer_and_earn_screen.dart';
 import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
@@ -28,6 +31,8 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => TeamProvider()),
+        ChangeNotifierProvider(create: (context) => BookingProvider()),
       ],
       child: const MyApp(),
     ),
@@ -58,6 +63,7 @@ class MyApp extends StatelessWidget {
               'revenue_screen': (context) => const RevenueScreen(),
               'refer_and_earn_screen': (context) => const ReferAndEarnScreen(),
               'toss': (context) => const Toss(),
+              'create_team': (context) => const CreateTeam(),
             },
           );
         }

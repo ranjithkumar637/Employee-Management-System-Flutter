@@ -2,6 +2,7 @@ import 'package:elevens_organizer/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
@@ -71,7 +72,11 @@ class InviteScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 10.w),
-              SvgPicture.asset(Images.share, color: AppColor.secondaryColor, width: 6.w,)
+              InkWell(
+                onTap: (){
+                  Share.share('BHFHDF9800M', subject: 'Share your referral code');
+                },
+                  child: SvgPicture.asset(Images.share, color: AppColor.secondaryColor, width: 6.w,))
             ],
           ),
         ),

@@ -10,6 +10,7 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../home/home_screen.dart';
+import '../my_team/my_teams.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   List<Widget> pages = <Widget>[
     const HomeScreen(),
-    Container(),
+    const MyTeams(),
     Container(),
     const MoreScreen()
   ];

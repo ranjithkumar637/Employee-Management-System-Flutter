@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
@@ -214,7 +215,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                       fontSize: 14.sp,
                                       color: AppColor.textColor
                                   ),),
-                                Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,)
+                                InkWell(
+                                    onTap: (){
+                                      FlutterClipboard.copy("GHYYH1900UI").then(( value ){
+                                        print('copied');
+                                        Dialogs.snackbar("Referral code copied to clipboard", context, isError: false);
+                                      });
+
+                                    },
+                                    child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,))
                               ],
                             ),
                           ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
@@ -30,7 +31,8 @@ class BattlesList extends StatelessWidget {
         children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Image.network('${AppConstants.imageBaseUrl}$image', fit: BoxFit.cover, width: 28.w, height: 14.h,)),
+              child: CachedNetworkImage(imageUrl: '${AppConstants.imageBaseUrl}/$image', fit: BoxFit.cover, width: 28.w, height: 14.h,
+                errorWidget: (context, url, error) => Icon(Icons.gps_not_fixed_rounded, size: 4.w,),)),
           SizedBox(width: 4.w),
           Expanded(
             child: Column(

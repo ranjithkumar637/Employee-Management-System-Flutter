@@ -1,6 +1,6 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
@@ -8,6 +8,7 @@ import 'package:sizer/sizer.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/snackbar.dart';
 
 
 class RefCodeDialog extends StatefulWidget {
@@ -71,7 +72,16 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
                       fontSize: 18.sp,
                       color: AppColor.secondaryColor
                   ),),
-                Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,)
+                InkWell(
+                    onTap: (){
+                      FlutterClipboard.copy("GHYYH1900UI").then(( value ){
+                        print('copied');
+                        Navigator.pop(context);
+                        Dialogs.snackbar("Referral code copied to clipboard", context, isError: false);
+                      });
+
+                    },
+                    child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,))
               ],
             ),
           ),
@@ -93,7 +103,7 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
               ),
               Bounceable(
                 onTap: (){
-                  Share.share('check out my website https://vishalinfant.carrd.co', subject: 'BHFHDF9800M');
+                  Share.share('BHFHDF9800M', subject: 'Share your referral code');
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

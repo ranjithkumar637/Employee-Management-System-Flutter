@@ -84,6 +84,9 @@ class Images {
   static const String inviteImage2 = 'assets/images/invite_step2_img.png';
   static const String inviteImage3 = 'assets/images/invite_step3_img.png';
 
+  static const String battingImage = 'assets/images/batting_img.svg';
+  static const String bowlingImage = 'assets/images/bowling_img.svg';
+
 
 
 }

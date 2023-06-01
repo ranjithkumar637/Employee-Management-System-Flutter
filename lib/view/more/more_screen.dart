@@ -1,5 +1,6 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
@@ -116,32 +117,37 @@ class _MoreScreenState extends State<MoreScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Square Out Fighters",
+                              Text(profile.getName(),
                                 style: fontMedium.copyWith(
                                     fontSize: 15.sp,
                                     color: AppColor.lightColor
                                 ),),
                               SizedBox(height: 0.5.h),
-                              Text("9988447755",
+                              Text(profile.getMobile(),
                                 style: fontRegular.copyWith(
                                     fontSize: 10.sp,
                                     color: AppColor.lightColor
                                 ),),
                               SizedBox(height: 0.5.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w,
-                                  vertical: 1.h,
+                              Bounceable(
+                                onTap:(){
+                                  Navigator.pushNamed(context, 'edit_profile');
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 3.w,
+                                    vertical: 1.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xffF9D700),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Text("Edit Profile",
+                                  style: fontRegular.copyWith(
+                                    color: AppColor.textColor,
+                                    fontSize: 8.sp
+                                  ),),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffF9D700),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Text("Edit Profile",
-                                style: fontRegular.copyWith(
-                                  color: AppColor.textColor,
-                                  fontSize: 8.sp
-                                ),),
                               ),
                               SizedBox(height: 0.5.h),
                               SizedBox(

@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:elevens_organizer/view/toss/toss_result_dialog.dart';
 import 'package:elevens_organizer/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:sizer/sizer.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
@@ -17,18 +19,21 @@ class Toss extends StatefulWidget {
   State<Toss> createState() => _TossState();
 }
 
-class _TossState extends State<Toss> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _TossState extends State<Toss> with TickerProviderStateMixin{
+
+late TabController tabController;
+
+late AnimationController _controller;
   late Animation<double> _spinAnimation;
 
   String _tossResult = '';
-  double height = 150.0;
-  double width = 150.0;
+  double height = 200.0;
+  double width = 200.0;
 
   @override
   void initState() {
     super.initState();
-
+    tabController = TabController(length: 2, vsync: this);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
@@ -128,6 +133,8 @@ class _TossState extends State<Toss> with SingleTickerProviderStateMixin {
     _handleToss();
   }
 
+  List<String> tabs = ['Heads', 'Tails'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,15 +146,15 @@ class _TossState extends State<Toss> with SingleTickerProviderStateMixin {
             children: [
               SizedBox(
                 width: double.infinity,
-                height: 60.h,
+                height: 64.h,
                 child: ClipPath(
                   clipper: ProsteBezierCurve(
                     position: ClipPosition.bottom,
                     list: [
                       BezierCurveSection(
-                        start: Offset(0, 54.h),
-                        top: Offset(MediaQuery.of(context).size.width / 2, 60.h),
-                        end: Offset(MediaQuery.of(context).size.width, 54.h),
+                        start: Offset(0, 58.h),
+                        top: Offset(MediaQuery.of(context).size.width / 2, 64.h),
+                        end: Offset(MediaQuery.of(context).size.width, 58.h),
                       ),
                     ],
                   ),
@@ -156,16 +163,16 @@ class _TossState extends State<Toss> with SingleTickerProviderStateMixin {
               ),
               Positioned(
                 child: SizedBox(
-                  height: 60.h,
+                  height: 64.h,
                   width: double.infinity,
                   child: ClipPath(
                     clipper: ProsteBezierCurve(
                       position: ClipPosition.bottom,
                       list: [
                         BezierCurveSection(
-                          start: Offset(0, 54.h),
-                          top: Offset(MediaQuery.of(context).size.width / 2, 60.h),
-                          end: Offset(MediaQuery.of(context).size.width, 54.h),
+                          start: Offset(0, 58.h),
+                          top: Offset(MediaQuery.of(context).size.width / 2, 64.h),
+                          end: Offset(MediaQuery.of(context).size.width, 58.h),
                         ),
                       ],
                     ),
@@ -217,31 +224,103 @@ class _TossState extends State<Toss> with SingleTickerProviderStateMixin {
                   ),),
               ),
               Positioned(
-                top: 52.h,
-                child: Transform(
-                  transform: Matrix4.rotationX(
-                    _controller.value < 0.5
-                        ? pi * _controller.value
-                        : pi - pi * _controller.value,
-                  )..rotateZ(_spinAnimation.value * pi / 360),
-                  alignment: Alignment.center,
-                  child: AnimatedContainer(
-                    height: height,
-                    width: width,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/${_tossResult.isEmpty ? 'head' : _tossResult}.png',
-                            )),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(-1, 1),
-                              blurRadius: 7.0,
-                              spreadRadius: 5.0),
-                        ]),
-                    duration: const Duration(milliseconds: 250),
+                top: 35.h,
+                left: 5.w,
+                right: 5.w,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColor.textColor,
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: TabBar(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 1.w,
+                      vertical: 0.5.h,
+                    ),
+                    controller: tabController,
+                    indicator: BoxDecoration(
+                      color: AppColor.lightColor,
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                      indicatorColor: Colors.transparent,
+                      labelColor: AppColor.textColor,
+                      labelStyle: fontMedium.copyWith(
+                        fontSize: 14.sp
+                      ),
+                      unselectedLabelColor: AppColor.lightColor,
+                      unselectedLabelStyle: fontMedium.copyWith(
+                        fontSize: 14.sp
+                      ),
+                      tabs: tabs.map((String value){
+                        return Tab(text: value,);
+                      }).toList(),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 45.h,
+                left: 5.w,
+                right: 5.w,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 5.w,
+                    vertical: 1.6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xffFBFAF7),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Toss & Tails",
+                          style: fontRegular.copyWith(
+                              color: AppColor.textColor,
+                              fontSize: 10.sp
+                          ),
+                        ),
+                      ),
+                      Icon(Icons.keyboard_arrow_down_sharp, color: AppColor.textMildColor, size: 5.w,),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 55.h,
+                child: GestureDetector(
+                  onTap: (){
+                    showDialog(context: context,
+                        builder: (BuildContext context){
+                          return const TossResultDialog(
+                          );
+                        });
+                  },
+                  child: Transform(
+                    transform: Matrix4.rotationX(
+                      _controller.value < 0.5
+                          ? pi * _controller.value
+                          : pi - pi * _controller.value,
+                    )..rotateZ(_spinAnimation.value * pi / 360),
+                    alignment: Alignment.center,
+                    child: AnimatedContainer(
+                      height: height,
+                      width: width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          image: DecorationImage(
+                              image: AssetImage(
+                                'assets/images/${_tossResult.isEmpty ? 'head' : _tossResult}.png',
+                              )),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(-1, 1),
+                                blurRadius: 7.0,
+                                spreadRadius: 5.0),
+                          ]),
+                      duration: const Duration(milliseconds: 250),
+                    ),
                   ),
                 ),
               ),

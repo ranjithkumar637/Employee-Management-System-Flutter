@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         loading = true;
       });
     }
-    // getProfile();
+    getProfile();
     await Future.delayed(const Duration(seconds: 1));
     showReferralCode();
     if(mounted){
@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getProfile(){
-    // Provider.of<ProfileProvider>(context, listen: false).getCaptainProfile();
+    Provider.of<ProfileProvider>(context, listen: false).getProfile();
   }
 
   @override
@@ -163,12 +163,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(width: 3.w),
-                        Expanded(
-                          child: Text("Hello!\nAjith",
-                            style: fontMedium.copyWith(
-                                fontSize: 14.sp,
-                                color: AppColor.lightColor
-                            ),),
+                        Consumer<ProfileProvider>(
+                          builder: (context, profile, child) {
+                            return Expanded(
+                              child: Text("Hello!\n${profile.getName()}",
+                                style: fontMedium.copyWith(
+                                    fontSize: 14.sp,
+                                    color: AppColor.lightColor
+                                ),),
+                            );
+                          }
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,

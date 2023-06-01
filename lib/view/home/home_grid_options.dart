@@ -29,7 +29,7 @@ class HomeGridOptions extends StatelessWidget {
               SizedBox(width: 5.w),
               Expanded(child: Bounceable(
                   onTap:(){
-                    // Navigator.pushNamed(context, "payment_information");
+                    Navigator.pushNamed(context, "payment_information");
                   },
                   child: const GridItem("Payment\nInformation", Images.gridImage2, Color(0xffF2EBE5)))),
               SizedBox(width: 5.w),

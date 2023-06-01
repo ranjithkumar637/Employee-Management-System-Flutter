@@ -4,12 +4,15 @@ import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/providers/team_provider.dart';
 import 'package:elevens_organizer/utils/colours.dart';
 import 'package:elevens_organizer/utils/strings.dart';
+import 'package:elevens_organizer/view/address/add_address.dart';
 import 'package:elevens_organizer/view/auth/login_screen.dart';
 import 'package:elevens_organizer/view/auth/register_screen.dart';
 import 'package:elevens_organizer/view/menu/menu_screen.dart';
 import 'package:elevens_organizer/view/my_matches/my_matches.dart';
 import 'package:elevens_organizer/view/my_team/create_team.dart';
 import 'package:elevens_organizer/view/notification/notifications_screen.dart';
+import 'package:elevens_organizer/view/payment/payment_information.dart';
+import 'package:elevens_organizer/view/profile/edit_profile.dart';
 import 'package:elevens_organizer/view/refer_and_earn/refer_and_earn_screen.dart';
 import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
 import 'package:elevens_organizer/view/splash_screen.dart';
@@ -64,6 +67,9 @@ class MyApp extends StatelessWidget {
               'refer_and_earn_screen': (context) => const ReferAndEarnScreen(),
               'toss': (context) => const Toss(),
               'create_team': (context) => const CreateTeam(),
+              'edit_profile': (context) => const EditProfile(),
+              'add_address': (context) => const AddAddress(),
+              'payment_information': (context) => const PaymentInformation(),
             },
           );
         }

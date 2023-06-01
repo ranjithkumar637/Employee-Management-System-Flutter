@@ -4,6 +4,7 @@ class AppConstants {
 
   static const String organizerRegister = '$baseUrl/auth/organizer/register';
   static const String organizerLogin = '$baseUrl/auth/organizer/login';
+  static const String organizerViewProfile = '$baseUrl/organizer/profile_view';
 
   static const String organizerLogout = '$baseUrl/organizer/logout';
 

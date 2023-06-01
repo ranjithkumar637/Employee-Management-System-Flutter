@@ -95,7 +95,7 @@ class _AddAddressState extends State<AddAddress> {
                           vertical: 1.5.h,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xff333333),
+                          color: AppColor.primaryColor,
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Row(
@@ -106,10 +106,10 @@ class _AddAddressState extends State<AddAddress> {
                                 vertical: 1.5.h,
                               ),
                               decoration: const BoxDecoration(
-                                  color: AppColor.primaryColor,
+                                  color: Color(0xff333333),
                                   shape: BoxShape.circle
                               ),
-                              child: SvgPicture.asset(Images.currentLocationImage, color: AppColor.textColor, width: 6.w,),
+                              child: SvgPicture.asset(Images.currentLocationImage, color: AppColor.primaryColor, width: 6.w,),
                             ),
                             SizedBox(width: 3.w),
                             Expanded(
@@ -119,19 +119,19 @@ class _AddAddressState extends State<AddAddress> {
                                   Text("Use my current location",
                                     style: fontMedium.copyWith(
                                         fontSize: 12.sp,
-                                        color: AppColor.lightColor
+                                        color: AppColor.textColor
                                     ),),
                                   SizedBox(height: 0.5.h),
                                   Text("Aspace gems, Madipakkam, Chennai",
                                     style: fontRegular.copyWith(
                                         fontSize: 10.sp,
-                                        color: AppColor.lightColor
+                                        color: AppColor.textColor
                                     ),),
                                 ],
                               ),
                             ),
                             SizedBox(width: 3.w),
-                            Icon(Icons.arrow_forward_ios_rounded, color: AppColor.primaryColor, size: 4.w,)
+                            Icon(Icons.arrow_forward_ios_rounded, color: AppColor.textColor, size: 4.w,)
                           ],
                         ),
                       ),
@@ -146,7 +146,7 @@ class _AddAddressState extends State<AddAddress> {
                                 initHeight = 45.h;
                               });
                             },
-                            child: const CustomButton(AppColor.primaryColor, 'Confirm Location', AppColor.textColor)),
+                            child: const CustomButton(AppColor.textColor, 'Confirm Location', AppColor.lightColor)),
                       ),
                   ],
                 ),
@@ -320,7 +320,7 @@ class _AddAddressState extends State<AddAddress> {
                                   initHeight = 75.h;
                                 });
                               },
-                              child: const CustomButton(AppColor.primaryColor, 'Save', AppColor.textColor)),
+                              child: const CustomButton(AppColor.textColor, 'Save', AppColor.lightColor)),
                         ],
                       ),
                     ),

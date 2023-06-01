@@ -29,6 +29,7 @@ class AppColor {
 
   static Color iconBgColor = const Color(0xffD78108).withOpacity(0.2);
   static const Color iconColour = Color(0xffD78108);
+  static const Color hintColour = Color(0xffA7A7A7);
 
 
 

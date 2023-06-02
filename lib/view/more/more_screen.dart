@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -235,7 +236,11 @@ class _MoreScreenState extends State<MoreScreen> {
                           ),
                         ),
                         SizedBox(width: 10.w),
-                        SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,)
+                        InkWell(
+                            onTap: (){
+                              Share.share("GHYYH1900UI");
+                            },
+                            child: SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,))
                       ],
                     ),
                     SizedBox(height: 2.h),

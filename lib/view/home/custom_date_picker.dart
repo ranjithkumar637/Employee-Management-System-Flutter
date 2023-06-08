@@ -63,7 +63,7 @@ class CustomDatePickerState extends State<CustomDatePicker> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 12.h,
+      height: 13.h,
       // color: AppColor.primaryColor.withOpacity(0.05),
       child: Column(
         children: [

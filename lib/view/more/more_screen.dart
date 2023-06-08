@@ -24,6 +24,18 @@ class MoreScreen extends StatefulWidget {
 }
 
 class _MoreScreenState extends State<MoreScreen> {
+
+  getProfile(){
+    Provider.of<ProfileProvider>(context, listen: false).getProfile();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +144,10 @@ class _MoreScreenState extends State<MoreScreen> {
                               SizedBox(height: 0.5.h),
                               Bounceable(
                                 onTap:(){
-                                  Navigator.pushNamed(context, 'edit_profile');
+                                  Navigator.pushNamed(context, 'edit_profile')
+                                  .then((value) {
+                                    getProfile();
+                                  });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(

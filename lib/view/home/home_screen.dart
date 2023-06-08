@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     getProfile();
     await Future.delayed(const Duration(seconds: 1));
-    showReferralCode();
+    // showReferralCode();
     if(mounted){
       setState(() {
         loading = false;
@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 2.h),
                             Bounceable(
                               onTap: (){
-                                // Share.share('check out my website https://vishalinfant.carrd.co', subject: 'BHFHDF9800M');
+                                showReferralCode();
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(

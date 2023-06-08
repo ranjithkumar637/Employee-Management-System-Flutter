@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class LocationData extends StatefulWidget {
-  const LocationData({Key? key}) : super(key: key);
+  final ProfileProvider ground;
+  const LocationData(this.ground, {Key? key}) : super(key: key);
 
   @override
   State<LocationData> createState() => _LocationDataState();

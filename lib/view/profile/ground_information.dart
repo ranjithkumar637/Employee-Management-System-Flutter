@@ -1,4 +1,6 @@
+import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/utils/images.dart';
+import 'package:elevens_organizer/view/profile/update_ground_info_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
@@ -7,7 +9,8 @@ import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 
 class GroundInformation extends StatelessWidget {
-  const GroundInformation({Key? key}) : super(key: key);
+  final ProfileProvider ground;
+  const GroundInformation(this.ground, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +37,26 @@ class GroundInformation extends StatelessWidget {
                     color: AppColor.textColor,
                     fontSize: 12.sp
                 ),),
-              SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,),
+              InkWell(
+                  onTap: (){
+                    showDialog(context: context,
+                        builder: (BuildContext context){
+                          return UpdateGroundInfoDialog(
+                              ground.pitch,
+                              ground.boundaryLine,
+                              ground.floodLight);
+                        }
+                    );
+                  },
+                  child: SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,)),
             ],
           ),
           SizedBox(height: 2.h),
-          const GroundInfoRow("Pitch", "Sand"),
+          GroundInfoRow("Pitch", ground.pitch),
           SizedBox(height: 2.h),
-          const GroundInfoRow("Boundary Line", "90 meters"),
+          GroundInfoRow("Boundary Line", ground.boundaryLine),
           SizedBox(height: 2.h),
-          const GroundInfoRow("Flood light", "Yes"),
+          GroundInfoRow("Flood light", ground.floodLight == 1 ? "Yes" : "No"),
         ],
       ),
     );
@@ -63,7 +77,7 @@ class GroundInfoRow extends StatelessWidget {
               color: AppColor.textMildColor,
               fontSize: 11.sp
           ),),
-        Text(value,
+        Text(value == "" ? '-' : value,
           style: fontRegular.copyWith(
               color: AppColor.textColor,
               fontSize: 11.sp

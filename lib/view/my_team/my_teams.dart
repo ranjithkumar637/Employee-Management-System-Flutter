@@ -189,12 +189,12 @@ class _MyTeamsState extends State<MyTeams> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return Bounceable(
                                       onTap: (){
-                                    //     Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) {
-                                    //     return TeamDetail(team.teamList[index].id.toString(), team.teamList[index].teamName.toString());
-                                    //   }),
-                                    // );
+                                        Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return TeamDetail(team.teamList[index].id.toString(), team.teamList[index].teamName.toString());
+                                      }),
+                                    );
                                   },
                                       child: AllTeams(team.teamList[index].logo.toString(), team.teamList[index].teamName.toString()));
                                 },

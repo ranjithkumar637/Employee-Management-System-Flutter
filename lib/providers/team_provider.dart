@@ -6,9 +6,11 @@ import 'package:http/http.dart' as http;
 import '../models/captain_list_model.dart';
 import '../models/city_list_model.dart';
 import '../models/create_team_model.dart';
+import '../models/squad_from_team_model.dart';
 import '../models/state_based_city_list_model.dart';
 import '../models/state_list_model.dart';
 import '../models/team_list_model.dart';
+import '../models/team_view_model.dart';
 import '../utils/app_constants.dart';
 
 class TeamProvider extends ChangeNotifier{
@@ -34,6 +36,16 @@ class TeamProvider extends ChangeNotifier{
   String state = "", stateId = "";
   String stateBasedCity = "", stateBasedCityId = "";
   String captainName = "", captainId = "";
+
+  SquadFromTeamModel squadFromTeamModel = SquadFromTeamModel();
+
+  List<CaptainData> captainData = [];
+  List<ViceCaptainData> vcData = [];
+  List<AdminData> adminData = [];
+
+  List<TeamPlayerList> teamPlayerList = [];
+  TeamViewModel teamViewModel = TeamViewModel();
+  TeamDetails teamDetails = TeamDetails();
 
   storeState(String stateName, String id){
     state = stateName;
@@ -339,42 +351,98 @@ class TeamProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  //state list
-  // Future<List<TeamList>> getTeamList() async {
-  //   teamList = [];
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   String? accToken = preferences.getString("access_token");
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(AppConstants.teamList),
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         'Authorization': 'Bearer $accToken',
-  //       },
-  //     );
-  //     var decodedJson = json.decode(response.body);
-  //     print(decodedJson);
-  //     if (response.statusCode == 200) {
-  //       teamListModel = TeamListModel.fromJson(decodedJson);
-  //       for (var state in decodedJson['team_list']) {
-  //         teamList.add(TeamList.fromJson(state));
-  //         notifyListeners();
-  //       }
-  //       notifyListeners();
-  //     } else {
-  //       // API call was not successful
-  //       throw const HttpException('Failed to load data');
-  //     }
-  //   } on SocketException {
-  //     print('No internet connection');
-  //   } on HttpException {
-  //     print('Failed to load data');
-  //   } on FormatException {
-  //     print('Team List - Invalid data format');
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return teamList;
-  // }
+  //player list after choosing team
+  Future<SquadFromTeamModel> getPlayersListOfTeam(String teamId) async {
+    teamPlayerList = [];
+    captainData = [];
+    vcData = [];
+    adminData = [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    var body = jsonEncode({
+      'team_id': teamId,
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.getSquadOfTeam),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+        body: body,
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        squadFromTeamModel = SquadFromTeamModel.fromJson(decodedJson);
+        for (var data in decodedJson['captain_list']) {
+          captainData.add(CaptainData.fromJson(data));
+          notifyListeners();
+        }
+        for (var data in decodedJson['vice_captain_list']) {
+          vcData.add(ViceCaptainData.fromJson(data));
+          notifyListeners();
+        }
+        for (var data in decodedJson['admin_list']) {
+          adminData.add(AdminData.fromJson(data));
+          notifyListeners();
+        }
+        notifyListeners();
+        for (var data in decodedJson['team_player_list']) {
+          teamPlayerList.add(TeamPlayerList.fromJson(data));
+          notifyListeners();
+        }
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('player list of a team- Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return squadFromTeamModel;
+  }
+
+  //view team
+  Future<TeamViewModel> viewTeam(String teamId) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    var body = jsonEncode({
+      'team_id': teamId,
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.organizerTeamView),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+        body: body,
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        teamViewModel = TeamViewModel.fromJson(decodedJson);
+        teamDetails = TeamDetails.fromJson(decodedJson['team_details']);
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('view team - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return teamViewModel;
+  }
 
 }

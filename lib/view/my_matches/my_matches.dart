@@ -65,7 +65,7 @@ class _MyMatchesScreenState extends State<MyMatchesScreen> with SingleTickerProv
               controller: tabController,
               tabs: const [
                 Tab(
-                  text: "Upcoming Battle",
+                  text: "Upcoming Matches",
                 ),
                 Tab(
                   text: "Match History",

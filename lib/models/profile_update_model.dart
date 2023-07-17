@@ -33,18 +33,19 @@ class ProfileUpdateModel {
 }
 
 class UpdatedOrganizerDetails {
-  int? id;
+  dynamic id;
   String? name;
   String? email;
-  String? mobile;
+  dynamic mobile;
   String? companyName;
   String? profileImgPath;
-  int? location;
+  dynamic location;
   String? dob;
   String? paymentUpi;
   String? qrCode;
-  int? approved;
-  int? active;
+  dynamic adminApprove;
+  dynamic approved;
+  dynamic active;
   String? createdAt;
   String? updatedAt;
   String? profilePhotoUrl;
@@ -60,6 +61,7 @@ class UpdatedOrganizerDetails {
         dob,
         paymentUpi,
         qrCode,
+        adminApprove,
         approved,
         active,
         createdAt,
@@ -77,6 +79,7 @@ class UpdatedOrganizerDetails {
     dob = json['dob'];
     paymentUpi = json['payment_upi'];
     qrCode = json['qr_code'];
+    adminApprove = json['admin_approve'];
     approved = json['approved'];
     active = json['active'];
     createdAt = json['created_at'];
@@ -96,6 +99,7 @@ class UpdatedOrganizerDetails {
     data['dob'] = dob;
     data['payment_upi'] = paymentUpi;
     data['qr_code'] = qrCode;
+    data['admin_approve'] = adminApprove;
     data['approved'] = approved;
     data['active'] = active;
     data['created_at'] = createdAt;
@@ -106,24 +110,24 @@ class UpdatedOrganizerDetails {
 }
 
 class UpdatedGroundDetails {
-  int? id;
-  int? organizerId;
+  dynamic id;
+  dynamic organizerId;
   String? groundName;
-  String? groundContactNumber;
-  int? groundBookingCost;
+  dynamic groundContactNumber;
+  dynamic groundBookingCost;
   String? description;
   String? pitch;
-  String? boundaryLine;
-  int? floodLight;
+  dynamic boundaryLine;
+  dynamic floodLight;
   String? mainImage;
   String? galleryImage;
   String? address;
-  int? stateId;
-  int? cityId;
-  String? pincode;
-  String? latitude;
-  String? longitude;
-  int? groundStatus;
+  dynamic stateId;
+  dynamic cityId;
+  dynamic pincode;
+  dynamic latitude;
+  dynamic longitude;
+  dynamic groundStatus;
   String? groundCreatedBy;
   String? createdAt;
   String? updatedAt;

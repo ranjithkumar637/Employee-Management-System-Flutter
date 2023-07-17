@@ -4,6 +4,12 @@ class AppConstants {
 
   static const String imageBaseUrlGallery = 'storage/app/public/ground/';
 
+  static const String imageBaseUrlCaptain = 'storage/app/public/captain/';
+
+  static const String imageBaseUrlPlayer = 'storage/app/public/player/';
+
+  static const String imageBaseUrlTeam = 'storage/app/public/team/';
+
   static const String organizerRegister = '$baseUrl/auth/organizer/register';
   static const String organizerLogin = '$baseUrl/auth/organizer/login';
   static const String organizerViewProfile = '$baseUrl/organizer/profile_view';
@@ -13,6 +19,7 @@ class AppConstants {
   static const String organizerLogout = '$baseUrl/organizer/logout';
 
   static const String organizerMatchHistoryList = '$baseUrl/organizer/organizer_match_history';
+  static const String organizerUpcomingMatchesList = '$baseUrl/organizer/upcoming_match_list';
 
   static const String stateBasedCityList = '$baseUrl/captain/org-cities-state';
 

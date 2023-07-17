@@ -23,7 +23,7 @@ class PlayerImage extends StatelessWidget {
           color: AppColor.primaryColor,
         ),
         child: CachedNetworkImage(
-          imageUrl: '${AppConstants.imageBaseUrl}/$imageUrl', fit: BoxFit.cover,
+          imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlCaptain}$imageUrl', fit: BoxFit.cover,
           errorWidget: (context, url, error) => const Icon(Icons.person_outline_rounded),
         ),
       ),

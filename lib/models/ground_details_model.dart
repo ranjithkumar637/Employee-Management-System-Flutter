@@ -1,16 +1,20 @@
 class GroundDetailsModel {
   bool? status;
   String? message;
-  GroundDetails? groundDetails;
+  dynamic groundDetails;
 
   GroundDetailsModel({status, message, groundDetails});
 
   GroundDetailsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    groundDetails = json['ground_details'] != null
-        ? GroundDetails.fromJson(json['ground_details'])
-        : null;
+    if (json is List) {
+      GroundDetails();
+    } else {
+      groundDetails = json['ground_details'] != null
+          ? GroundDetails.fromJson(json['ground_details'])
+          : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -25,14 +29,14 @@ class GroundDetailsModel {
 }
 
 class GroundDetails {
-  int? id;
+  dynamic id;
   String? groundName;
   String? groundContactNumber;
-  int? groundBookingCost;
+  dynamic groundBookingCost;
   String? description;
   String? pitch;
-  int? boundaryLine;
-  int? floodLight;
+  dynamic boundaryLine;
+  dynamic floodLight;
   String? mainImage;
   String? address;
   String? stateId;
@@ -40,7 +44,7 @@ class GroundDetails {
   String? pincode;
   String? latitude;
   String? longitude;
-  int? groundStatus;
+  dynamic groundStatus;
   String? groundCreatedBy;
   String? houseNo;
   String? streetName;
@@ -88,7 +92,11 @@ class GroundDetails {
     groundCreatedBy = json['ground_created_by'];
     houseNo = json['house_no'];
     streetName = json['street_name'];
-    galleryImage = json['gallery_image'].cast<String>();
+    if (json['gallery_image'] != null && json['gallery_image'] is List) {
+      galleryImage = List<String>.from(json['gallery_image']);
+    } else {
+      galleryImage = [];
+    }
   }
 
   Map<String, dynamic> toJson() {

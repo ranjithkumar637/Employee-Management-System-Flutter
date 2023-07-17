@@ -1,6 +1,7 @@
 import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,11 @@ import '../../providers/team_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../my_team/city_list_dialog.dart';
+import '../my_team/create_team.dart';
+import '../my_team/state_list_dialog.dart';
 import '../widgets/snackbar.dart';
+import 'location_data.dart';
 
 class Profile extends StatefulWidget {
   final ProfileProvider ground;
@@ -26,7 +31,9 @@ class _ProfileState extends State<Profile> {
   final TextEditingController groundNameController = TextEditingController();
   final TextEditingController groundMobileController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController companyNameController = TextEditingController();
   final TextEditingController mobileNumberController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   String date = "";
   final _formKey = GlobalKey<FormState>();
@@ -44,436 +51,606 @@ class _ProfileState extends State<Profile> {
     Provider.of<TeamProvider>(context, listen: false).getCityList();
   }
 
+  void openCitySheet(String stateBasedCityId) {
+    Provider.of<TeamProvider>(context, listen: false).getStateBasedCityList(stateBasedCityId);
+    showDialog(context: context,
+        builder: (BuildContext context){
+          return const CityListDialog();
+        }
+    );
+  }
+
+  getStateList(){
+    Provider.of<TeamProvider>(context, listen: false).getStateList();
+  }
+
+  void openStateSheet() {
+    showDialog(context: context,
+        builder: (BuildContext context){
+          return const StateListDialog();
+        }
+    );
+  }
+
+  getData(){
+    final profile = Provider.of<ProfileProvider>(context, listen: false);
+    groundNameController.text = profile.organizerDetails.groundName.toString();
+    groundMobileController.text = profile.organizerDetails.groundContactNumber.toString();
+    nameController.text = profile.organizerDetails.name.toString();
+    mobileNumberController.text = profile.organizerDetails.mobile.toString();
+    companyNameController.text = profile.organizerDetails.companyName.toString();
+    date = profile.getDob();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCityList();
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColor.bgColor,
-      child: Form(
-        key: _formKey,
-        child: Consumer<ProfileProvider>(
-          builder: (context, profile, child) {
-            groundNameController.text = profile.organizerDetails.groundName.toString();
-            groundMobileController.text = profile.organizerDetails.groundContactNumber.toString();
-            nameController.text = profile.organizerDetails.name.toString();
-            mobileNumberController.text = profile.organizerDetails.mobile.toString();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: MediaQuery.removePadding(
-                    removeTop: true,
-                    context: context,
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 2.h,
+    return GestureDetector(
+      onTap: (){
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Container(
+        color: AppColor.bgColor,
+        child: Form(
+          key: _formKey,
+          child: Consumer<ProfileProvider>(
+            builder: (context, profile, child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                              vertical: 2.h,
+                            ),
+                            child: Text("Ground Information",
+                              style: fontMedium.copyWith(
+                                  color: AppColor.textColor,
+                                  fontSize: 13.sp
+                              ),),
                           ),
-                          child: Text("Ground Information",
-                            style: fontMedium.copyWith(
-                                color: AppColor.textColor,
-                                fontSize: 13.sp
-                            ),),
-                        ),
-                        const Divider(
-                          height: 0.5,
-                        ),
-                        SizedBox(height: 2.h),
-                        //ground name
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
+                          const Divider(
+                            height: 0.5,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Ground Name *",
-                                style: fontRegular.copyWith(
-                                    fontSize: 11.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                              SizedBox(height:1.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.5.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.lightColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                child: Center(
-                                  child: TextFormField(
-                                    controller: groundNameController,
-                                    cursorColor: AppColor.secondaryColor,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Enter ground name';
-                                      }
-                                      return null;
-                                    },
-                                    style: fontRegular.copyWith(
-                                        fontSize: 10.sp,
-                                        color: AppColor.textColor
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      border: InputBorder.none,
-                                      hintText: "Ex: Square out fighters",
-                                      hintStyle: fontRegular.copyWith(
+                          SizedBox(height: 2.h),
+                          //ground name
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Ground Name *",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Center(
+                                    child: TextFormField(
+                                      controller: groundNameController,
+                                      cursorColor: AppColor.secondaryColor,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Enter ground name';
+                                        }
+                                        return null;
+                                      },
+                                      style: fontRegular.copyWith(
                                           fontSize: 10.sp,
-                                          color: AppColor.hintColour
-                                      ),),
+                                          color: AppColor.textColor
+                                      ),
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: "Ex: Square out fighters",
+                                        hintStyle: fontRegular.copyWith(
+                                            fontSize: 10.sp,
+                                            color: AppColor.hintColour
+                                        ),),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        //ground mobile number
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Mobile Number *",
-                                style: fontRegular.copyWith(
-                                    fontSize: 11.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                              SizedBox(height:1.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.5.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.lightColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                child: Center(
-                                  child: TextFormField(
-                                    controller: groundMobileController,
-                                    cursorColor: AppColor.secondaryColor,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Enter mobile number';
-                                      }
-                                      return null;
-                                    },
-                                    style: fontRegular.copyWith(
-                                        fontSize: 10.sp,
-                                        color: AppColor.textColor
-                                    ),
-                                    keyboardType: TextInputType.phone,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      border: InputBorder.none,
-                                      hintText: "Ex: 9876546576",
-                                      hintStyle: fontRegular.copyWith(
+                          SizedBox(height: 2.h),
+                          //ground mobile number
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Ground Mobile Number *",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Center(
+                                    child: TextFormField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(10),
+                                      ],
+                                      controller: groundMobileController,
+                                      cursorColor: AppColor.secondaryColor,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Enter mobile number';
+                                        }
+                                        return null;
+                                      },
+                                      style: fontRegular.copyWith(
                                           fontSize: 10.sp,
-                                          color: AppColor.hintColour
-                                      ),),
+                                          color: AppColor.textColor
+                                      ),
+                                      keyboardType: TextInputType.phone,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: "Ex: 9876546576",
+                                        hintStyle: fontRegular.copyWith(
+                                            fontSize: 10.sp,
+                                            color: AppColor.hintColour
+                                        ),),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 2.h,
-                          ),
-                          child: Text("Personal Information",
-                            style: fontMedium.copyWith(
-                                color: AppColor.textColor,
-                                fontSize: 13.sp
-                            ),),
-                        ),
-                        const Divider(
-                          height: 0.5,
-                        ),
-                        SizedBox(height: 2.h),
-                        //organizer name
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Name *",
-                                style: fontRegular.copyWith(
-                                    fontSize: 11.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                              SizedBox(height:1.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.5.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.lightColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                child: Center(
-                                  child: TextFormField(
-                                    controller: nameController,
-                                    cursorColor: AppColor.secondaryColor,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Enter your name';
-                                      }
-                                      return null;
-                                    },
-                                    style: fontRegular.copyWith(
-                                        fontSize: 10.sp,
-                                        color: AppColor.textColor
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      border: InputBorder.none,
-                                      hintText: "Ex: John Doe",
-                                      hintStyle: fontRegular.copyWith(
+                          SizedBox(height: 2.h),
+                          //company name
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Company Name *",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Center(
+                                    child: TextFormField(
+                                      controller: companyNameController,
+                                      cursorColor: AppColor.secondaryColor,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Enter company name';
+                                        }
+                                        return null;
+                                      },
+                                      style: fontRegular.copyWith(
                                           fontSize: 10.sp,
-                                          color: AppColor.hintColour
-                                      ),),
+                                          color: AppColor.textColor
+                                      ),
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.done,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: "Ex: ABC Organizers",
+                                        hintStyle: fontRegular.copyWith(
+                                            fontSize: 10.sp,
+                                            color: AppColor.hintColour
+                                        ),),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        //organizer mobile number
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
+                          SizedBox(height: 2.h),
+                          LocationData(widget.ground.groundDetails, profile.organizerDetails, true),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                              vertical: 2.h,
+                            ),
+                            child: Text("Personal Information",
+                              style: fontMedium.copyWith(
+                                  color: AppColor.textColor,
+                                  fontSize: 13.sp
+                              ),),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Mobile Number *",
-                                style: fontRegular.copyWith(
-                                    fontSize: 11.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                              SizedBox(height:1.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.5.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.lightColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                child: Center(
-                                  child: TextFormField(
-                                    enabled: false,
-                                    controller: mobileNumberController,
-                                    cursorColor: AppColor.secondaryColor,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Enter mobile number';
-                                      }
-                                      return null;
-                                    },
-                                    style: fontRegular.copyWith(
-                                        fontSize: 10.sp,
-                                        color: AppColor.textColor
-                                    ),
-                                    keyboardType: TextInputType.phone,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      border: InputBorder.none,
-                                      hintText: "Ex: 9876546576",
-                                      hintStyle: fontRegular.copyWith(
+                          const Divider(
+                            height: 0.5,
+                          ),
+                          SizedBox(height: 2.h),
+                          //organizer name
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Name *",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Center(
+                                    child: TextFormField(
+                                      controller: nameController,
+                                      cursorColor: AppColor.secondaryColor,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Enter your name';
+                                        }
+                                        return null;
+                                      },
+                                      style: fontRegular.copyWith(
                                           fontSize: 10.sp,
-                                          color: AppColor.hintColour
-                                      ),),
+                                          color: AppColor.textColor
+                                      ),
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: "Ex: John Doe",
+                                        hintStyle: fontRegular.copyWith(
+                                            fontSize: 10.sp,
+                                            color: AppColor.hintColour
+                                        ),),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        //date of birth
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
+                          SizedBox(height: 2.h),
+                          //organizer mobile number
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Mobile Number *",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Center(
+                                    child: TextFormField(
+                                      enabled: false,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(10),
+                                      ],
+                                      controller: mobileNumberController,
+                                      cursorColor: AppColor.secondaryColor,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Enter mobile number';
+                                        }
+                                        return null;
+                                      },
+                                      style: fontRegular.copyWith(
+                                          fontSize: 10.sp,
+                                          color: AppColor.textColor
+                                      ),
+                                      keyboardType: TextInputType.phone,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: "Ex: 9876546576",
+                                        hintStyle: fontRegular.copyWith(
+                                            fontSize: 10.sp,
+                                            color: AppColor.hintColour
+                                        ),),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Date of Birth",
-                                style: fontRegular.copyWith(
-                                    fontSize: 11.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                              SizedBox(height:1.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.6.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.lightColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        date,
-                                        style: fontRegular.copyWith(
-                                            color: AppColor.textColor,
-                                            fontSize: 11.sp
+                          SizedBox(height: 2.h),
+                          //date of birth
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Date of Birth",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.6.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          date == "" ? "Select Date" : date,
+                                          style: fontRegular.copyWith(
+                                              color: date == "" ? AppColor.textMildColor : AppColor.textColor,
+                                              fontSize: 11.sp
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    InkWell(
-                                        onTap: () async {
-                                          final DateTime? picked = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(1950),
-                                            lastDate: DateTime(2100),
-                                            builder: (context, child) {
-                                              return Theme(
-                                                data: Theme.of(context).copyWith(
-                                                  useMaterial3: true,
-                                                  colorScheme: const ColorScheme.light(
-                                                    primary: AppColor.primaryColor,
-                                                    onPrimary: AppColor.textColor,
-                                                    onSurface: AppColor.textColor,
-                                                  ),
-                                                  textButtonTheme: TextButtonThemeData(
-                                                    style: TextButton.styleFrom(
-                                                      foregroundColor: AppColor.secondaryColor,
+                                      InkWell(
+                                          onTap: () async {
+                                            final DateTime? picked = await showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(1950),
+                                              lastDate: DateTime(2100),
+                                              builder: (context, child) {
+                                                return Theme(
+                                                  data: Theme.of(context).copyWith(
+                                                    useMaterial3: true,
+                                                    colorScheme: const ColorScheme.light(
+                                                      primary: AppColor.primaryColor,
+                                                      onPrimary: AppColor.textColor,
+                                                      onSurface: AppColor.textColor,
+                                                    ),
+                                                    textButtonTheme: TextButtonThemeData(
+                                                      style: TextButton.styleFrom(
+                                                        foregroundColor: AppColor.secondaryColor,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                child: child!,
-                                              );
-                                            },
-                                          );
+                                                  child: child!,
+                                                );
+                                              },
+                                            );
 
-                                          if (picked != null) {
-                                            setState(() {
-                                              date = DateFormat("dd-MM-yyyy").format(picked);
-                                            });
-                                          }
-                                        },
-                                        child: SvgPicture.asset(Images.calendarIcon, color: AppColor.textColor, width: 5.5.w,)),
-                                  ],
+                                            if (picked != null) {
+                                              setState(() {
+                                                date = DateFormat("dd-MM-yyyy").format(picked);
+                                              });
+                                            }
+                                          },
+                                          child: SvgPicture.asset(Images.calendarIcon, color: AppColor.textColor, width: 5.5.w,)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        //location
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Location",
-                                style: fontRegular.copyWith(
-                                    fontSize: 11.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                              SizedBox(height:1.h),
-                              Consumer<TeamProvider>(
-                                  builder: (context, team, child) {
-                                    return Container(
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 5.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColor.lightColor,
-                                        borderRadius: BorderRadius.circular(30.0),
-                                      ),
-                                      child: DropdownButton<String>(
-                                        underline: const SizedBox(),
-                                        isExpanded: true,
-                                        value: location,
-                                        style: fontRegular.copyWith(
-                                            color: AppColor.textColor
-                                        ),
-                                        items: team.cityList.map((date) {
-                                          return DropdownMenuItem<String>(
-                                            value: date.cityName,
-                                            child: Text(date.cityName.toString(),
-                                              style: fontRegular.copyWith(
-                                                  color: AppColor.textColor
-                                              ),),
-                                          );
-                                        }).toList(),
-                                        onChanged: (selectedDateId) {
-                                          // print(selectedDateId);
-                                          setState(() {
-                                            location = selectedDateId;
-                                          });
+                          SizedBox(height: 2.h),
+                          //location
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Text("Location",
+                                //   style: fontRegular.copyWith(
+                                //       fontSize: 11.sp,
+                                //       color: AppColor.textMildColor
+                                //   ),),
+                                // SizedBox(height:1.h),
+                                // Consumer<TeamProvider>(
+                                //     builder: (context, team, child) {
+                                //       return Container(
+                                //         width: double.infinity,
+                                //         padding: EdgeInsets.symmetric(
+                                //           horizontal: 5.w,
+                                //         ),
+                                //         decoration: BoxDecoration(
+                                //           color: AppColor.lightColor,
+                                //           borderRadius: BorderRadius.circular(30.0),
+                                //         ),
+                                //         child: DropdownButton<String>(
+                                //           underline: const SizedBox(),
+                                //           isExpanded: true,
+                                //           value: location,
+                                //           style: fontRegular.copyWith(
+                                //               color: AppColor.textColor
+                                //           ),
+                                //           items: team.cityList.map((date) {
+                                //             return DropdownMenuItem<String>(
+                                //               value: date.id.toString(),
+                                //               child: Text(date.cityName.toString(),
+                                //                 style: fontRegular.copyWith(
+                                //                     color: AppColor.textColor
+                                //                 ),),
+                                //             );
+                                //           }).toList(),
+                                //           onChanged: (selectedDateId) {
+                                //             // print(selectedDateId);
+                                //             setState(() {
+                                //               location = selectedDateId;
+                                //             });
+                                //           },
+                                //         ),
+                                //       );
+                                //     }
+                                // ),
+
+                                const FieldHeading("State"),
+                                SizedBox(height:1.h),
+                                Consumer<TeamProvider>(
+                                    builder: (context, team, child) {
+                                      return InkWell(
+                                        onTap: (){
+                                          getStateList();
+                                          openStateSheet();
                                         },
-                                      ),
-                                    );
-                                  }
-                              ),
-                            ],
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 1.2.h
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.lightColor,
+                                            borderRadius: BorderRadius.circular(30.0),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(team.state,
+                                                style: fontRegular.copyWith(
+                                                    color: AppColor.textColor
+                                                ),),
+                                              const Spacer(),
+                                              const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                ),
+                                SizedBox(height: 2.h),
+                                const FieldHeading("City"),
+                                SizedBox(height:1.h),
+                                Consumer<TeamProvider>(
+                                    builder: (context, team, child) {
+                                      return InkWell(
+                                        onTap: (){
+                                          openCitySheet(team.stateId);
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 1.2.h
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.lightColor,
+                                            borderRadius: BorderRadius.circular(30.0),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(team.stateBasedCity,
+                                                style: fontRegular.copyWith(
+                                                    color: AppColor.textColor
+                                                ),),
+                                              const Spacer(),
+                                              const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 5.w,
-                    vertical: 2.h,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    child: loading
+                      ? const Center(child: CircularProgressIndicator(),)
+                    : Bounceable(
+                        onTap: (){
+                          validate();
+                        },
+                        child: const CustomButton(AppColor.textColor, "Save Profile", AppColor.lightColor)),
                   ),
-                  child: loading
-                    ? const Center(child: CircularProgressIndicator(),)
-                  : Bounceable(
-                      onTap: (){
-                        validate();
-                      },
-                      child: const CustomButton(AppColor.textColor, "Save Profile", AppColor.lightColor)),
-                ),
-              ],
-            );
-          }
+                ],
+              );
+            }
+          ),
         ),
       ),
     );
   }
 
   validate(){
+    String address = Provider.of<ProfileProvider>(context, listen: false).address;
+    String houseNo = Provider.of<ProfileProvider>(context, listen: false).houseNo;
+    String pinCode = Provider.of<ProfileProvider>(context, listen: false).pinCode;
+    String street = Provider.of<ProfileProvider>(context, listen: false).street;
+    String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
+    String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
     if (_formKey.currentState!.validate()) {
       setState(() {
         loading = true;
@@ -483,10 +660,11 @@ class _ProfileState extends State<Profile> {
           groundMobileController.text.toString(),
           nameController.text.toString(),
           date == "" ? "" : date,
-          location.toString() == "null" ? "" : location.toString())
+          location.toString() == "null" ? "" : location.toString(),
+          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street)
       .then((value) {
         if(value.status == true){
-          Dialogs.snackbar(value.message.toString(), context, isError: false);
+          Dialogs.snackbar("Profile updated successfully", context, isError: false);
           Navigator.pop(context);
           setState(() {
             loading = false;
@@ -502,6 +680,12 @@ class _ProfileState extends State<Profile> {
           });
         }
       });
+    } else{
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
     }
   }
 

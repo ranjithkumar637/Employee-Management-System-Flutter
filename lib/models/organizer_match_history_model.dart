@@ -1,3 +1,5 @@
+import 'package:elevens_organizer/main.dart';
+
 class OrganizerMatchHistoryModel {
   bool? status;
   String? message;
@@ -31,6 +33,8 @@ class OrganizerMatchHistoryModel {
 class MatchHistoryList {
   int? id;
   String? groundImage;
+  String? mainImage;
+  String? organizerName;
   String? groundName;
   String? teamAName;
   String? teamBName;
@@ -42,6 +46,8 @@ class MatchHistoryList {
   MatchHistoryList(
       {id,
         groundImage,
+        organizerName,
+        mainImage,
         groundName,
         teamAName,
         teamBName,
@@ -53,6 +59,8 @@ class MatchHistoryList {
   MatchHistoryList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     groundImage = json['ground_image'];
+    mainImage = json['main_image'];
+    organizerName = json['organizer_name'];
     groundName = json['ground_name'];
     teamAName = json['team_a_name'];
     teamBName = json['team_b_name'];
@@ -66,6 +74,8 @@ class MatchHistoryList {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['ground_image'] = groundImage;
+    data['main_image'] = mainImage;
+    data['organizer_name'] = organizerName;
     data['ground_name'] = groundName;
     data['team_a_name'] = teamAName;
     data['team_b_name'] = teamBName;

@@ -120,23 +120,30 @@ class _TeamDetailDataState extends State<TeamDetailData> {
                             ),),
                         ),
                         SizedBox(height:2.h),
-                        const FieldHeading("Secondary Number", false),
-                        SizedBox(height:1.h),
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Text(teamSecMobile,
-                            style: fontRegular.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.textColor
-                            ),),
+                        teamSecMobile == ""
+                        ? const SizedBox()
+                        : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const FieldHeading("Secondary Number", false),
+                            SizedBox(height:1.h),
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Text(teamSecMobile,
+                                style: fontRegular.copyWith(
+                                    fontSize: 10.sp,
+                                    color: AppColor.textColor
+                                ),),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -209,23 +216,30 @@ class _TeamDetailDataState extends State<TeamDetailData> {
                             ),),
                         ),
                         SizedBox(height:2.h),
-                        const FieldHeading("Secondary Number", false),
-                        SizedBox(height:1.h),
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Text(capSecMobile,
-                            style: fontRegular.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.textColor
-                            ),),
+                        capSecMobile == ""
+                        ? const SizedBox()
+                        : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const FieldHeading("Secondary Number", false),
+                            SizedBox(height:1.h),
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Text(capSecMobile,
+                                style: fontRegular.copyWith(
+                                    fontSize: 10.sp,
+                                    color: AppColor.textColor
+                                ),),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -298,23 +312,30 @@ class _TeamDetailDataState extends State<TeamDetailData> {
                             ),),
                         ),
                         SizedBox(height:2.h),
-                        const FieldHeading("Secondary Number", false),
-                        SizedBox(height:1.h),
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Text(vcSecMobile,
-                            style: fontRegular.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.textColor
-                            ),),
+                        vcSecMobile == ""
+                        ? const SizedBox()
+                        : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const FieldHeading("Secondary Number", false),
+                            SizedBox(height:1.h),
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Text(vcSecMobile,
+                                style: fontRegular.copyWith(
+                                    fontSize: 10.sp,
+                                    color: AppColor.textColor
+                                ),),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -323,12 +344,16 @@ class _TeamDetailDataState extends State<TeamDetailData> {
               ),
             ),
           ),
-          Padding(
+          adminName == "" && adminMobile == "" && adminSecMobile == ""
+              ? const SizedBox()
+              : Padding(
             padding: EdgeInsets.symmetric(vertical: 1.h),
             child: const Divider(thickness: 1.0,),
           ),
           //admin
-          SizedBox(
+          adminName == "" && adminMobile == "" && adminSecMobile == ""
+          ? const SizedBox()
+          : SizedBox(
             width: double.infinity,
             child: Theme(
               data: Theme.of(context).copyWith(
@@ -360,62 +385,86 @@ class _TeamDetailDataState extends State<TeamDetailData> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const FieldHeading("Name", false),
-                        SizedBox(height:1.h),
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Text(adminName,
-                            style: fontRegular.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.textColor
-                            ),),
+                        adminName == ""
+                            ? const SizedBox()
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const FieldHeading("Name", false),
+                            SizedBox(height:1.h),
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Text(adminName,
+                                style: fontRegular.copyWith(
+                                    fontSize: 10.sp,
+                                    color: AppColor.textColor
+                                ),),
+                            ),
+                            SizedBox(height:2.h),
+                          ],
                         ),
-                        SizedBox(height:2.h),
-                        const FieldHeading("Mobile Number", false),
-                        SizedBox(height:1.h),
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Text(adminMobile,
-                            style: fontRegular.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.textColor
-                            ),),
+
+                        adminMobile == ""
+                            ? const SizedBox()
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const FieldHeading("Mobile Number", false),
+                            SizedBox(height:1.h),
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Text(adminMobile,
+                                style: fontRegular.copyWith(
+                                    fontSize: 10.sp,
+                                    color: AppColor.textColor
+                                ),),
+                            ),
+                            SizedBox(height:2.h),
+                          ],
                         ),
-                        SizedBox(height:2.h),
-                        const FieldHeading("Secondary Number", false),
-                        SizedBox(height:1.h),
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Text(adminSecMobile,
-                            style: fontRegular.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.textColor
-                            ),),
+
+                        adminSecMobile == ""
+                        ? const SizedBox()
+                        : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const FieldHeading("Secondary Number", false),
+                            SizedBox(height:1.h),
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Text(adminSecMobile,
+                                style: fontRegular.copyWith(
+                                    fontSize: 10.sp,
+                                    color: AppColor.textColor
+                                ),),
+                            ),
+                          ],
                         ),
+
                       ],
                     ),
                   ),

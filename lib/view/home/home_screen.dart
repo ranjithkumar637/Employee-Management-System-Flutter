@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.5.w,)),
                             SizedBox(height: 2.h),
-                            Bounceable(
+                            profile.organizerDetails.adminApprove == 1 ? Bounceable(
                               onTap: (){
                                 showReferralCode();
                               },
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                               ),
-                            ),
+                            ) : const SizedBox(),
                           ],
                         ),
                       ],

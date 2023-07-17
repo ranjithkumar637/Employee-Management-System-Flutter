@@ -8,6 +8,9 @@ import 'package:elevens_organizer/view/address/add_address.dart';
 import 'package:elevens_organizer/view/auth/login_screen.dart';
 import 'package:elevens_organizer/view/auth/register_screen.dart';
 import 'package:elevens_organizer/view/menu/menu_screen.dart';
+import 'package:elevens_organizer/view/more/block_slot_date.dart';
+import 'package:elevens_organizer/view/more/request_player.dart';
+import 'package:elevens_organizer/view/my_bookings/bookings.dart';
 import 'package:elevens_organizer/view/my_matches/my_matches.dart';
 import 'package:elevens_organizer/view/my_team/create_team.dart';
 import 'package:elevens_organizer/view/notification/notifications_screen.dart';
@@ -70,6 +73,9 @@ class MyApp extends StatelessWidget {
               'edit_profile': (context) => const EditProfile(),
               'add_address': (context) => const AddAddress(),
               'payment_information': (context) => const PaymentInformation(),
+              'my_bookings': (context) => const MyBookings(),
+              'block_slot_date': (context) => const BlockSlotDate(),
+              'request_player': (context) => const RequestPlayer(),
             },
           );
         }

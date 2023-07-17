@@ -6,6 +6,7 @@ import 'package:elevens_organizer/models/organizer_match_history_model.dart';
 import 'package:elevens_organizer/models/profile_model.dart';
 import 'package:elevens_organizer/models/profile_update_model.dart';
 import 'package:elevens_organizer/models/response_model.dart';
+import 'package:elevens_organizer/models/upcoming_matches_list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -20,14 +21,17 @@ class ProfileProvider extends ChangeNotifier{
 
   ProfileModel profileModel = ProfileModel();
   OrganizerDetails organizerDetails = OrganizerDetails();
-  String name = "", mobile = "", email = "";
+  String name = "", mobile = "", email = "", dob = "";
   String getName() => name;
   String getMobile() => mobile;
   String getEmail() => email;
+  String getDob() => dob;
 
   ProfileUpdateModel profileUpdateModel = ProfileUpdateModel();
 
   ResponseModel responseModel = ResponseModel();
+  UpcomingMatchesListModel upcomingMatchesListModel = UpcomingMatchesListModel();
+  List<UpcomingMatch> upcomingMatch = [];
 
   GroundDetailsModel groundDetailsModel = GroundDetailsModel();
   GroundDetails groundDetails = GroundDetails();
@@ -38,6 +42,10 @@ class ProfileProvider extends ChangeNotifier{
   String pitch = "", boundaryLine = "";
   int floodLight = 0;
   String description = "";
+  String address = "", street = "";
+  String houseNo = "", pinCode = "";
+  String latitude = "", longitude = "";
+  String mainImg = "";
 
   //save ground information locally
   saveGroundInfo(String value1, String value2, int value3){
@@ -65,8 +73,19 @@ class ProfileProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  //save ground address locally
+  void saveGroundAddress(String streetData, String subLocality, String locality, String pin, String lat, String long, String houseNumber) {
+    print(streetData);
+    address = "$streetData, $subLocality, $locality, $pin";
+    latitude = lat;
+    street = streetData;
+    houseNo = houseNumber;
+    pinCode = pin;
+    longitude = long;
+    notifyListeners();
+  }
 
-  //captain match history list
+  //organizer match history list
   Future<List<MatchHistoryList>> getOrganizerMatchHistoryList() async {
     matchHistoryList = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -103,6 +122,43 @@ class ProfileProvider extends ChangeNotifier{
     return matchHistoryList;
   }
 
+  //organizer upcoming matches list
+  Future<List<UpcomingMatch>> getOrganizerUpcomingMatchList() async {
+    upcomingMatch = [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    try {
+      final response = await http.get(
+        Uri.parse(AppConstants.organizerUpcomingMatchesList),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        upcomingMatchesListModel = UpcomingMatchesListModel.fromJson(decodedJson);
+        for (var data in decodedJson['upcoming_match']) {
+          upcomingMatch.add(UpcomingMatch.fromJson(data));
+          notifyListeners();
+        }
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('organizer UpcomingMatch list - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return upcomingMatch;
+  }
+
   //get profile
   getProfile() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -124,6 +180,7 @@ class ProfileProvider extends ChangeNotifier{
         name = organizerDetails.name.toString();
         email = organizerDetails.email.toString();
         mobile = organizerDetails.mobile.toString();
+        dob = organizerDetails.dob.toString();
         notifyListeners();
       } else {
         throw const HttpException('Failed to load data');
@@ -140,17 +197,26 @@ class ProfileProvider extends ChangeNotifier{
     return profileModel;
   }
 
-  Future<ProfileUpdateModel> updateProfile(String groundName, String groundContact, String name, String dob, String location) async {
+  Future<ProfileUpdateModel> updateProfile(String groundName, String groundContact, String name, String dob, String location, String companyName,
+      String latitude, String longitude, String address, String houseNo, String pinCode, String streetName) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
-    print("$groundName $groundContact $name $dob $location");
+    print("$groundName $groundContact $name $dob $location $companyName");
+    print("$latitude $longitude $address $houseNo $pinCode $streetName");
     var body = jsonEncode({
       'ground_name': groundName,
       'ground_contact_number': groundContact,
+      'latitude': latitude,
+      'company_name': companyName,
+      'longitude': longitude,
+      'address': address,
+      'house_no': houseNo,
+      'pincode': pinCode,
+      'street_name': streetName,
       'name': name,
       'dob': dob,
-      'location': location,
+      'location': location == "" ? "" : int.parse(location),
     });
     try {
       final response = await http.post(
@@ -199,11 +265,26 @@ class ProfileProvider extends ChangeNotifier{
       print(decodedJson);
       if (response.statusCode == 200) {
         groundDetailsModel = GroundDetailsModel.fromJson(decodedJson);
-        groundDetails = GroundDetails.fromJson(decodedJson['ground_details']);
-        pitch = groundDetails.pitch.toString();
-        boundaryLine = groundDetails.boundaryLine.toString();
-        floodLight = int.parse(groundDetails.floodLight.toString());
-        description = groundDetails.description.toString();
+        if(decodedJson['ground_details'] is List){
+          groundDetails = GroundDetails();
+          notifyListeners();
+        } else if(decodedJson['ground_details'] is Map){
+          groundDetails = GroundDetails.fromJson(decodedJson['ground_details']);
+          pitch = groundDetails.pitch.toString();
+          boundaryLine = groundDetails.boundaryLine.toString();
+          floodLight = int.parse(groundDetails.floodLight.toString());
+          description = groundDetails.description.toString();
+          address = groundDetails.address.toString();
+          street = groundDetails.streetName.toString();
+          houseNo = groundDetails.houseNo.toString();
+          pinCode = groundDetails.pincode.toString();
+          latitude = groundDetails.latitude.toString();
+          longitude = groundDetails.longitude.toString();
+          mainImg = groundDetails.mainImage.toString();
+          print(mainImg);
+          notifyListeners();
+        }
+
         for (var data in decodedJson['ground_details']['gallery_image']) {
           groundImages.add(data);
           notifyListeners();
@@ -226,7 +307,8 @@ class ProfileProvider extends ChangeNotifier{
 
   //update ground details
   Future<ResponseModel> updateGroundDetails(String description, List<String> main, List<String> gallery,
-      String houseNo, String floodLight, String address, String pinCode, String latitude, String longitude, String pitch, String boundaryLine) async{
+      String houseNo, String floodLight, String address, String pinCode, String latitude, String longitude, String pitch, String boundaryLine, String streetName) async{
+    print("$description $houseNo $floodLight $address $pinCode $latitude $longitude  $pitch $boundaryLine $streetName");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
@@ -241,6 +323,7 @@ class ProfileProvider extends ChangeNotifier{
     List<http.MultipartFile> newList = [];
 
     for (var img in main) {
+      print(img.split('/').last);
       if (img != "") {
         var multipartFile = await http.MultipartFile.fromPath(
           'main_image',
@@ -271,6 +354,7 @@ class ProfileProvider extends ChangeNotifier{
     request.fields['pincode'] = pinCode;
     request.fields['latitude'] = latitude;
     request.fields['longitude'] = longitude;
+    request.fields['street_name'] = streetName;
 
     final res = await request.send();
     final reStr = await res.stream.bytesToString();

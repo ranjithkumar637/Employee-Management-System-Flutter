@@ -79,7 +79,7 @@ class _CreateTeamState extends State<CreateTeam> {
     });
   }
 
-  File? imageFile = File("");
+  File? imageFile;
 
   openCameraStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
@@ -226,7 +226,8 @@ class _CreateTeamState extends State<CreateTeam> {
                     top: 12.h,
                     child: Stack(
                       children: [
-                        Container(
+                        imageFile != null
+                            ? Container(
                           height: 15.h,
                           width: 30.w,
                           decoration: BoxDecoration(
@@ -237,7 +238,17 @@ class _CreateTeamState extends State<CreateTeam> {
                                   fit: BoxFit.cover,
                                   image: FileImage(imageFile!))
                           ),
-                        ),
+                        ) : Container(
+                            height: 15.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: AppColor.imageBorderColor, width: 2),
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                image: const DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(Images.createTeamBg))
+                            )),
                         Positioned(
                           bottom: 0.0,
                           right: 0.0,
@@ -559,45 +570,45 @@ class _CreateTeamState extends State<CreateTeam> {
                                       ),
                                     ),
                                     SizedBox(height: 2.h),
-                                    const FieldHeading("Location *"),
-                                    SizedBox(height:1.h),
-                                    Consumer<TeamProvider>(
-                                      builder: (context, team, child) {
-                                        return Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColor.lightColor,
-                                            borderRadius: BorderRadius.circular(30.0),
-                                          ),
-                                          child: DropdownButton<String>(
-                                            underline: const SizedBox(),
-                                            isExpanded: true,
-                                            value: captainCity,
-                                            style: fontRegular.copyWith(
-                                              color: AppColor.textColor
-                                            ),
-                                            items: team.cityList.map((date) {
-                                              return DropdownMenuItem<String>(
-                                                value: date.cityName,
-                                                child: Text(date.cityName.toString(),
-                                                style: fontRegular.copyWith(
-                                                  color: AppColor.textColor
-                                                ),),
-                                              );
-                                            }).toList(),
-                                            onChanged: (selectedDateId) {
-                                              // print(selectedDateId);
-                                              setState(() {
-                                                captainCity = selectedDateId;
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      }
-                                    ),
+                                    // const FieldHeading("Location *"),
+                                    // SizedBox(height:1.h),
+                                    // Consumer<TeamProvider>(
+                                    //   builder: (context, team, child) {
+                                    //     return Container(
+                                    //       width: double.infinity,
+                                    //       padding: EdgeInsets.symmetric(
+                                    //         horizontal: 5.w,
+                                    //       ),
+                                    //       decoration: BoxDecoration(
+                                    //         color: AppColor.lightColor,
+                                    //         borderRadius: BorderRadius.circular(30.0),
+                                    //       ),
+                                    //       child: DropdownButton<String>(
+                                    //         underline: const SizedBox(),
+                                    //         isExpanded: true,
+                                    //         value: captainCity,
+                                    //         style: fontRegular.copyWith(
+                                    //           color: AppColor.textColor
+                                    //         ),
+                                    //         items: team.cityList.map((date) {
+                                    //           return DropdownMenuItem<String>(
+                                    //             value: date.cityName,
+                                    //             child: Text(date.cityName.toString(),
+                                    //             style: fontRegular.copyWith(
+                                    //               color: AppColor.textColor
+                                    //             ),),
+                                    //           );
+                                    //         }).toList(),
+                                    //         onChanged: (selectedDateId) {
+                                    //           // print(selectedDateId);
+                                    //           setState(() {
+                                    //             captainCity = selectedDateId;
+                                    //           });
+                                    //         },
+                                    //       ),
+                                    //     );
+                                    //   }
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -750,45 +761,45 @@ class _CreateTeamState extends State<CreateTeam> {
                                       ),
                                     ),
                                     SizedBox(height: 2.h),
-                                    const FieldHeading("Location *"),
-                                    SizedBox(height:1.h),
-                                    Consumer<TeamProvider>(
-                                        builder: (context, team, child) {
-                                          return Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: AppColor.lightColor,
-                                              borderRadius: BorderRadius.circular(30.0),
-                                            ),
-                                            child: DropdownButton<String>(
-                                              underline: const SizedBox(),
-                                              isExpanded: true,
-                                              value: viceCaptainCity,
-                                              style: fontRegular.copyWith(
-                                                  color: AppColor.textColor
-                                              ),
-                                              items: team.cityList.map((date) {
-                                                return DropdownMenuItem<String>(
-                                                  value: date.cityName,
-                                                  child: Text(date.cityName.toString(),
-                                                    style: fontRegular.copyWith(
-                                                        color: AppColor.textColor
-                                                    ),),
-                                                );
-                                              }).toList(),
-                                              onChanged: (selectedDateId) {
-                                                // print(selectedDateId);
-                                                setState(() {
-                                                  viceCaptainCity = selectedDateId;
-                                                });
-                                              },
-                                            ),
-                                          );
-                                        }
-                                    ),
+                                    // const FieldHeading("Location *"),
+                                    // SizedBox(height:1.h),
+                                    // Consumer<TeamProvider>(
+                                    //     builder: (context, team, child) {
+                                    //       return Container(
+                                    //         width: double.infinity,
+                                    //         padding: EdgeInsets.symmetric(
+                                    //           horizontal: 5.w,
+                                    //         ),
+                                    //         decoration: BoxDecoration(
+                                    //           color: AppColor.lightColor,
+                                    //           borderRadius: BorderRadius.circular(30.0),
+                                    //         ),
+                                    //         child: DropdownButton<String>(
+                                    //           underline: const SizedBox(),
+                                    //           isExpanded: true,
+                                    //           value: viceCaptainCity,
+                                    //           style: fontRegular.copyWith(
+                                    //               color: AppColor.textColor
+                                    //           ),
+                                    //           items: team.cityList.map((date) {
+                                    //             return DropdownMenuItem<String>(
+                                    //               value: date.cityName,
+                                    //               child: Text(date.cityName.toString(),
+                                    //                 style: fontRegular.copyWith(
+                                    //                     color: AppColor.textColor
+                                    //                 ),),
+                                    //             );
+                                    //           }).toList(),
+                                    //           onChanged: (selectedDateId) {
+                                    //             // print(selectedDateId);
+                                    //             setState(() {
+                                    //               viceCaptainCity = selectedDateId;
+                                    //             });
+                                    //           },
+                                    //         ),
+                                    //       );
+                                    //     }
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -938,72 +949,72 @@ class _CreateTeamState extends State<CreateTeam> {
                                       ),
                                     ),
                                     SizedBox(height: 2.h),
-                                    const FieldHeading("State"),
-                                    SizedBox(height:1.h),
-                                    Consumer<TeamProvider>(
-                                        builder: (context, team, child) {
-                                          return InkWell(
-                                            onTap: (){
-                                              getStateList();
-                                              openStateSheet();
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.2.h
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: AppColor.lightColor,
-                                                borderRadius: BorderRadius.circular(30.0),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(team.state,
-                                                    style: fontRegular.copyWith(
-                                                    color: AppColor.textColor
-                                                    ),),
-                                                  const Spacer(),
-                                                  const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                    ),
-                                    SizedBox(height: 2.h),
-                                    const FieldHeading("City"),
-                                    SizedBox(height:1.h),
-                                    Consumer<TeamProvider>(
-                                        builder: (context, team, child) {
-                                          return InkWell(
-                                            onTap: (){
-                                              openCitySheet(team.stateId);
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.2.h
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: AppColor.lightColor,
-                                                borderRadius: BorderRadius.circular(30.0),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(team.stateBasedCity,
-                                                    style: fontRegular.copyWith(
-                                                        color: AppColor.textColor
-                                                    ),),
-                                                  const Spacer(),
-                                                  const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                    ),
+                                    // const FieldHeading("State"),
+                                    // SizedBox(height:1.h),
+                                    // Consumer<TeamProvider>(
+                                    //     builder: (context, team, child) {
+                                    //       return InkWell(
+                                    //         onTap: (){
+                                    //           getStateList();
+                                    //           openStateSheet();
+                                    //         },
+                                    //         child: Container(
+                                    //           width: double.infinity,
+                                    //           padding: EdgeInsets.symmetric(
+                                    //             horizontal: 5.w,
+                                    //             vertical: 1.2.h
+                                    //           ),
+                                    //           decoration: BoxDecoration(
+                                    //             color: AppColor.lightColor,
+                                    //             borderRadius: BorderRadius.circular(30.0),
+                                    //           ),
+                                    //           child: Row(
+                                    //             children: [
+                                    //               Text(team.state,
+                                    //                 style: fontRegular.copyWith(
+                                    //                 color: AppColor.textColor
+                                    //                 ),),
+                                    //               const Spacer(),
+                                    //               const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
+                                    //             ],
+                                    //           ),
+                                    //         ),
+                                    //       );
+                                    //     }
+                                    // ),
+                                    // SizedBox(height: 2.h),
+                                    // const FieldHeading("City"),
+                                    // SizedBox(height:1.h),
+                                    // Consumer<TeamProvider>(
+                                    //     builder: (context, team, child) {
+                                    //       return InkWell(
+                                    //         onTap: (){
+                                    //           openCitySheet(team.stateId);
+                                    //         },
+                                    //         child: Container(
+                                    //           width: double.infinity,
+                                    //           padding: EdgeInsets.symmetric(
+                                    //             horizontal: 5.w,
+                                    //             vertical: 1.2.h
+                                    //           ),
+                                    //           decoration: BoxDecoration(
+                                    //             color: AppColor.lightColor,
+                                    //             borderRadius: BorderRadius.circular(30.0),
+                                    //           ),
+                                    //           child: Row(
+                                    //             children: [
+                                    //               Text(team.stateBasedCity,
+                                    //                 style: fontRegular.copyWith(
+                                    //                     color: AppColor.textColor
+                                    //                 ),),
+                                    //               const Spacer(),
+                                    //               const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
+                                    //             ],
+                                    //           ),
+                                    //         ),
+                                    //       );
+                                    //     }
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -1154,6 +1165,10 @@ class _CreateTeamState extends State<CreateTeam> {
   }
 
   validate(){
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
     String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
     String capName = Provider.of<TeamProvider>(context, listen: false).captainName;
     String capId = Provider.of<TeamProvider>(context, listen: false).captainId;
@@ -1165,11 +1180,13 @@ class _CreateTeamState extends State<CreateTeam> {
         Dialogs.snackbar("Upload team logo image", context, isError: true);
       } else if(qrcode.isEmpty){
         Dialogs.snackbar("Upload qr code image", context, isError: true);
-      } else if(captainCity == "" || captainCity == null){
-        Dialogs.snackbar("Choose captain city", context, isError: true);
-      } else if(viceCaptainCity == "" || viceCaptainCity == null){
-        Dialogs.snackbar("Choose vice captain city", context, isError: true);
-      }else{
+      }
+      // else if(captainCity == "" || captainCity == null){
+      //   Dialogs.snackbar("Choose captain city", context, isError: true);
+      // } else if(viceCaptainCity == "" || viceCaptainCity == null){
+      //   Dialogs.snackbar("Choose vice captain city", context, isError: true);
+      // }
+      else{
         setState(() {
           loading = true;
         });

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elevens_organizer/view/my_team/team_detail_data.dart';
 import 'package:elevens_organizer/view/my_team/team_detail_player_list.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,14 @@ import 'package:sizer/sizer.dart';
 
 import '../../providers/booking_provider.dart';
 import '../../providers/team_provider.dart';
+import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class TeamDetail extends StatefulWidget {
-  final String teamId, teamName;
-  const TeamDetail(this.teamId, this.teamName, {Key? key}) : super(key: key);
+  final String teamId, teamName, logo;
+  const TeamDetail(this.teamId, this.teamName, this.logo, {Key? key}) : super(key: key);
 
   @override
   State<TeamDetail> createState() => _TeamDetailState();
@@ -135,7 +137,23 @@ class _TeamDetailState extends State<TeamDetail> with SingleTickerProviderStateM
                     top: 10.h,
                     child: Column(
                       children: [
-                        Container(
+                        widget.logo != ""
+                        ? Container(
+                            height: 13.h,
+                            width: 28.w,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.imageBorderColor, width: 2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${widget.logo}",
+                                fit: BoxFit.cover,
+                                errorWidget:(context, url, error) =>
+                                    Image.asset(Images.createTeamBg, fit: BoxFit.cover,),
+                              ),
+                            )
+                        ) : Container(
                           height: 13.h,
                           width: 26.w,
                           decoration: BoxDecoration(
@@ -144,21 +162,17 @@ class _TeamDetailState extends State<TeamDetail> with SingleTickerProviderStateM
                               color: Colors.white,
                               image: const DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage(Images.teamTopImage))
+                                  image: AssetImage(Images.createTeamBg))
                           ),
                         ),
                         SizedBox(height: 2.h),
-                        Positioned(
-                          left: 10.w,
-                          right: 10.w,
-                          child: Center(
-                            child: Text(widget.teamName,
-                              overflow: TextOverflow.ellipsis,
-                              style: fontBold.copyWith(
-                                  fontSize: 16.sp,
-                                  color: AppColor.lightColor
-                              ),),
-                          ),
+                        Center(
+                          child: Text(widget.teamName,
+                            overflow: TextOverflow.ellipsis,
+                            style: fontBold.copyWith(
+                                fontSize: 16.sp,
+                                color: AppColor.lightColor
+                            ),),
                         ),
                       ],
                     ),

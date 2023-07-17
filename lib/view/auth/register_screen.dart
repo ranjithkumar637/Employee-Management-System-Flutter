@@ -347,21 +347,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Text("Company Name",
-                                  style: fontRegular.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.textColor
-                                  ),),
-                                const Spacer(),
-                                Text("(Optional)",
-                                  style: fontRegular.copyWith(
-                                      fontSize: 8.sp,
-                                      color: AppColor.textMildColor
-                                  ),),
-                              ],
-                            ),
+                            Text("Company Name *",
+                              style: fontRegular.copyWith(
+                                  fontSize: 10.sp,
+                                  color: AppColor.textColor
+                              ),),
                             SizedBox(height:1.h),
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -380,6 +370,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       fontSize: 10.sp,
                                       color: AppColor.textColor
                                   ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Enter company name';
+                                    }
+                                    return null;
+                                  },
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.done,
                                   decoration: InputDecoration(

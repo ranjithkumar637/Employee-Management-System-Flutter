@@ -42,7 +42,11 @@ class _InformationState extends State<Information> {
                   //ground information
                   GroundInformation(widget.ground),
                   //location
-                  LocationData(widget.ground),
+                  // Consumer<ProfileProvider>(
+                  //   builder: (context, profile, child) {
+                  //     return LocationData(widget.ground.groundDetails, profile.organizerDetails, false);
+                  //   }
+                  // ),
                   //about
                   About(widget.ground),
                 ],
@@ -71,20 +75,29 @@ class _InformationState extends State<Information> {
     String description = Provider.of<ProfileProvider>(context, listen: false).description;
     String pitch = Provider.of<ProfileProvider>(context, listen: false).pitch;
     String boundaryLine = Provider.of<ProfileProvider>(context, listen: false).boundaryLine;
+    String address = Provider.of<ProfileProvider>(context, listen: false).address;
+    String houseNo = Provider.of<ProfileProvider>(context, listen: false).houseNo;
+    String pinCode = Provider.of<ProfileProvider>(context, listen: false).pinCode;
+    String street = Provider.of<ProfileProvider>(context, listen: false).street;
+    String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
+    String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
     int floodLight = Provider.of<ProfileProvider>(context, listen: false).floodLight;
     List<String> gallery = Provider.of<ProfileProvider>(context, listen: false).newGroundImages;
     List<String> mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;
+    int i = 0;
+    print(mainImg[i].toString());
     setState(() {
       loading = true;
     });
 
-    ProfileProvider().updateGroundDetails(description, mainImg, gallery, "14/S1", floodLight.toString(), "Near saravana stores, Chrompet", "600044", "12.9516", "80.1462", pitch, boundaryLine)
+    ProfileProvider().updateGroundDetails(description, mainImg, gallery, houseNo, floodLight.toString(), address, pinCode, latitude, longitude, pitch, boundaryLine, street)
         .then((value){
           if(value.status == true){
             Dialogs.snackbar(value.message.toString(), context, isError: false);
             setState(() {
               loading = false;
             });
+            Navigator.pop(context);
           } else if(value.status == false){
             setState(() {
               loading = false;

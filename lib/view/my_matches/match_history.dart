@@ -186,12 +186,12 @@ class _MatchHistoryState extends State<MatchHistory> {
 
                           },
                           child: BattlesList(
-                              matchHistoryList[index].groundImage.toString(),
+                              matchHistoryList[index].mainImage.toString(),
                               '${matchHistoryList[index].teamAName.toString()} vs ${matchHistoryList[index].teamBName.toString()}',
                               matchHistoryList[index].bookingDate.toString(),
                               matchHistoryList[index].bookingSlotStart.toString(),
                               matchHistoryList[index].groundName.toString(),
-                            "JK organizers",
+                            matchHistoryList[index].organizerName.toString(),
                           ),
                         );
                       },

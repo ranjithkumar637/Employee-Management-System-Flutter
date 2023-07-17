@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/upcoming_matches_list_model.dart';
+import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
@@ -16,49 +18,52 @@ class UpcomingBattle extends StatefulWidget {
 
 class _UpcomingBattleState extends State<UpcomingBattle> {
 
-  bool noMatches = false;
+  Future<List<UpcomingMatch>>? futureData;
+  List<UpcomingMatch> upcomingMatchList = [];
+  String firstDate = "";
+  String lastDate = "";
+  bool loading = false;
 
-  List<Map<String, dynamic>> battles = [
-    {
-      "image": Images.groundImage,
-      "battle_name": "Toss & Tails vs TBA",
-      "date": "Aug 21, 2023",
-      "time": "07:00 AM",
-      'organizer': "JK Organizers",
-      "ground_location": "Square out fighters"
-    },
-    {
-      "image": Images.groundImage,
-      "battle_name": "Toss & Tails vs Dhoni CC",
-      "date": "Aug 21, 2023",
-      "time": "07:00 PM",
-      'organizer': "JK Organizers",
-      "ground_location": "Square out fighters"
-    },
-    {
-      "image": Images.groundImage,
-      "battle_name": "Toss & Tails vs TBA",
-      "date": "Aug 21, 2023",
-      "time": "07:00 AM",
-      'organizer': "JK Organizers",
-      "ground_location": "Square out fighters"
-    },
-    {
-      "image": Images.groundImage,
-      "battle_name": "Toss & Tails vs Dhoni CC",
-      "date": "Aug 21, 2023",
-      "time": "07:00 PM",
-      'organizer': "JK Organizers",
-      "ground_location": "Square out fighters"
+  getUpcomingMatchList(){
+    futureData = ProfileProvider().getOrganizerUpcomingMatchList().then((value) {
+      if(mounted){
+        setState(() {
+          upcomingMatchList = [];
+          upcomingMatchList.addAll(value);
+        });
+      }
+      print(upcomingMatchList);
+      return upcomingMatchList;
+    });
+  }
+
+  setDelay() async {
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
     }
-  ];
+    getUpcomingMatchList();
+    await Future.delayed(const Duration(seconds: 1));
+    if(mounted){
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setDelay();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        noMatches
+        upcomingMatchList.isEmpty
             ? const SizedBox()
             : Padding(
           padding: EdgeInsets.symmetric(
@@ -70,7 +75,7 @@ class _UpcomingBattleState extends State<UpcomingBattle> {
                 color: AppColor.textColor
             ),),
         ),
-        noMatches
+        upcomingMatchList.isEmpty
             ? Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,36 +93,44 @@ class _UpcomingBattleState extends State<UpcomingBattle> {
           ),
         )
             : Expanded(
-          child: MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                separatorBuilder: (context, _){
-                  return SizedBox(height: 1.5.h);
-                },
-                itemCount: battles.length,
-                itemBuilder: (context, index){
-                  return Bounceable(
-                    onTap: (){
-                      // Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(builder: (context) {
-                      //           return const UpcomingBattleDetail();
-                      //         }),
-                      //       );
-                          },
-                    child: BattlesList(
-                      battles[index]["image"],
-                      battles[index]["battle_name"],
-                      battles[index]["date"],
-                      battles[index]["time"],
-                      battles[index]["ground_location"],
-                        battles[index]["organizer"]
-                    ),
-                  );
-                },
-              )),
+          child: FutureBuilder(
+              future: futureData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } if (snapshot.connectionState ==
+                    ConnectionState.done) {
+                  return MediaQuery.removePadding(
+                      context: context,
+                      removeTop: true,
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        separatorBuilder: (context, _){
+                          return SizedBox(height: 1.5.h);
+                        },
+                        itemCount: upcomingMatchList.length,
+                        itemBuilder: (context, index){
+                          return Bounceable(
+                            onTap: (){
+
+                            },
+                            child: BattlesList(
+                              upcomingMatchList[index].mainImage.toString(),
+                              '${upcomingMatchList[index].teamAName.toString()} vs ${upcomingMatchList[index].teamBName.toString() == "" ? "TBA" : upcomingMatchList[index].teamBName.toString()}',
+                              upcomingMatchList[index].bookingDate.toString(),
+                              upcomingMatchList[index].bookingSlotStart.toString(),
+                              upcomingMatchList[index].groundName.toString(),
+                              upcomingMatchList[index].organizerName.toString(),
+                            ),
+                          );
+                        },
+                      ));
+                } else{
+                  return const CircularProgressIndicator();
+                }
+              }
+          ),
         ),
       ],
     );

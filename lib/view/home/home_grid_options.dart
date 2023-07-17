@@ -23,7 +23,7 @@ class HomeGridOptions extends StatelessWidget {
             children: [
               Expanded(child: Bounceable(
                   onTap:(){
-                    // Navigator.pushNamed(context, "request_player");
+                    Navigator.pushNamed(context, "request_player");
                   },
                   child: const GridItem("Request player", Images.gridImage5, Color(0xffF9E4E3)))),
               SizedBox(width: 5.w),
@@ -44,11 +44,18 @@ class HomeGridOptions extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Expanded(child: GridItem("Bookings", Images.gridImage4, Color(0xffE6E6E6))),
+              Expanded(
+                child: Bounceable(
+                  onTap: (){
+                      Navigator.pushNamed(context, "my_bookings");
+                    },
+                  child: const GridItem("Bookings", Images.gridImage4, Color(0xffE6E6E6)),
+                ),
+              ),
               SizedBox(width: 5.w),
               Expanded(child: Bounceable(
                   onTap:(){
-                    // Navigator.pushNamed(context, "request_player");
+                    Navigator.pushNamed(context, "request_player");
                   },
                   child: const GridItem("Request player", Images.gridImage5, Color(0xffF9E4E3)))),
               SizedBox(width: 5.w),

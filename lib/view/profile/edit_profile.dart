@@ -144,7 +144,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                   ),
                   Positioned(
                     bottom: 1.h,
-                    child: Text(ground.groundDetails.groundName.toString(),
+                    child: ground.groundDetails.groundName == null || ground.groundDetails.groundName.toString() == ""
+                        ? const SizedBox()
+                    : Text(ground.groundDetails.groundName.toString(),
                       style: fontMedium.copyWith(
                           color: AppColor.lightColor,
                           fontSize: 16.sp
@@ -173,16 +175,28 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                 fit: BoxFit.cover,
                                 height: 18.h,
                               ))
-                        ] else if(ground.groundDetails.mainImage.toString() != "")...[
-                          ClipRRect(
+                        ]
+                        else if(ground.groundDetails.mainImage.toString() != ""
+                              && imageFiles.isNotEmpty)...[
+                            ClipRRect(
+                                borderRadius: BorderRadius.circular(15.0),
+                                child: Image.file(
+                                  imageFile!,
+                                  width: 90.w,
+                                  fit: BoxFit.cover,
+                                  height: 18.h,
+                                ))
+                          ]
+                          else if(ground.groundDetails.mainImage.toString() != "")...[
+                            ClipRRect(
                               borderRadius: BorderRadius.circular(15.0),
                               child: CachedNetworkImage(
-                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${ground.groundDetails.mainImage}",
+                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${ground.mainImg.toString()}",
                                 width: 90.w,
                                 fit: BoxFit.cover,
                                 height: 18.h,
                                 errorWidget: (context, error, url) =>
-                                    Image.asset(Images.groundListImage1, width: 90.w,
+                                    Image.asset(Images.groundImage, width: 90.w,
                                       fit: BoxFit.cover,
                                       height: 18.h,),
                               ))
@@ -204,9 +218,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                             ),
                           ),
                         ),
-                        ground.groundDetails.mainImage.toString() != ""
-                        ? const SizedBox()
-                        : Positioned(
+                        Positioned(
                           child: Bounceable(
                             onTap: (){
                               chooseGroundImage();
@@ -220,7 +232,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                 color: AppColor.primaryColor,
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
-                              child: Text("Add",
+                              child: Text(ground.groundDetails.mainImage.toString() == "" || ground.groundDetails.mainImage == null ? "Add" : "Edit",
                                 style: fontMedium.copyWith(
                                     fontSize: 10.sp,
                                     color: AppColor.textColor

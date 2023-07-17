@@ -192,7 +192,7 @@ class _MyTeamsState extends State<MyTeams> {
                                         Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) {
-                                        return TeamDetail(team.teamList[index].id.toString(), team.teamList[index].teamName.toString());
+                                        return TeamDetail(team.teamList[index].id.toString(), team.teamList[index].teamName.toString(), team.teamList[index].logo.toString());
                                       }),
                                     );
                                   },
@@ -247,14 +247,18 @@ class AllTeams extends StatelessWidget {
                 topLeft: Radius.circular(10.0),
                 topRight: Radius.circular(10.0),
               ),
-              child: CachedNetworkImage(imageUrl: "${AppConstants.imageBaseUrl}$image",
-                errorWidget: (context, url, error) => Center(child: Icon(Icons.people_alt_outlined, size: 14.w,)),)),
+              child: CachedNetworkImage(imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}$image",
+                fit: BoxFit.cover, width: double.maxFinite, height: double.maxFinite,
+                errorWidget:(context, url, error) =>
+                    Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: double.maxFinite, height: double.maxFinite,),
+              )
+          ),
           Positioned(
             top: 1.5.h,
             right: 3.w,
             child: Bounceable(
               onTap: (){
-                Navigator.pushNamed(context, 'edit_team');
+                // Navigator.pushNamed(context, 'edit_team');
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

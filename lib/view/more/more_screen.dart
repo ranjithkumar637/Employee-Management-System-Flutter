@@ -267,17 +267,20 @@ class _MoreScreenState extends State<MoreScreen> {
                     SizedBox(height: 1.h),
                     InkWell(
                         onTap: (){
-                          // Navigator.pushNamed(context, "my_teams");
+                          Navigator.pushNamed(context, "my_matches");
                         },
                         child: const ProfileOption("Matches")),
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, "my_matches");
                         },
                         child: const ProfileOption("Players")),
                     const Divider(thickness: 0.7,),
-                    const ProfileOption("Block Slot & Date"),
+                    InkWell(
+                        onTap: (){
+                          Navigator.pushNamed(context, "block_slot_date");
+                        },
+                        child: const ProfileOption("Block Slot & Date")),
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){

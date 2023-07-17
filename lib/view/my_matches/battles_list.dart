@@ -31,8 +31,12 @@ class BattlesList extends StatelessWidget {
         children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: CachedNetworkImage(imageUrl: '${AppConstants.imageBaseUrl}/$image', fit: BoxFit.cover, width: 28.w, height: 14.h,
-                errorWidget: (context, url, error) => Icon(Icons.gps_not_fixed_rounded, size: 4.w,),)),
+              child: CachedNetworkImage(
+                imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$image',
+                fit: BoxFit.cover,
+                width: 28.w,
+                height: 14.h,
+                errorWidget: (context, url, error) => Icon(Icons.error_outline, size: 5.w, color: AppColor.redColor,),)),
           SizedBox(width: 4.w),
           Expanded(
             child: Column(
@@ -106,14 +110,14 @@ class BattlesList extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(organizer,
-                          style: fontMedium.copyWith(
+                        Text(location,
+                          style: fontRegular.copyWith(
                               fontSize: 9.5.sp,
                               color: AppColor.textColor
                           ),),
                         SizedBox(height: 0.5.h),
-                        Text(location,
-                          style: fontRegular.copyWith(
+                        Text(organizer,
+                          style: fontMedium.copyWith(
                               fontSize: 9.sp,
                               color: AppColor.textMildColor
                           ),),

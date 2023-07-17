@@ -20,6 +20,7 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/custom_dialog_box.dart';
+import '../widgets/snackbar.dart';
 
 class About extends StatefulWidget {
   final ProfileProvider ground;
@@ -75,37 +76,7 @@ class _AboutState extends State<About> {
         }
     );
   }
-  String? accToken;
-  Future<List<Uint8List>>? _imageData;
 
-  Future<Uint8List> fetchProtectedImages(String imageUrl) async {
-    print("imageurl $imageUrl");
-    final headers = {'Authorization': 'Bearer $accToken'};
-
-    var response = await http.get(Uri.parse("${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$imageUrl"), headers: headers);
-    print("${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$imageUrl");
-    print(response.body);
-    print(response.statusCode);
-    print(json.decode(response.body));
-    if (response.statusCode == 200) {
-      return response.bodyBytes;
-    } else {
-      throw Exception('Failed to load image');
-    }
-  }
-
-
-  getPrefs() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    accToken = preferences.getString("access_token");
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getPrefs();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,10 +138,11 @@ class _AboutState extends State<About> {
                     color: AppColor.textColor,
                     fontSize: 12.sp
                 ),),
-              widget.ground.groundImages.length < 5
-              ? InkWell(
+              InkWell(
                   onTap: (){
-                    chooseGroundImage();
+                    imageFiles.length == 5
+                    ? Dialogs.snackbar("Only 5 images are allowed", context, isError: false)
+                    : chooseGroundImage();
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -192,47 +164,46 @@ class _AboutState extends State<About> {
                           ),),
                       ],
                     ),
-                  )) : const SizedBox(),
+                  )),
             ],
           ),
-          SizedBox(height: 2.h),
-          SizedBox(
+          widget.ground.groundImages.isEmpty
+              ? const SizedBox()
+              : SizedBox(height: 2.h),
+          widget.ground.groundImages.isEmpty
+          ? const SizedBox()
+          : SizedBox(
             height: 11.h,
             child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
               separatorBuilder: (context, _){
                 return SizedBox(width: 2.w);
               },
               scrollDirection: Axis.horizontal,
               itemCount: widget.ground.groundImages.length,
               itemBuilder: (context, index){
-                print("index $index");
-                return FutureBuilder<Uint8List>(
-                  future: fetchProtectedImages(widget.ground.groundImages[index].toString()),
-                  builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                      return Image.memory(
-                        snapshot.data!,
-                        fit: BoxFit.cover,
-                      );
-                    } else if (snapshot.hasError) {
-                      print("failed to load image");
-                      return const Text('Failed to load images');
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: CachedNetworkImage(
+                    imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.ground.groundImages[index].toString()}",
+                    fit: BoxFit.cover,
+                    width: 24.w,
+                    height: 10.h,
+                  ),
                 );
-                // return ClipRRect(
-                //     borderRadius: BorderRadius.circular(5.0),
-                //     child: Image.memory(
-                //       fetchProtectedImage("${AppConstants.imageBaseUrl}storage/app/public/ground/${widget.ground.groundImages[index].toString()}"),
-                //       width: 24.w,
-                //       height: 10.h,
-                //       fit: BoxFit.cover,
-                //     ));
               },
             ),
           ),
+          imageFiles.isEmpty
+              ? const SizedBox()
+              : SizedBox(height: 2.h),
+          imageFiles.isEmpty
+              ? const SizedBox()
+              : Text("Now added Photos",
+            style: fontMedium.copyWith(
+                color: AppColor.textMildColor,
+                fontSize: 10.sp
+            ),),
           imageFiles.isEmpty
               ? const SizedBox()
               : SizedBox(height: 2.h),

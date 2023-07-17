@@ -64,7 +64,7 @@ class _PaymentInformationState extends State<PaymentInformation> with SingleTick
               controller: tabController,
               tabs: const [
                 Tab(
-                  text: "Upcoming Battle",
+                  text: "Upcoming Matches",
                 ),
                 Tab(
                   text: "Match History",

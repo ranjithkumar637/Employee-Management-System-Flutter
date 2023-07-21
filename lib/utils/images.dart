@@ -86,6 +86,7 @@ class Images {
 
   static const String battingImage = 'assets/images/batting_img.svg';
   static const String bowlingImage = 'assets/images/bowling_img.svg';
+  static const String otpImage = 'assets/images/otp_image.svg';
 
 
 

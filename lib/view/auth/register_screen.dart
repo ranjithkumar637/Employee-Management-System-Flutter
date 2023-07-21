@@ -11,6 +11,7 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/snackbar.dart';
+import 'enter_otp.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -56,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     children: [
                       Text("Create Account",
-                        style: fontBold.copyWith(
+                        style: fontSemiBold.copyWith(
                             fontSize: 20.sp,
                             color: AppColor.textColor
                         ),),
@@ -73,7 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   left: 5.w,
                   bottom: 4.h,
                   child: Text("Sign Up",
-                    style: fontBold.copyWith(
+                    style: fontSemiBold.copyWith(
                         fontSize: 20.sp,
                         color: AppColor.textColor
                     ),),
@@ -106,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Your Name",
+                            Text("Your Name *",
                               style: fontRegular.copyWith(
                                   fontSize: 10.sp,
                                   color: AppColor.textColor
@@ -161,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Row(
                               children: [
-                                Text("Email",
+                                Text("Email ID",
                                   style: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textColor
@@ -216,7 +217,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Mobile Number",
+                            Text("Mobile Number *",
                               style: fontRegular.copyWith(
                                   fontSize: 10.sp,
                                   color: AppColor.textColor
@@ -266,79 +267,79 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 2.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 5.w
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Password",
-                              style: fontRegular.copyWith(
-                                  fontSize: 10.sp,
-                                  color: AppColor.textColor
-                              ),),
-                            SizedBox(height:1.h),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColor.lightColor,
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: passwordController,
-                                        obscureText: !passwordVisible,
-                                        keyboardType: TextInputType.visiblePassword,
-                                        textInputAction: TextInputAction.next,
-                                        cursorColor: AppColor.secondaryColor,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Enter password';
-                                          }
-                                          return null;
-                                        },
-                                        style: fontRegular.copyWith(
-                                            fontSize: 10.sp,
-                                            color: AppColor.textColor
-                                        ),
-
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                          hintText: "Opklnm@123",
-                                          hintStyle: fontRegular.copyWith(
-                                              fontSize: 10.sp,
-                                              color: AppColor.textMildColor
-                                          ),),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        passwordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                                        size: 5.w,
-                                        color: AppColor.textColor,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          passwordVisible = !passwordVisible;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // SizedBox(height: 2.h),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //       horizontal: 5.w
+                      //   ),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text("Password",
+                      //         style: fontRegular.copyWith(
+                      //             fontSize: 10.sp,
+                      //             color: AppColor.textColor
+                      //         ),),
+                      //       SizedBox(height:1.h),
+                      //       Container(
+                      //         padding: EdgeInsets.symmetric(
+                      //           horizontal: 5.w,
+                      //           vertical: 1.h,
+                      //         ),
+                      //         decoration: BoxDecoration(
+                      //           color: AppColor.lightColor,
+                      //           borderRadius: BorderRadius.circular(30.0),
+                      //         ),
+                      //         child: Center(
+                      //           child: Row(
+                      //             children: [
+                      //               Expanded(
+                      //                 child: TextFormField(
+                      //                   controller: passwordController,
+                      //                   obscureText: !passwordVisible,
+                      //                   keyboardType: TextInputType.visiblePassword,
+                      //                   textInputAction: TextInputAction.next,
+                      //                   cursorColor: AppColor.secondaryColor,
+                      //                   validator: (value) {
+                      //                     if (value!.isEmpty) {
+                      //                       return 'Enter password';
+                      //                     }
+                      //                     return null;
+                      //                   },
+                      //                   style: fontRegular.copyWith(
+                      //                       fontSize: 10.sp,
+                      //                       color: AppColor.textColor
+                      //                   ),
+                      //
+                      //                   decoration: InputDecoration(
+                      //                     isDense: true,
+                      //                     border: InputBorder.none,
+                      //                     hintText: "Opklnm@123",
+                      //                     hintStyle: fontRegular.copyWith(
+                      //                         fontSize: 10.sp,
+                      //                         color: AppColor.textMildColor
+                      //                     ),),
+                      //                 ),
+                      //               ),
+                      //               IconButton(
+                      //                 icon: Icon(
+                      //                   passwordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      //                   size: 5.w,
+                      //                   color: AppColor.textColor,
+                      //                 ),
+                      //                 onPressed: () {
+                      //                   setState(() {
+                      //                     passwordVisible = !passwordVisible;
+                      //                   });
+                      //                 },
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       SizedBox(height: 2.h),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -403,7 +404,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ? const Center( child: CircularProgressIndicator(),)
                 : Bounceable(
                 onTap:(){
-                  validate();
+                  // validate();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return const EnterOtpScreen(login: false, register: true);
+                    }),
+                  );
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),

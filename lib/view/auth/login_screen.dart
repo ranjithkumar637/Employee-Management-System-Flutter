@@ -11,6 +11,7 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/snackbar.dart';
+import 'enter_otp.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -129,103 +130,109 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 2.h),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5.w
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Password",
-                      style: fontRegular.copyWith(
-                          fontSize: 10.sp,
-                          color: AppColor.textColor
-                      ),),
-                    SizedBox(height:1.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 1.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColor.lightColor,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Center(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: passwordController,
-                                obscureText: !passwordVisible,
-                                keyboardType: TextInputType.visiblePassword,
-                                textInputAction: TextInputAction.done,
-                                cursorColor: AppColor.secondaryColor,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Enter password';
-                                  }
-                                  return null;
-                                },
-                                style: fontRegular.copyWith(
-                                    fontSize: 10.sp,
-                                    color: AppColor.textColor
-                                ),
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  border: InputBorder.none,
-                                  hintText: "Opklnm@123",
-                                  hintStyle: fontRegular.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.textMildColor
-                                  ),),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                passwordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                                size: 5.w,
-                                color: AppColor.textColor,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  passwordVisible = !passwordVisible;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 3.h),
-              Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: (){
-                    Navigator.pushNamed(context, "forgot_password");
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 5.w,
-                    ),
-                    child: Text("Forgot Password?",
-                      style: fontMedium.copyWith(
-                          fontSize: 10.sp,
-                          color: AppColor.redColor
-                      ),),
-                  ),
-                ),
-              ),
+              // SizedBox(height: 2.h),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(
+              //       horizontal: 5.w
+              //   ),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text("Password",
+              //         style: fontRegular.copyWith(
+              //             fontSize: 10.sp,
+              //             color: AppColor.textColor
+              //         ),),
+              //       SizedBox(height:1.h),
+              //       Container(
+              //         padding: EdgeInsets.symmetric(
+              //           horizontal: 5.w,
+              //           vertical: 1.h,
+              //         ),
+              //         decoration: BoxDecoration(
+              //           color: AppColor.lightColor,
+              //           borderRadius: BorderRadius.circular(30.0),
+              //         ),
+              //         child: Center(
+              //           child: Row(
+              //             children: [
+              //               Expanded(
+              //                 child: TextFormField(
+              //                   controller: passwordController,
+              //                   obscureText: !passwordVisible,
+              //                   keyboardType: TextInputType.visiblePassword,
+              //                   textInputAction: TextInputAction.done,
+              //                   cursorColor: AppColor.secondaryColor,
+              //                   validator: (value) {
+              //                     if (value!.isEmpty) {
+              //                       return 'Enter password';
+              //                     }
+              //                     return null;
+              //                   },
+              //                   style: fontRegular.copyWith(
+              //                       fontSize: 10.sp,
+              //                       color: AppColor.textColor
+              //                   ),
+              //                   decoration: InputDecoration(
+              //                     isDense: true,
+              //                     border: InputBorder.none,
+              //                     hintText: "Opklnm@123",
+              //                     hintStyle: fontRegular.copyWith(
+              //                         fontSize: 10.sp,
+              //                         color: AppColor.textMildColor
+              //                     ),),
+              //                 ),
+              //               ),
+              //               IconButton(
+              //                 icon: Icon(
+              //                   passwordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+              //                   size: 5.w,
+              //                   color: AppColor.textColor,
+              //                 ),
+              //                 onPressed: () {
+              //                   setState(() {
+              //                     passwordVisible = !passwordVisible;
+              //                   });
+              //                 },
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // SizedBox(height: 3.h),
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: InkWell(
+              //     onTap: (){
+              //       Navigator.pushNamed(context, "forgot_password");
+              //     },
+              //     child: Padding(
+              //       padding: EdgeInsets.symmetric(
+              //         horizontal: 5.w,
+              //       ),
+              //       child: Text("Forgot Password?",
+              //         style: fontMedium.copyWith(
+              //             fontSize: 10.sp,
+              //             color: AppColor.redColor
+              //         ),),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 4.h),
               loading
                   ? const Center( child: CircularProgressIndicator(),)
                   : Bounceable(
                   onTap:(){
-                    validate();
+                    // validate();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const EnterOtpScreen(login: true, register: false);
+                      }),
+                    );
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),

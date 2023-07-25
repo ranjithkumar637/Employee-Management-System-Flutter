@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/auth_provider.dart';
@@ -30,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final TextEditingController companyNameController = TextEditingController();
 
   @override
@@ -160,63 +160,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Text("Email ID",
-                                  style: fontRegular.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.textColor
-                                  ),),
-                                const Spacer(),
-                                Text("(Optional)",
-                                  style: fontRegular.copyWith(
-                                      fontSize: 8.sp,
-                                      color: AppColor.textMildColor
-                                  ),),
-                              ],
-                            ),
-                            SizedBox(height:1.h),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.5.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColor.lightColor,
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Center(
-                                child: TextFormField(
-                                  controller: emailController,
-                                  cursorColor: AppColor.secondaryColor,
-                                  style: fontRegular.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.textColor
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
-                                  textInputAction: TextInputAction.next,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    border: InputBorder.none,
-                                    hintText: "johndoe@gmail.com",
-                                    hintStyle: fontRegular.copyWith(
-                                        fontSize: 10.sp,
-                                        color: AppColor.textMildColor
-                                    ),),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 5.w
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             Text("Mobile Number *",
                               style: fontRegular.copyWith(
                                   fontSize: 10.sp,
@@ -267,79 +210,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
-                      // SizedBox(height: 2.h),
-                      // Padding(
-                      //   padding: EdgeInsets.symmetric(
-                      //       horizontal: 5.w
-                      //   ),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Text("Password",
-                      //         style: fontRegular.copyWith(
-                      //             fontSize: 10.sp,
-                      //             color: AppColor.textColor
-                      //         ),),
-                      //       SizedBox(height:1.h),
-                      //       Container(
-                      //         padding: EdgeInsets.symmetric(
-                      //           horizontal: 5.w,
-                      //           vertical: 1.h,
-                      //         ),
-                      //         decoration: BoxDecoration(
-                      //           color: AppColor.lightColor,
-                      //           borderRadius: BorderRadius.circular(30.0),
-                      //         ),
-                      //         child: Center(
-                      //           child: Row(
-                      //             children: [
-                      //               Expanded(
-                      //                 child: TextFormField(
-                      //                   controller: passwordController,
-                      //                   obscureText: !passwordVisible,
-                      //                   keyboardType: TextInputType.visiblePassword,
-                      //                   textInputAction: TextInputAction.next,
-                      //                   cursorColor: AppColor.secondaryColor,
-                      //                   validator: (value) {
-                      //                     if (value!.isEmpty) {
-                      //                       return 'Enter password';
-                      //                     }
-                      //                     return null;
-                      //                   },
-                      //                   style: fontRegular.copyWith(
-                      //                       fontSize: 10.sp,
-                      //                       color: AppColor.textColor
-                      //                   ),
-                      //
-                      //                   decoration: InputDecoration(
-                      //                     isDense: true,
-                      //                     border: InputBorder.none,
-                      //                     hintText: "Opklnm@123",
-                      //                     hintStyle: fontRegular.copyWith(
-                      //                         fontSize: 10.sp,
-                      //                         color: AppColor.textMildColor
-                      //                     ),),
-                      //                 ),
-                      //               ),
-                      //               IconButton(
-                      //                 icon: Icon(
-                      //                   passwordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      //                   size: 5.w,
-                      //                   color: AppColor.textColor,
-                      //                 ),
-                      //                 onPressed: () {
-                      //                   setState(() {
-                      //                     passwordVisible = !passwordVisible;
-                      //                   });
-                      //                 },
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                      SizedBox(height: 2.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("Email ID",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.textColor
+                                  ),),
+                                const Spacer(),
+                                Text("(Optional)",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 8.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                              ],
+                            ),
+                            SizedBox(height:1.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightColor,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Center(
+                                child: TextFormField(
+                                  controller: emailController,
+                                  cursorColor: AppColor.secondaryColor,
+                                  style: fontRegular.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.textColor
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    hintText: "johndoe@gmail.com",
+                                    hintStyle: fontRegular.copyWith(
+                                        fontSize: 10.sp,
+                                        color: AppColor.textMildColor
+                                    ),),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 2.h),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -400,22 +327,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             SizedBox(height: 2.h),
-            loading
-            ? const Center( child: CircularProgressIndicator(),)
-                : Bounceable(
-                onTap:(){
-                  // validate();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return const EnterOtpScreen(login: false, register: true);
-                    }),
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: const CustomButton(AppColor.primaryColor, "Sign Up", AppColor.textColor),
-                )),
+            if(loading)...[
+              const Center(
+                child: CircularProgressIndicator(
+                  color: AppColor.primaryColor,
+                ),
+              )
+            ] else...[
+              Bounceable(
+                  onTap:(){
+                    validate();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: const CustomButton(AppColor.primaryColor, "Sign Up", AppColor.textColor),
+                  ))
+            ],
             SizedBox(height: 2.h),
             RichText(
               text: TextSpan(
@@ -450,18 +377,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         loading = true;
       });
-      AuthProvider().register(nameController.text, emailController.text, mobileController.text, passwordController.text, companyNameController.text)
-      .then((value) {
+      AuthProvider().register(nameController.text, emailController.text, mobileController.text, companyNameController.text)
+      .then((value) async {
         if(value.status == true){
+          print("registered successfully");
+          Dialogs.snackbar(value.message.toString(), context, isError: false);
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString("user_temp_id", value.userTempId.toString());
+          preferences.setString("mobile", mobileController.text);
+          preferences.setBool("isLoginScreen", false);
           setState(() {
             loading = false;
           });
-          print("registered successfully");
-          Dialogs.snackbar(value.message.toString(), context, isError: false);
-          Navigator.pushNamed(context, 'menu_screen');
+          if(mounted){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return EnterOtpScreen(false, true, value.otp.toString(), value.userTempId.toString(), mobileController.text);
+              }),
+            );
+          }
         } else if(value.status == false){
           print(value.message.toString());
           Dialogs.snackbar(value.message.toString(), context, isError: true);
+          setState(() {
+            loading = false;
+          });
+        } else {
+          Dialogs.snackbar("Something went wrong", context, isError: true);
           setState(() {
             loading = false;
           });

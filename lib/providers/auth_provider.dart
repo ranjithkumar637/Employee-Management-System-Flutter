@@ -1,18 +1,25 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:elevens_organizer/models/login_submit_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/login_model.dart';
 import '../models/registration_model.dart';
+import '../models/registration_submit_model.dart';
 import '../models/response_model.dart';
 import '../utils/app_constants.dart';
 
 class AuthProvider extends ChangeNotifier{
 //registration
   RegistrationModel registrationModel = RegistrationModel();
+  RegistrationSubmitModel registrationSubmitModel = RegistrationSubmitModel();
   //login
   LoginModel loginModel = LoginModel();
+  LoginSubmitModel loginSubmitModel = LoginSubmitModel();
+  LoginData loginData = LoginData();
+
   String token = "";
   ResponseModel responseModel = ResponseModel();
 
@@ -23,10 +30,9 @@ class AuthProvider extends ChangeNotifier{
   }
 
   // organizer login
-  Future<LoginModel> login(String mobile, String password) async {
+  Future<LoginSubmitModel> login(String mobile, String password) async {
     var body = jsonEncode({
-      'mobile': mobile,
-      'password': password,
+      'mobile_no': mobile,
     });
     try {
       final response = await http.post(
@@ -35,23 +41,62 @@ class AuthProvider extends ChangeNotifier{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: body,
-      );
+      ).timeout(const Duration(seconds: 15));
       var decodedJson = json.decode(response.body);
       print(decodedJson);
       if (response.statusCode == 200) {
-        loginModel = LoginModel.fromJson(decodedJson);
-        token = loginModel.data!.rememberToken.toString();
-        saveUserData(true, token);
+        loginSubmitModel = LoginSubmitModel.fromJson(decodedJson);
+        loginData = LoginData.fromJson(decodedJson['data']);
         notifyListeners();
       } else {
         throw const HttpException('Failed to load data');
       }
+    } on TimeoutException {
+      print('Request timed out');
     } on SocketException {
       print('No internet connection');
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer login- Invalid data format');
+      print('organizer login submit- Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return loginSubmitModel;
+  }
+
+  //login otp verify
+  Future<LoginModel> loginOtpVerify(String userId, String otp) async {
+    var body = jsonEncode({
+      'user_id': userId,
+      'otp': otp
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.organizerLoginOtpVerify),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      ).timeout(const Duration(seconds: 15));
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        loginModel = LoginModel.fromJson(decodedJson);
+        token = loginModel.token.toString();
+        saveUserData(true, token);
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on TimeoutException {
+      print('Request timed out');
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('organizer login otp verify- Invalid data format');
     } catch (e) {
       print(e);
     }
@@ -91,13 +136,12 @@ class AuthProvider extends ChangeNotifier{
   }
 
 
-  //register as organizer
-  Future<RegistrationModel> register(String name, String email, String mobile, String password, String companyName) async {
+  //register submit as organizer
+  Future<RegistrationSubmitModel> register(String name, String email, String mobile, String companyName) async {
     var body = jsonEncode({
       'name': name,
       'email': email,
-      'mobile': mobile,
-      'password': password,
+      'mobile_no': mobile,
       'company_name': companyName
     });
     try {
@@ -107,7 +151,43 @@ class AuthProvider extends ChangeNotifier{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: body,
-      );
+      ).timeout(const Duration(seconds: 15));
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        registrationSubmitModel = RegistrationSubmitModel.fromJson(decodedJson);
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on TimeoutException {
+      print('Request timed out');
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('organizer register submit - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return registrationSubmitModel;
+  }
+
+  //register otp verify
+  Future<RegistrationModel> registerOtpVerify(String userTempId, String otp) async {
+    var body = jsonEncode({
+      'user_temp_id': userTempId,
+      'otp': otp
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.organizerRegisterOtpCheck),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      ).timeout(const Duration(seconds: 15));
       var decodedJson = json.decode(response.body);
       print(decodedJson);
       if (response.statusCode == 200) {
@@ -117,12 +197,14 @@ class AuthProvider extends ChangeNotifier{
       } else {
         throw const HttpException('Failed to load data');
       }
+    } on TimeoutException {
+      print('Request timed out');
     } on SocketException {
       print('No internet connection');
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer register - Invalid data format');
+      print('organizer register tp verify- Invalid data format');
     } catch (e) {
       print(e);
     }

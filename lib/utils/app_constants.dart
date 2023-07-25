@@ -11,7 +11,9 @@ class AppConstants {
   static const String imageBaseUrlTeam = 'storage/app/public/team/';
 
   static const String organizerRegister = '$baseUrl/auth/organizer/register';
+  static const String organizerRegisterOtpCheck = '$baseUrl/auth/organizer/register-otp-check';
   static const String organizerLogin = '$baseUrl/auth/organizer/login';
+  static const String organizerLoginOtpVerify = '$baseUrl/auth/organizer/login-otp-check';
   static const String organizerViewProfile = '$baseUrl/organizer/profile_view';
 
   static const String organizerProfileUpdate = '$baseUrl/organizer/org_profile_update';

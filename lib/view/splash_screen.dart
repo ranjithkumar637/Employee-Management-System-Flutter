@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 
 import '../utils/colours.dart';
 import '../utils/images.dart';
+import 'auth/enter_otp.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -22,6 +23,10 @@ class _SplashScreenState extends State<SplashScreen> {
   getPrefs() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     bool? login = preferences.getBool("isLoggedIn");
+    String? userId = preferences.getString("user_temp_id");
+    String? mobile = preferences.getString("mobile");
+    bool? isLogin = preferences.getBool("isLoginScreen");
+    print("user_id $userId mobile $mobile isLoginScreen $isLogin");
 
     if(login == true){
       String? token = await FirebaseMessaging.instance.getToken();
@@ -31,6 +36,34 @@ class _SplashScreenState extends State<SplashScreen> {
       Timer(
           const Duration(seconds: 2), () async {
         Navigator.pushNamed(context, 'menu_screen');
+      }
+      );
+    }
+    else if(userId == null) {
+      Timer(
+          const Duration(seconds: 2), () async {
+        Navigator.pushNamed(context, 'login_screen');
+      }
+      );
+    }
+    else if(userId.isNotEmpty) {
+      Timer(
+          const Duration(seconds: 2), () async {
+        if(isLogin == true){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return EnterOtpScreen(true, false, "", userId.toString(), mobile.toString());
+            }),
+          );
+        } else{
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return EnterOtpScreen(false, true, "", userId.toString(), mobile.toString());
+            }),
+          );
+        }
       }
       );
     } else{

@@ -1,4 +1,5 @@
 import 'package:elevens_organizer/providers/profile_provider.dart';
+import 'package:elevens_organizer/providers/team_provider.dart';
 import 'package:elevens_organizer/view/profile/your_slots.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -42,11 +43,11 @@ class _InformationState extends State<Information> {
                   //ground information
                   GroundInformation(widget.ground),
                   //location
-                  // Consumer<ProfileProvider>(
-                  //   builder: (context, profile, child) {
-                  //     return LocationData(widget.ground.groundDetails, profile.organizerDetails, false);
-                  //   }
-                  // ),
+                  Consumer<ProfileProvider>(
+                    builder: (context, profile, child) {
+                      return LocationData(widget.ground.groundDetails, profile.organizerDetails, false);
+                    }
+                  ),
                   //about
                   About(widget.ground),
                 ],
@@ -81,33 +82,47 @@ class _InformationState extends State<Information> {
     String street = Provider.of<ProfileProvider>(context, listen: false).street;
     String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
     String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
+    String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
+    String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
     int floodLight = Provider.of<ProfileProvider>(context, listen: false).floodLight;
     List<String> gallery = Provider.of<ProfileProvider>(context, listen: false).newGroundImages;
-    List<String> mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;
-    int i = 0;
-    print(mainImg[i].toString());
-    setState(() {
-      loading = true;
-    });
-
-    ProfileProvider().updateGroundDetails(description, mainImg, gallery, houseNo, floodLight.toString(), address, pinCode, latitude, longitude, pitch, boundaryLine, street)
-        .then((value){
-          if(value.status == true){
-            Dialogs.snackbar(value.message.toString(), context, isError: false);
-            setState(() {
-              loading = false;
-            });
-            Navigator.pop(context);
-          } else if(value.status == false){
-            setState(() {
-              loading = false;
-            });
-            Dialogs.snackbar(value.message.toString(), context, isError: true);
-          } else{
-            setState(() {
-              loading = false;
-            });
-          }
-    });
+    List<String> mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;if(mainImg.isEmpty){
+      Dialogs.snackbar("Upload main ground image", context, isError: true);
+    }
+    else if(gallery.isEmpty){
+      Dialogs.snackbar("Upload gallery images", context, isError: true);
+    } else if(pitch == ""){
+      Dialogs.snackbar("Set pitch data", context, isError: true);
+    } else if(boundaryLine == ""){
+      Dialogs.snackbar("Set boundary line", context, isError: true);
+    } else if(pinCode == ""){
+      Dialogs.snackbar("Provide ground address details", context, isError: true);
+    } else if(stateId == "" || cityId == ""){
+      Dialogs.snackbar("Select ground state & city", context, isError: true);
+    } else{
+      setState(() {
+        loading = true;
+      });
+      ProfileProvider().updateGroundDetails(description, mainImg, gallery, houseNo, floodLight.toString(),
+          address, pinCode, latitude, longitude, pitch, boundaryLine, street, stateId, cityId)
+          .then((value){
+        if(value.status == true){
+          Dialogs.snackbar(value.message.toString(), context, isError: false);
+          setState(() {
+            loading = false;
+          });
+          Navigator.pop(context);
+        } else if(value.status == false){
+          setState(() {
+            loading = false;
+          });
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
+        } else{
+          setState(() {
+            loading = false;
+          });
+        }
+      });
+    }
   }
 }

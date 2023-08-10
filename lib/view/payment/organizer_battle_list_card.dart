@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elevens_organizer/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,6 +17,7 @@ class OrganizerBattleListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(paidPrice);
     return Bounceable(
       onTap: (){
         // Navigator.pushNamed(context, "payment_info_detail_screen");
@@ -35,7 +38,8 @@ class OrganizerBattleListCard extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(image, fit: BoxFit.cover, width: 28.w, height: 14.h,)),
+                child: CachedNetworkImage(
+                  imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}$image", fit: BoxFit.cover, width: 28.w, height: 14.h,)),
             SizedBox(width: 4.w),
             Expanded(
               child: Column(
@@ -49,7 +53,7 @@ class OrganizerBattleListCard extends StatelessWidget {
                             fontSize: 12.sp,
                             color: AppColor.textColor
                         ),),
-                      status == "Unpaid"
+                      status == "0"
                       ? InkWell(
                           onTap: (){
                             showPopupMenu(context);
@@ -123,11 +127,11 @@ class OrganizerBattleListCard extends StatelessWidget {
                           vertical: 0.4.h
                         ),
                         decoration: BoxDecoration(
-                          color: status == "Paid" ? const Color(0xff57BB8A) : status == "Unpaid" ? const Color(0xffE67C73) : null,
+                          color: status == "1" ? const Color(0xff57BB8A) : status == "0" ? const Color(0xffE67C73) : null,
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Center(
-                          child: Text(status,
+                          child: Text(status == "1" ? "Paid" : status == "0" ? "Unpaid" : "",
                             style: fontRegular.copyWith(
                                 color: AppColor.lightColor,
                                 fontSize: 10.sp

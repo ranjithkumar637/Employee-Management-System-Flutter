@@ -57,7 +57,7 @@ class _AddAddressState extends State<AddAddress> {
     Provider.of<TeamProvider>(context, listen: false).getStateBasedCityList(stateBasedCityId);
     showDialog(context: context,
         builder: (BuildContext context){
-          return const CityListDialog();
+          return const CityListDialog(fromOrganizer: false,);
         }
     );
   }
@@ -69,7 +69,7 @@ class _AddAddressState extends State<AddAddress> {
   void openStateSheet() {
     showDialog(context: context,
         builder: (BuildContext context){
-          return const StateListDialog();
+          return const StateListDialog(fromOrganizer: false,);
         }
     );
   }
@@ -116,6 +116,7 @@ class _AddAddressState extends State<AddAddress> {
       long = _latLong.longitude.toString();
       streetController.text =
       "${street.toString()}.";
+      streetController.text = street.toString();
       pinCodeController.text = postalCode.toString();
     });
   }
@@ -595,9 +596,11 @@ class _AddAddressState extends State<AddAddress> {
       setState(() {
         loading = true;
       });
+      String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
+      String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
       Provider.of<ProfileProvider>(context, listen: false).saveGroundAddress(
-          street.toString(), subLocality.toString(), locality.toString(),
-          postalCode.toString(), lat.toString(), long.toString(), houseController.text.toString());
+          streetController.text.toString(), subLocality.toString(), locality.toString(),
+          postalCode.toString(), lat.toString(), long.toString(), houseController.text.toString(), stateId, cityId);
       setState(() {
         loading = false;
       });

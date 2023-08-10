@@ -1,15 +1,21 @@
 import 'dart:io';
+import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/view/menu/widgets/bottom_menu_text.dart';
 import 'package:elevens_organizer/view/more/more_screen.dart';
+import 'package:elevens_organizer/view/my_matches/my_matches.dart';
+import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../home/home_screen.dart';
+import '../my_bookings/bookings.dart';
 import '../my_team/my_teams.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -26,10 +32,23 @@ class _MenuScreenState extends State<MenuScreen> {
 
   List<Widget> pages = <Widget>[
     const HomeScreen(),
-    const MyTeams(),
-    Container(),
+    const MyBookings(),
+    const MyMatchesScreen(),
+    const RevenueScreen(),
     const MoreScreen()
   ];
+
+  moveToBookings() {
+    setState(() {
+      _currentIndex = 1;
+    });
+  }
+
+  moveToMatches() {
+    setState(() {
+      _currentIndex = 2;
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -159,116 +178,188 @@ class _MenuScreenState extends State<MenuScreen> {
       },
       child: Scaffold(
         body: pages.elementAt(_currentIndex),
-        bottomNavigationBar: Container(
-          height: 9.h,
-          padding: EdgeInsets.symmetric(
-            horizontal: 5.w,
-            vertical: 1.h,
-          ),
-          decoration: const BoxDecoration(
-            color: AppColor.lightColor,
-            boxShadow: [
-                      BoxShadow(
-                          color: Colors.black12,
-                          offset: Offset(0,0),
-                          blurRadius: 3.0,
-                          spreadRadius: 3.0
+        bottomNavigationBar: Consumer<ProfileProvider>(
+          builder: (context, move, child) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              if (move.bookings == true) {
+                moveToBookings();
+              } else if(move.matches == true){
+                moveToMatches();
+              }
+              else
+              {
+                null;
+              }
+            });
+            return Container(
+              height: 9.h,
+              padding: EdgeInsets.symmetric(
+                horizontal: 3.w,
+                vertical: 1.h,
+              ),
+              decoration: const BoxDecoration(
+                color: AppColor.lightColor,
+                boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0,0),
+                              blurRadius: 3.0,
+                              spreadRadius: 3.0
+                          ),
+                        ],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
+                )
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Bounceable(
+                      onTap:() { _onItemTapped(0);
+                      Provider.of<ProfileProvider>(context,
+                          listen: false)
+                          .removeBookings();
+                      Provider.of<ProfileProvider>(context,
+                          listen: false)
+                          .removeMatches();
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18.0),
+                          color: _currentIndex == 0 ? AppColor.iconBgColor : Colors.transparent
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(Images.homeIcon, width: 6.w, color: _currentIndex == 0 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
+                            MenuText("Home", _currentIndex == 0 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
+                          ],
+                        ),
                       ),
-                    ],
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8.0),
-              topRight: Radius.circular(8.0),
-            )
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Bounceable(
-                  onTap:() => _onItemTapped(0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18.0),
-                      color: _currentIndex == 0 ? AppColor.iconBgColor : Colors.transparent
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(Images.home, width: 6.w, color: _currentIndex == 0 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
-                        MenuText("Home", _currentIndex == 0 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
-                      ],
                     ),
                   ),
-                ),
-              ),
-              // SizedBox(width:3.w),
-              Expanded(
-                child: Bounceable(
-                  onTap:() => _onItemTapped(1),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 1.w,
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18.0),
-                        color: _currentIndex == 1 ? AppColor.iconBgColor : Colors.transparent
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(Images.myTeams, width: 6.w, color: _currentIndex == 1 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
-                        MenuText("My Teams", _currentIndex == 1 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // SizedBox(width:3.w),
-              Expanded(
-                child: Bounceable(
-                  onTap:() => _onItemTapped(2),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18.0),
-                        color: _currentIndex == 2 ? AppColor.iconBgColor : Colors.transparent
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(Images.playVs, width: 6.w, color: _currentIndex == 2 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
-                        MenuText("PlayVS", _currentIndex == 2 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
-                      ],
+                  // SizedBox(width:3.w),
+                  Expanded(
+                    child: Bounceable(
+                      onTap:(){
+                        _onItemTapped(1);
+                        Provider.of<ProfileProvider>(context,
+                            listen: false)
+                            .removeBookings();
+                        Provider.of<ProfileProvider>(context,
+                            listen: false)
+                            .removeMatches();
+                        },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 1.w,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18.0),
+                            color: _currentIndex == 1 ? AppColor.iconBgColor : Colors.transparent
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(Images.bookings, width: 6.w, color: _currentIndex == 1 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
+                            MenuText("Bookings", _currentIndex == 1 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              // SizedBox(width:3.w),
-              Expanded(
-                child: Bounceable(
-                  onTap:() => _onItemTapped(3),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18.0),
-                        color: _currentIndex == 3 ? AppColor.iconBgColor : Colors.transparent
+                  // SizedBox(width:3.w),
+                  Expanded(
+                    child: Bounceable(
+                      onTap:() {
+                        _onItemTapped(2);
+                        Provider.of<ProfileProvider>(context,
+                            listen: false)
+                            .removeBookings();
+                        Provider.of<ProfileProvider>(context,
+                            listen: false)
+                            .removeMatches();
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18.0),
+                            color: _currentIndex == 2 ? AppColor.iconBgColor : Colors.transparent
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(Images.matches, width: 6.w, color: _currentIndex == 2 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
+                            MenuText("Matches", _currentIndex == 2 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                  ),
+                  // SizedBox(width:3.w),
+                  Expanded(
+                    child: Bounceable(
+                      onTap:(){ _onItemTapped(3);
+                      Provider.of<ProfileProvider>(context,
+                          listen: false)
+                          .removeBookings();
+                      Provider.of<ProfileProvider>(context,
+                          listen: false)
+                          .removeMatches();
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18.0),
+                            color: _currentIndex == 3 ? AppColor.iconBgColor : Colors.transparent
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
 
-                        SvgPicture.asset(Images.more, width: 6.w, color: _currentIndex == 3 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
-                        MenuText("More", _currentIndex == 3 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
-                      ],
+                            SvgPicture.asset(Images.revenue, width: 6.w, color: _currentIndex == 3 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
+                            MenuText("Revenue", _currentIndex == 3 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                  Expanded(
+                    child: Bounceable(
+                      onTap:(){ _onItemTapped(4);
+                      Provider.of<ProfileProvider>(context,
+                          listen: false)
+                          .removeBookings();
+                      Provider.of<ProfileProvider>(context,
+                          listen: false)
+                          .removeMatches();
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18.0),
+                            color: _currentIndex == 4 ? AppColor.iconBgColor : Colors.transparent
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(Images.moreIcon, width: 6.w, color: _currentIndex == 4 ? AppColor.iconColour : AppColor.inactiveBottomNavText,),
+                            MenuText("More", _currentIndex == 4 ? AppColor.iconColour : AppColor.inactiveBottomNavText),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          }
         ),
       ),
     );

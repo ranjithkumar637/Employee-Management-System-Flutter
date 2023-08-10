@@ -1,6 +1,6 @@
 class AppConstants {
-  static const String baseUrl = 'https://11s.staging-sg.com/api';
-  static const String imageBaseUrl = 'https://11s.staging-sg.com/';
+  static const String baseUrl = 'https://11s-dev.rezndus.com/api';
+  static const String imageBaseUrl = 'https://11s-dev.rezndus.com/';
 
   static const String imageBaseUrlGallery = 'storage/app/public/ground/';
 
@@ -10,22 +10,24 @@ class AppConstants {
 
   static const String imageBaseUrlTeam = 'storage/app/public/team/';
 
+  static const String slotsTimeList = '$baseUrl/slots-list';
+
   static const String organizerRegister = '$baseUrl/auth/organizer/register';
   static const String organizerRegisterOtpCheck = '$baseUrl/auth/organizer/register-otp-check';
   static const String organizerLogin = '$baseUrl/auth/organizer/login';
   static const String organizerLoginOtpVerify = '$baseUrl/auth/organizer/login-otp-check';
-  static const String organizerViewProfile = '$baseUrl/organizer/profile_view';
+  static const String organizerViewProfile = '$baseUrl/organizer/profile-view';
 
-  static const String organizerProfileUpdate = '$baseUrl/organizer/org_profile_update';
+  static const String organizerProfileUpdate = '$baseUrl/organizer/org-profile-update';
 
   static const String organizerLogout = '$baseUrl/organizer/logout';
 
-  static const String organizerMatchHistoryList = '$baseUrl/organizer/organizer_match_history';
-  static const String organizerUpcomingMatchesList = '$baseUrl/organizer/upcoming_match_list';
+  static const String organizerMatchHistoryList = '$baseUrl/organizer/organizer-match-history';
+  static const String organizerUpcomingMatchesList = '$baseUrl/organizer/upcoming-match-list';
 
-  static const String stateBasedCityList = '$baseUrl/captain/org-cities-state';
+  static const String stateBasedCityList = '$baseUrl/cities-state';
 
-  static const String stateList = '$baseUrl/organizer/org-state-list';
+  static const String stateList = '$baseUrl/state-list';
   static const String cityList = '$baseUrl/city-list';
   static const String organizerTeamStore = '$baseUrl/organizer/team_store';
   static const String organizerTeamView = '$baseUrl/organizer/org_team_view';
@@ -37,6 +39,39 @@ class AppConstants {
 
   static const String groundDetails = '$baseUrl/organizer/ground_view';
   static const String groundDetailsUpdate = '$baseUrl/organizer/ground_update';
+
+  // bookings
+  static const String recentbookings = '$baseUrl/organizer/recent-bookings';
+  static const String bookingshistory = '$baseUrl/organizer/booking-history';
+
+  //revenue
+  static const String revenuelist = '$baseUrl/organizer/get-revenue';
+
+  //upcomingmatchespayment
+  static const String upcomingmatchespayment = '$baseUrl/organizer/payment-upcoming-matches';
+  static const String matchhistorypayment = '$baseUrl/organizer/payment-match-history';
+
+//offing list
+
+  static const String intheoffing  = '$baseUrl/organizer/in-the-offing';
+
+  //total revenue
+  static const String totalrevenue  = '$baseUrl/organizer/get-home-details';
+
+  //today matches for toos
+  static const String matchesfortoss  = '$baseUrl/organizer/today-matches';
+
+  //payment get
+  static const String paymentgeto  = '$baseUrl/organizer/payment-get';
+
+  //payment update
+  static const String paymentUpdateo  = '$baseUrl/organizer/payment-update';
+
+  //toss won by
+  static const String tosswon = '$baseUrl/organizer/toss-won-by';
+
+  static const String homeDetails  = '$baseUrl/organizer/get-home-details';
+
 
 
 

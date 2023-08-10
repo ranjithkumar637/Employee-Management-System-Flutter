@@ -25,8 +25,11 @@ class MoreScreen extends StatefulWidget {
 
 class _MoreScreenState extends State<MoreScreen> {
 
+
   getProfile(){
-    Provider.of<ProfileProvider>(context, listen: false).getProfile();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      Provider.of<ProfileProvider>(context, listen: false).getProfile();
+    });
   }
 
   @override
@@ -110,89 +113,89 @@ class _MoreScreenState extends State<MoreScreen> {
                 left: 5.w,
                 right: 5.w,
                 child: Consumer<ProfileProvider>(
-                  builder: (context, profile, child) {
-                    return Row(
-                      children: [
-                        Container(
-                          height: 14.h,
-                          width: 28.w,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: AppColor.imageBorderColor, width: 3.0),
-                              color: Colors.white,
-                              image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage("https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1680345590~exp=1680346190~hmac=eb31a40018f2115d71ee38e25576a27bf9933b85d832af6bb6ece771dc2c4d42"))
+                    builder: (context, profile, child) {
+                      return Row(
+                        children: [
+                          Container(
+                            height: 14.h,
+                            width: 28.w,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: AppColor.imageBorderColor, width: 3.0),
+                                color: Colors.white,
+                                image: const DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage("https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1680345590~exp=1680346190~hmac=eb31a40018f2115d71ee38e25576a27bf9933b85d832af6bb6ece771dc2c4d42"))
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(profile.getName(),
-                                style: fontMedium.copyWith(
-                                    fontSize: 15.sp,
-                                    color: AppColor.lightColor
-                                ),),
-                              SizedBox(height: 0.5.h),
-                              Text(profile.getMobile(),
-                                style: fontRegular.copyWith(
-                                    fontSize: 10.sp,
-                                    color: AppColor.lightColor
-                                ),),
-                              SizedBox(height: 0.5.h),
-                              Bounceable(
-                                onTap:(){
-                                  Navigator.pushNamed(context, 'edit_profile')
-                                  .then((value) {
-                                    getProfile();
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 3.w,
-                                    vertical: 1.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xffF9D700),
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: Text("Edit Profile",
-                                  style: fontRegular.copyWith(
-                                    color: AppColor.textColor,
-                                    fontSize: 8.sp
+                          SizedBox(width: 4.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(profile.getName(),
+                                  style: fontMedium.copyWith(
+                                      fontSize: 15.sp,
+                                      color: AppColor.lightColor
                                   ),),
-                                ),
-                              ),
-                              SizedBox(height: 0.5.h),
-                              SizedBox(
-                                width: 40.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("66%",
-                                      style: fontRegular.copyWith(
-                                          fontSize: 9.sp,
-                                          color: AppColor.lightColor
-                                      ),),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(3.0),
-                                      child: const LinearProgressIndicator(
-                                        color: Color(0xffF9D700),
-                                        backgroundColor: AppColor.lightColor,
-                                        value: 0.66,
-                                      ),
+                                SizedBox(height: 0.5.h),
+                                Text(profile.getMobile(),
+                                  style: fontRegular.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.lightColor
+                                  ),),
+                                SizedBox(height: 0.5.h),
+                                Bounceable(
+                                  onTap:(){
+                                    Navigator.pushNamed(context, 'edit_profile')
+                                        .then((value) {
+                                      getProfile();
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 3.w,
+                                      vertical: 1.h,
                                     ),
-                                  ],
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffF9D700),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Text("Edit Profile",
+                                      style: fontRegular.copyWith(
+                                          color: AppColor.textColor,
+                                          fontSize: 8.sp
+                                      ),),
+                                  ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 0.5.h),
+                                SizedBox(
+                                  width: 40.w,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text("66%",
+                                        style: fontRegular.copyWith(
+                                            fontSize: 9.sp,
+                                            color: AppColor.lightColor
+                                        ),),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(3.0),
+                                        child: const LinearProgressIndicator(
+                                          color: Color(0xffF9D700),
+                                          backgroundColor: AppColor.lightColor,
+                                          value: 0.66,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
+                        ],
+                      );
+                    }
                 ),
               ),
             ],
@@ -201,7 +204,7 @@ class _MoreScreenState extends State<MoreScreen> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: 5.w
+                  horizontal: 5.w
               ),
               child: MediaQuery.removePadding(
                 removeTop: true,
@@ -209,55 +212,67 @@ class _MoreScreenState extends State<MoreScreen> {
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    Text("Referral Code",
-                      style: fontMedium.copyWith(
-                          fontSize: 14.sp,
-                          color: AppColor.textColor
-                      ),),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 1.h,
-                            ),
-                            decoration: BoxDecoration(
-                                color: const Color(0xffFAEDD0),
-                                borderRadius: BorderRadius.circular(5.0),
-                                border: RDottedLineBorder.all(color: AppColor.primaryColor)
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("GHYYH1900UI",
-                                  textAlign: TextAlign.center,
-                                  style: fontMedium.copyWith(
-                                      fontSize: 14.sp,
-                                      color: AppColor.textColor
-                                  ),),
-                                InkWell(
-                                    onTap: (){
-                                      FlutterClipboard.copy("GHYYH1900UI").then(( value ){
-                                        print('copied');
-                                        Dialogs.snackbar("Referral code copied to clipboard", context, isError: false);
-                                      });
+                    Consumer<ProfileProvider>(
+                        builder: (context, profile, child) {
+                          return profile.organizerDetails.adminApprove == 1
+                              ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Referral Code",
+                                style: fontMedium.copyWith(
+                                    fontSize: 14.sp,
+                                    color: AppColor.textColor
+                                ),),
+                              SizedBox(height: 2.h),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 1.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: const Color(0xffFAEDD0),
+                                          borderRadius: BorderRadius.circular(5.0),
+                                          border: RDottedLineBorder.all(color: AppColor.primaryColor)
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(profile.organizerDetails.organizerRefCode.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: fontMedium.copyWith(
+                                                fontSize: 14.sp,
+                                                color: AppColor.textColor
+                                            ),),
+                                          InkWell(
+                                              onTap: (){
+                                                FlutterClipboard.copy(profile.organizerDetails.organizerRefCode.toString()).then(( value ){
+                                                  print('copied');
+                                                  Dialogs.snackbar("Referral code copied to clipboard", context, isError: false);
+                                                });
 
-                                    },
-                                    child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,))
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        InkWell(
-                            onTap: (){
-                              Share.share("GHYYH1900UI");
-                            },
-                            child: SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,))
-                      ],
+                                              },
+                                              child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  InkWell(
+                                      onTap: (){
+                                        Share.share(profile.organizerDetails.organizerRefCode.toString());
+                                      },
+                                      child: SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,))
+                                ],
+                              ),
+                            ],
+                          )
+                              : const SizedBox();
+                        }
                     ),
+
                     SizedBox(height: 2.h),
                     Text("Overview",
                       style: fontMedium.copyWith(
@@ -267,26 +282,29 @@ class _MoreScreenState extends State<MoreScreen> {
                     SizedBox(height: 1.h),
                     InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, "my_matches");
+                          Provider.of<ProfileProvider>(context, listen: false)
+                              .moveToBookings();
+                        },
+                        child: const ProfileOption("Bookings")),
+                    const Divider(thickness: 0.7,),
+                    InkWell(
+                        onTap: (){
+                          Provider.of<ProfileProvider>(context, listen: false)
+                              .moveToMatches();
                         },
                         child: const ProfileOption("Matches")),
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
+                          Navigator.pushNamed(context, "payment_information");
                         },
-                        child: const ProfileOption("Players")),
+                        child: const ProfileOption("Payment Information")),
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, "block_slot_date");
+                          Navigator.pushNamed(context, "toss");
                         },
-                        child: const ProfileOption("Block Slot & Date")),
-                    const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, "request_player");
-                        },
-                        child: const ProfileOption("Request Team / Player")),
+                        child: const ProfileOption("Flip/Call toss")),
                     const Divider(thickness: 0.7,),
                     SizedBox(height: 2.h),
                     Text("Settings",
@@ -300,8 +318,6 @@ class _MoreScreenState extends State<MoreScreen> {
                           Navigator.pushNamed(context, "notification_screen");
                         },
                         child: const ProfileOption("Notifications")),
-                    const Divider(thickness: 0.7,),
-                    const ProfileOption("Reports"),
                     const Divider(thickness: 0.7,),
                     SizedBox(height: 2.h),
                     Text("About",
@@ -415,7 +431,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 if (value.status == true) {
                                   Navigator.pop(context);
                                   Navigator.pushNamed(
-                                    context, 'login_screen'
+                                      context, 'login_screen'
                                   ).then((value) {
                                     // Snackbar.hideSnackBar(context);
                                   });

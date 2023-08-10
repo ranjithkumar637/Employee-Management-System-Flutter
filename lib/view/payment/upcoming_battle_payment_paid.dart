@@ -1,70 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/upcoming_matches_payment_model.dart';
+import '../../utils/colours.dart';
+import '../../utils/converter.dart';
 import '../../utils/images.dart';
+import '../../utils/styles.dart';
 import 'organizer_battle_list_card.dart';
 
 class UpcomingBattlePaymentPaid extends StatelessWidget {
-  const UpcomingBattlePaymentPaid({Key? key}) : super(key: key);
+  final List<UpcomingMatches> paidUpcomingList;
+  const UpcomingBattlePaymentPaid(this.paidUpcomingList, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    List<Map<String, dynamic>> organizerBattlePaidList = [
-      {
-        "image": Images.groundListImage1,
-        "paid_price": "5000",
-        "total_price": "5000",
-        "date": "Aug 21, 2023",
-        "time": "07:00 AM",
-        'team': "Toss & Tails",
-        "status": "Paid"
-      },
-      {
-        "image": Images.groundListImage2,
-        "paid_price": "5000",
-        "total_price": "5000",
-        "date": "Aug 21, 2023",
-        "time": "07:00 PM",
-        'team': "Dhoni CC",
-        "status": "Paid"
-      },
-      {
-        "image": Images.groundListImage3,
-        "paid_price": "5000",
-        "total_price": "5000",
-        "date": "Aug 21, 2023",
-        "time": "07:00 AM",
-        'team': "Toss & Tails",
-        "status": "Paid"
-      },
-      {
-        "image": Images.groundListImage4,
-        "paid_price": "5000",
-        "total_price": "5000",
-        "date": "Aug 21, 2023",
-        "time": "07:00 PM",
-        'team': "Dhoni CC",
-        "status": "Paid"
-      }
-    ];
-
-
-    return ListView.separated(
+    return paidUpcomingList.isEmpty
+        ? Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 4.h),
+          Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+          SizedBox(height: 3.h),
+          Text("You don’t have any paid list",
+            style: fontMedium.copyWith(
+                fontSize: 12.sp,
+                color: AppColor.redColor
+            ),),
+        ],
+      ),
+    )
+        : ListView.separated(
       physics: const BouncingScrollPhysics(),
       separatorBuilder: (context, _){
         return SizedBox(height: 1.5.h);
       },
-      itemCount: organizerBattlePaidList.length,
+      itemCount: paidUpcomingList.length,
       itemBuilder: (context, index){
         return OrganizerBattleListCard(
-          organizerBattlePaidList[index]["image"],
-          organizerBattlePaidList[index]["paid_price"],
-          organizerBattlePaidList[index]["total_price"],
-          organizerBattlePaidList[index]["date"],
-          organizerBattlePaidList[index]["time"],
-          organizerBattlePaidList[index]["team"],
-          organizerBattlePaidList[index]["status"],
+          paidUpcomingList[index].logo,
+          paidUpcomingList[index].paidPrice.toString(),
+          paidUpcomingList[index].totalPrice.toString(),
+          paidUpcomingList[index].bookingDate.toString(),
+          Converter().convertTo12HourFormat(paidUpcomingList[index].bookingSlotStart.toString()),
+          paidUpcomingList[index].teamName.toString(),
+          paidUpcomingList[index].paidStatus.toString(),
         );
       },
     );

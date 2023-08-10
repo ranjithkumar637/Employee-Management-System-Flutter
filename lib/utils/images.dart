@@ -88,6 +88,13 @@ class Images {
   static const String bowlingImage = 'assets/images/bowling_img.svg';
   static const String otpImage = 'assets/images/otp_image.svg';
 
+  //bottom nav icons
+  static const String homeIcon = 'assets/images/home_icon.svg';
+  static const String bookings = 'assets/images/bookings.svg';
+  static const String matches = 'assets/images/matches_icon.svg';
+  static const String revenue = 'assets/images/revenue.svg';
+  static const String moreIcon = 'assets/images/more_icon.svg';
+
 
 
 }

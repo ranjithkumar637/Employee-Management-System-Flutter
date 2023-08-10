@@ -30,7 +30,7 @@ class AuthProvider extends ChangeNotifier{
   }
 
   // organizer login
-  Future<LoginSubmitModel> login(String mobile, String password) async {
+  Future<LoginSubmitModel> login(String mobile) async {
     var body = jsonEncode({
       'mobile_no': mobile,
     });
@@ -67,9 +67,12 @@ class AuthProvider extends ChangeNotifier{
 
   //login otp verify
   Future<LoginModel> loginOtpVerify(String userId, String otp) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString("device_token");
     var body = jsonEncode({
       'user_id': userId,
-      'otp': otp
+      'otp': otp,
+      "device_token": token.toString()
     });
     try {
       final response = await http.post(
@@ -176,9 +179,12 @@ class AuthProvider extends ChangeNotifier{
 
   //register otp verify
   Future<RegistrationModel> registerOtpVerify(String userTempId, String otp) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString("device_token");
     var body = jsonEncode({
       'user_temp_id': userTempId,
-      'otp': otp
+      'otp': otp,
+      "device_token": token.toString()
     });
     try {
       final response = await http.post(
@@ -192,7 +198,8 @@ class AuthProvider extends ChangeNotifier{
       print(decodedJson);
       if (response.statusCode == 200) {
         registrationModel = RegistrationModel.fromJson(decodedJson);
-        saveUserData(true, registrationModel.accessToken.toString());
+        saveUserData(true, registrationModel.token.toString());
+        print(registrationModel.token.toString());
         notifyListeners();
       } else {
         throw const HttpException('Failed to load data');

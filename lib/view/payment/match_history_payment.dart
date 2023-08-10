@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/match_history_payment_model.dart';
+import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 import 'match_history_payment_paid.dart';
@@ -17,11 +19,51 @@ class _MatchHistoryPaymentState extends State<MatchHistoryPayment> with SingleTi
 
   late TabController tabController;
 
+  Future<List<MatchHistory>>? futureData ;
+  bool loading = false ;
+
+  List<MatchHistory> matchHistoryPayment = [];
+
+  List<MatchHistory> matchHistoryPaid = [];
+  List<MatchHistory> matchHistoryUnPaid = [];
+
+  getMatchHistoryList(){
+    futureData = PaymentInfoProvider().getMatchHistory().then((value) {
+      setState(() {
+        matchHistoryPayment =[];
+        matchHistoryPayment.addAll(value);
+      });
+      filterList();
+      print(matchHistoryPayment);
+      return matchHistoryPayment ;
+    });
+  }
+  filterList(){
+    setState(() {
+      matchHistoryPaid = matchHistoryPayment . where((payment) =>payment.paidStatus.toString()=="1").toList();
+      matchHistoryUnPaid = matchHistoryPayment.where((payment) => payment.paidStatus.toString()=="0").toList();
+    });
+    print("paid list $matchHistoryPaid ");
+    print("unpaid list $matchHistoryUnPaid");
+  }
+
+  setDelay() async {
+    setState(() {
+      loading = true;
+    });
+    getMatchHistoryList();
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      loading = false;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+    setDelay();
   }
 
   @override
@@ -62,9 +104,9 @@ class _MatchHistoryPaymentState extends State<MatchHistoryPayment> with SingleTi
         Expanded(
           child: TabBarView(
               controller: tabController,
-              children: const [
-                MatchHistoryPaymentPaid(),
-                MatchHistoryPaymentUnPaid(),
+              children: [
+                MatchHistoryPaymentPaid(matchHistoryPaid),
+                MatchHistoryPaymentUnPaid(matchHistoryUnPaid),
               ]),
         ),
       ],

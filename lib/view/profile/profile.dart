@@ -33,12 +33,14 @@ class _ProfileState extends State<Profile> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController mobileNumberController = TextEditingController();
+  final TextEditingController orgPinCodeController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   String date = "";
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
   String? location;
+  bool editCity = false, editState = false;
 
   String removeTime(DateTime dateTime) {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
@@ -55,7 +57,7 @@ class _ProfileState extends State<Profile> {
     Provider.of<TeamProvider>(context, listen: false).getStateBasedCityList(stateBasedCityId);
     showDialog(context: context,
         builder: (BuildContext context){
-          return const CityListDialog();
+          return const CityListDialog(fromOrganizer: true);
         }
     );
   }
@@ -67,7 +69,7 @@ class _ProfileState extends State<Profile> {
   void openStateSheet() {
     showDialog(context: context,
         builder: (BuildContext context){
-          return const StateListDialog();
+          return const StateListDialog(fromOrganizer: true);
         }
     );
   }
@@ -79,6 +81,7 @@ class _ProfileState extends State<Profile> {
     nameController.text = profile.organizerDetails.name.toString();
     mobileNumberController.text = profile.organizerDetails.mobile.toString();
     companyNameController.text = profile.organizerDetails.companyName.toString();
+    orgPinCodeController.text = profile.organizerDetails.orgPincode.toString();
     date = profile.getDob();
   }
 
@@ -155,6 +158,7 @@ class _ProfileState extends State<Profile> {
                                   child: Center(
                                     child: TextFormField(
                                       controller: groundNameController,
+                                      readOnly: groundNameController.text.isEmpty ? false : true,
                                       cursorColor: AppColor.secondaryColor,
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -212,6 +216,7 @@ class _ProfileState extends State<Profile> {
                                         LengthLimitingTextInputFormatter(10),
                                       ],
                                       controller: groundMobileController,
+                                      readOnly: groundMobileController.text.isEmpty ? false : true,
                                       cursorColor: AppColor.secondaryColor,
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -336,6 +341,7 @@ class _ProfileState extends State<Profile> {
                                   child: Center(
                                     child: TextFormField(
                                       controller: nameController,
+                                      readOnly: true,
                                       cursorColor: AppColor.secondaryColor,
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -389,7 +395,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   child: Center(
                                     child: TextFormField(
-                                      enabled: false,
+                                      readOnly: true,
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(10),
                                       ],
@@ -485,8 +491,9 @@ class _ProfileState extends State<Profile> {
 
                                             if (picked != null) {
                                               setState(() {
-                                                date = DateFormat("dd-MM-yyyy").format(picked);
+                                                date = DateFormat("yyyy-MM-dd").format(picked);
                                               });
+                                              print(date);
                                             }
                                           },
                                           child: SvgPicture.asset(Images.calendarIcon, color: AppColor.textColor, width: 5.5.w,)),
@@ -505,50 +512,6 @@ class _ProfileState extends State<Profile> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Text("Location",
-                                //   style: fontRegular.copyWith(
-                                //       fontSize: 11.sp,
-                                //       color: AppColor.textMildColor
-                                //   ),),
-                                // SizedBox(height:1.h),
-                                // Consumer<TeamProvider>(
-                                //     builder: (context, team, child) {
-                                //       return Container(
-                                //         width: double.infinity,
-                                //         padding: EdgeInsets.symmetric(
-                                //           horizontal: 5.w,
-                                //         ),
-                                //         decoration: BoxDecoration(
-                                //           color: AppColor.lightColor,
-                                //           borderRadius: BorderRadius.circular(30.0),
-                                //         ),
-                                //         child: DropdownButton<String>(
-                                //           underline: const SizedBox(),
-                                //           isExpanded: true,
-                                //           value: location,
-                                //           style: fontRegular.copyWith(
-                                //               color: AppColor.textColor
-                                //           ),
-                                //           items: team.cityList.map((date) {
-                                //             return DropdownMenuItem<String>(
-                                //               value: date.id.toString(),
-                                //               child: Text(date.cityName.toString(),
-                                //                 style: fontRegular.copyWith(
-                                //                     color: AppColor.textColor
-                                //                 ),),
-                                //             );
-                                //           }).toList(),
-                                //           onChanged: (selectedDateId) {
-                                //             // print(selectedDateId);
-                                //             setState(() {
-                                //               location = selectedDateId;
-                                //             });
-                                //           },
-                                //         ),
-                                //       );
-                                //     }
-                                // ),
-
                                 const FieldHeading("State"),
                                 SizedBox(height:1.h),
                                 Consumer<TeamProvider>(
@@ -562,13 +525,33 @@ class _ProfileState extends State<Profile> {
                                           width: double.infinity,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
-                                              vertical: 1.2.h
+                                              vertical: 1.4.h
                                           ),
                                           decoration: BoxDecoration(
                                             color: AppColor.lightColor,
                                             borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                          child: Row(
+                                          child: profile.organizerDetails.state.toString() != "" && !editState
+                                              ? Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(profile.organizerDetails.state.toString(),
+                                                      style: fontRegular.copyWith(
+                                                          color: AppColor.textColor
+                                                      ),),
+                                                  ),
+                                                  profile.organizerDetails.state.toString() != ""
+                                                      ? InkWell(
+                                                      onTap: (){
+                                                        setState(() {
+                                                          editState = true;
+                                                        });
+                                                      },
+                                                      child: Icon(Icons.edit, color: AppColor.secondaryColor, size: 4.w,))
+                                                      : const SizedBox()
+                                                ],
+                                              )
+                                          : Row(
                                             children: [
                                               Text(team.state,
                                                 style: fontRegular.copyWith(
@@ -595,13 +578,33 @@ class _ProfileState extends State<Profile> {
                                           width: double.infinity,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
-                                              vertical: 1.2.h
+                                              vertical: 1.4.h
                                           ),
                                           decoration: BoxDecoration(
                                             color: AppColor.lightColor,
                                             borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                          child: Row(
+                                          child: profile.organizerDetails.city.toString() != "" && !editCity
+                                          ? Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(profile.organizerDetails.city.toString(),
+                                                  style: fontRegular.copyWith(
+                                                      color: AppColor.textColor
+                                                  ),),
+                                              ),
+                                              profile.organizerDetails.city.toString() != ""
+                                                  ? InkWell(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      editCity = true;
+                                                    });
+                                                  },
+                                                  child: Icon(Icons.edit, color: AppColor.secondaryColor, size: 4.w,))
+                                                  : const SizedBox()
+                                            ],
+                                          )
+                                          : Row(
                                             children: [
                                               Text(team.stateBasedCity,
                                                 style: fontRegular.copyWith(
@@ -614,6 +617,62 @@ class _ProfileState extends State<Profile> {
                                         ),
                                       );
                                     }
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Pin Code *",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 11.sp,
+                                      color: AppColor.textMildColor
+                                  ),),
+                                SizedBox(height:1.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Center(
+                                    child: TextFormField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(6),
+                                      ],
+                                      controller: orgPinCodeController,
+                                      cursorColor: AppColor.secondaryColor,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Enter pin code';
+                                        }
+                                        return null;
+                                      },
+                                      style: fontRegular.copyWith(
+                                          fontSize: 10.sp,
+                                          color: AppColor.textColor
+                                      ),
+                                      keyboardType: TextInputType.phone,
+                                      textInputAction: TextInputAction.done,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: "Ex: 600001",
+                                        hintStyle: fontRegular.copyWith(
+                                            fontSize: 10.sp,
+                                            color: AppColor.hintColour
+                                        ),),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -651,6 +710,13 @@ class _ProfileState extends State<Profile> {
     String street = Provider.of<ProfileProvider>(context, listen: false).street;
     String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
     String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
+
+    String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
+    String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
+
+    String groundCityId = Provider.of<ProfileProvider>(context, listen: false).cityIdGround;
+    String groundStateId = Provider.of<ProfileProvider>(context, listen: false).stateIdGround;
+
     if (_formKey.currentState!.validate()) {
       setState(() {
         loading = true;
@@ -661,7 +727,7 @@ class _ProfileState extends State<Profile> {
           nameController.text.toString(),
           date == "" ? "" : date,
           location.toString() == "null" ? "" : location.toString(),
-          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street)
+          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street, cityId, stateId, groundCityId, groundStateId, orgPinCodeController.text)
       .then((value) {
         if(value.status == true){
           Dialogs.snackbar("Profile updated successfully", context, isError: false);

@@ -53,6 +53,7 @@ class _LocationDataState extends State<LocationData> {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,6 +96,18 @@ class _LocationDataState extends State<LocationData> {
                   ),
                 ],
               ),
+          ),
+          widget.ground.address.toString() == "null"
+          ? const SizedBox()
+          : Column(
+            children: [
+              SizedBox(height: 2.h),
+              Text(widget.ground.address.toString(),
+                style: fontMedium.copyWith(
+                    color: AppColor.textColor,
+                    fontSize: 10.sp
+                ),),
+            ],
           ),
         ],
       ),

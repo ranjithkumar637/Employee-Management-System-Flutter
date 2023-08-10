@@ -39,11 +39,12 @@ class _MyBookingsState extends State<MyBookings> with SingleTickerProviderStateM
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
-                    onTap:(){
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
+                // InkWell(
+                //     onTap:(){
+                //       Navigator.pop(context);
+                //     },
+                //     child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
+                SizedBox(width: 7.w,),
                 Text("Bookings",
                   style: fontMedium.copyWith(
                       fontSize: 16.sp,
@@ -86,7 +87,7 @@ class _MyBookingsState extends State<MyBookings> with SingleTickerProviderStateM
                 controller: tabController,
                 children: const [
                   RecentBookings(),
-                  BookingHistory(),
+                  BookingHistoryScreen(),
                 ]),
           ),
         ],

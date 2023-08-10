@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:elevens_organizer/models/ground_details_model.dart';
-import 'package:elevens_organizer/models/organizer_match_history_model.dart';
+import 'package:elevens_organizer/models/match_history_list_model.dart';
 import 'package:elevens_organizer/models/profile_model.dart';
 import 'package:elevens_organizer/models/profile_update_model.dart';
 import 'package:elevens_organizer/models/response_model.dart';
-import 'package:elevens_organizer/models/upcoming_matches_list_model.dart';
+import 'package:elevens_organizer/models/upcoming_match_list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +16,7 @@ import '../utils/app_constants.dart';
 
 class ProfileProvider extends ChangeNotifier{
 
-  OrganizerMatchHistoryModel organizerMatchHistoryModel = OrganizerMatchHistoryModel();
+    MatchHistoryListModel matchHistoryListModel = MatchHistoryListModel();
   List<MatchHistoryList> matchHistoryList = [];
 
   ProfileModel profileModel = ProfileModel();
@@ -30,7 +30,7 @@ class ProfileProvider extends ChangeNotifier{
   ProfileUpdateModel profileUpdateModel = ProfileUpdateModel();
 
   ResponseModel responseModel = ResponseModel();
-  UpcomingMatchesListModel upcomingMatchesListModel = UpcomingMatchesListModel();
+  UpcomingMatchListModel upcomingMatchListModel = UpcomingMatchListModel();
   List<UpcomingMatch> upcomingMatch = [];
 
   GroundDetailsModel groundDetailsModel = GroundDetailsModel();
@@ -45,9 +45,10 @@ class ProfileProvider extends ChangeNotifier{
   String address = "", street = "";
   String houseNo = "", pinCode = "";
   String latitude = "", longitude = "";
+  String stateIdGround = "", cityIdGround = "";
   String mainImg = "";
 
-  //save ground information locally
+    //save ground information locally
   saveGroundInfo(String value1, String value2, int value3){
     pitch = value1;
     boundaryLine = value2;
@@ -74,7 +75,7 @@ class ProfileProvider extends ChangeNotifier{
   }
 
   //save ground address locally
-  void saveGroundAddress(String streetData, String subLocality, String locality, String pin, String lat, String long, String houseNumber) {
+  void saveGroundAddress(String streetData, String subLocality, String locality, String pin, String lat, String long, String houseNumber, String sId, String cId) {
     print(streetData);
     address = "$streetData, $subLocality, $locality, $pin";
     latitude = lat;
@@ -82,8 +83,35 @@ class ProfileProvider extends ChangeNotifier{
     houseNo = houseNumber;
     pinCode = pin;
     longitude = long;
+    stateIdGround = sId;
+    cityIdGround = cId;
     notifyListeners();
   }
+
+  bool bookings = false;
+  bool matches = false;
+
+  moveToBookings() {
+    bookings = true;
+    notifyListeners();
+  }
+
+    removeBookings() {
+      bookings = false;
+      notifyListeners();
+    }
+
+    removeMatches() {
+      matches = false;
+      notifyListeners();
+    }
+
+  moveToMatches() {
+    matches = true;
+    notifyListeners();
+  }
+
+    List<SlotList> slotList = [];
 
   //organizer match history list
   Future<List<MatchHistoryList>> getOrganizerMatchHistoryList() async {
@@ -101,7 +129,7 @@ class ProfileProvider extends ChangeNotifier{
       var decodedJson = json.decode(response.body);
       print(decodedJson);
       if (response.statusCode == 200) {
-        organizerMatchHistoryModel = OrganizerMatchHistoryModel.fromJson(decodedJson);
+        matchHistoryListModel = MatchHistoryListModel.fromJson(decodedJson);
         for (var data in decodedJson['match_history']) {
           matchHistoryList.add(MatchHistoryList.fromJson(data));
           notifyListeners();
@@ -138,7 +166,7 @@ class ProfileProvider extends ChangeNotifier{
       var decodedJson = json.decode(response.body);
       print(decodedJson);
       if (response.statusCode == 200) {
-        upcomingMatchesListModel = UpcomingMatchesListModel.fromJson(decodedJson);
+        upcomingMatchListModel = UpcomingMatchListModel.fromJson(decodedJson);
         for (var data in decodedJson['upcoming_match']) {
           upcomingMatch.add(UpcomingMatch.fromJson(data));
           notifyListeners();
@@ -161,9 +189,11 @@ class ProfileProvider extends ChangeNotifier{
 
   //get profile
   getProfile() async {
+    slotList.clear();
+     notifyListeners();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
-    print(accToken);
+    print("get profile $accToken");
     try {
       final response = await http.get(
         Uri.parse(AppConstants.organizerViewProfile),
@@ -177,6 +207,10 @@ class ProfileProvider extends ChangeNotifier{
       if (response.statusCode == 200) {
         profileModel = ProfileModel.fromJson(decodedJson);
         organizerDetails = OrganizerDetails.fromJson(decodedJson['organizer_details']);
+        for (var data in decodedJson['slotList']) {
+          slotList.add(SlotList.fromJson(data));
+          notifyListeners();
+        }
         name = organizerDetails.name.toString();
         email = organizerDetails.email.toString();
         mobile = organizerDetails.mobile.toString();
@@ -198,12 +232,14 @@ class ProfileProvider extends ChangeNotifier{
   }
 
   Future<ProfileUpdateModel> updateProfile(String groundName, String groundContact, String name, String dob, String location, String companyName,
-      String latitude, String longitude, String address, String houseNo, String pinCode, String streetName) async {
+      String latitude, String longitude, String address, String houseNo, String pinCode,
+      String streetName, String cityId, String stateId, String groundCityId, String groundStateId, String organizerPinCode) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
     print("$groundName $groundContact $name $dob $location $companyName");
     print("$latitude $longitude $address $houseNo $pinCode $streetName");
+    print("$cityId $stateId $groundCityId $groundStateId $organizerPinCode");
     var body = jsonEncode({
       'ground_name': groundName,
       'ground_contact_number': groundContact,
@@ -217,6 +253,11 @@ class ProfileProvider extends ChangeNotifier{
       'name': name,
       'dob': dob,
       'location': location == "" ? "" : int.parse(location),
+      'city_id': cityId,
+      'state_id': stateId,
+      'ground_city_id': groundCityId,
+      'ground_state_id': groundStateId,
+      'org_pincode': organizerPinCode,
     });
     try {
       final response = await http.post(
@@ -307,7 +348,7 @@ class ProfileProvider extends ChangeNotifier{
 
   //update ground details
   Future<ResponseModel> updateGroundDetails(String description, List<String> main, List<String> gallery,
-      String houseNo, String floodLight, String address, String pinCode, String latitude, String longitude, String pitch, String boundaryLine, String streetName) async{
+      String houseNo, String floodLight, String address, String pinCode, String latitude, String longitude, String pitch, String boundaryLine, String streetName, String stateId, String cityId) async{
     print("$description $houseNo $floodLight $address $pinCode $latitude $longitude  $pitch $boundaryLine $streetName");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
@@ -355,6 +396,8 @@ class ProfileProvider extends ChangeNotifier{
     request.fields['latitude'] = latitude;
     request.fields['longitude'] = longitude;
     request.fields['street_name'] = streetName;
+    request.fields['state_id'] = stateId;
+    request.fields['city_id'] = cityId;
 
     final res = await request.send();
     final reStr = await res.stream.bytesToString();

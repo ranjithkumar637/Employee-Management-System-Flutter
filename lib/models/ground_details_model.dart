@@ -1,6 +1,6 @@
 class GroundDetailsModel {
   bool? status;
-  String? message;
+  dynamic message;
   dynamic groundDetails;
 
   GroundDetailsModel({status, message, groundDetails});
@@ -30,24 +30,24 @@ class GroundDetailsModel {
 
 class GroundDetails {
   dynamic id;
-  String? groundName;
-  String? groundContactNumber;
+  dynamic groundName;
+  dynamic groundContactNumber;
   dynamic groundBookingCost;
-  String? description;
-  String? pitch;
+  dynamic description;
+  dynamic pitch;
   dynamic boundaryLine;
   dynamic floodLight;
-  String? mainImage;
-  String? address;
-  String? stateId;
-  String? cityId;
-  String? pincode;
-  String? latitude;
-  String? longitude;
+  dynamic mainImage;
+  dynamic address;
+  dynamic stateId;
+  dynamic cityId;
+  dynamic pincode;
+  dynamic latitude;
+  dynamic longitude;
   dynamic groundStatus;
-  String? groundCreatedBy;
-  String? houseNo;
-  String? streetName;
+  dynamic groundCreatedBy;
+  dynamic houseNo;
+  dynamic streetName;
   List<String>? galleryImage;
 
   GroundDetails(

@@ -152,7 +152,11 @@ class _MyTeamsState extends State<MyTeams> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         team.teamList.isEmpty
-                        ? const SizedBox()
+                        ? Text("You have not created your team yet. Start creating your first team now",
+                          style: fontMedium.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColor.redColor
+                          ),)
                         : Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 5.w

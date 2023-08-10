@@ -1,14 +1,18 @@
+import 'package:elevens_organizer/models/match_history_payment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
+import '../../utils/converter.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import 'organizer_battle_list_card.dart';
 
 class MatchHistoryPaymentPaid extends StatefulWidget {
-  const MatchHistoryPaymentPaid({Key? key}) : super(key: key);
+  final List<MatchHistory> matchHistoryPaid;
+  const MatchHistoryPaymentPaid(this.matchHistoryPaid, {Key? key}) : super(key: key);
 
   @override
   State<MatchHistoryPaymentPaid> createState() => _MatchHistoryPaymentPaidState();
@@ -104,6 +108,47 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
                 ),
               ],
             )
+        ),
+        Expanded(
+          child: widget.matchHistoryPaid.isEmpty
+              ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 4.h),
+                Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+                SizedBox(height: 3.h),
+                Text("You don’t have any paid list",
+                  style: fontMedium.copyWith(
+                      fontSize: 12.sp,
+                      color: AppColor.redColor
+                  ),),
+              ],
+            ),
+          )
+              : MediaQuery.removePadding(
+            removeTop: true,
+            context: context,
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              separatorBuilder: (context, _){
+                return SizedBox(height: 1.5.h);
+              },
+              itemCount: widget.matchHistoryPaid.length,
+              itemBuilder: (context, index){
+                return OrganizerBattleListCard(
+                  widget.matchHistoryPaid[index].logo,
+                  widget.matchHistoryPaid[index].paidPrice.toString(),
+                  widget.matchHistoryPaid[index].totalPrice.toString(),
+                  widget.matchHistoryPaid[index].bookingDate.toString(),
+                  Converter().convertTo12HourFormat(widget.matchHistoryPaid[index].bookingSlotStart.toString()),
+                  widget.matchHistoryPaid[index].teamName.toString(),
+                  widget.matchHistoryPaid[index].paidStatus.toString(),
+                );
+              },
+            ),
+          ),
         ),
       ],
     );

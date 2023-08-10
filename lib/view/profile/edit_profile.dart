@@ -28,9 +28,12 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   late TabController tabController;
 
+
   getProfile(){
-    Provider.of<ProfileProvider>(context, listen: false).getProfile();
-    Provider.of<ProfileProvider>(context, listen: false).getGroundDetails();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      Provider.of<ProfileProvider>(context, listen: false).getProfile();
+      Provider.of<ProfileProvider>(context, listen: false).getGroundDetails();
+    });
   }
 
   File? imageFile = File("");
@@ -136,8 +139,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.favorite_border_rounded, color: AppColor.lightColor, size: 6.w,),
-                        SizedBox(width: 5.w),
+                        // Icon(Icons.favorite_border_rounded, color: AppColor.lightColor, size: 6.w,),
+                        // SizedBox(width: 5.w),
                         SvgPicture.asset(Images.share, color: AppColor.lightColor, width: 6.w,)
                       ],
                     ),
@@ -243,11 +246,18 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         Positioned(
                           bottom: 1.h,
                           right: 2.w,
-                          child: Text("5+ photos",
-                            style: fontMedium.copyWith(
-                                fontSize: 10.sp,
-                                color: AppColor.lightColor
-                            ),),
+                          child: ground.groundImages.isEmpty
+                          ? const SizedBox()
+                          : InkWell(
+                            onTap: (){
+
+                            },
+                            child: Text("${ground.groundImages.length - 1}+ photos",
+                              style: fontMedium.copyWith(
+                                  fontSize: 10.sp,
+                                  color: AppColor.lightColor
+                              ),),
+                          ),
                         ),
                       ],
                     ),

@@ -1,10 +1,10 @@
 class LoginModel {
   bool? status;
-  String? message;
+  dynamic message;
   User? user;
-  String? token;
+  dynamic token;
 
-  LoginModel({this.status, this.message, this.user, this.token});
+  LoginModel({status, message, user, token});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -15,47 +15,57 @@ class LoginModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    data['status'] = status;
+    data['message'] = message;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
-    data['token'] = this.token;
+    data['token'] = token;
     return data;
   }
 }
 
 class User {
-  int? id;
-  String? name;
-  String? email;
-  String? emailVerifiedAt;
-  String? dob;
-  String? mobileNo;
-  String? alterMobileNo;
-  String? twoFactorConfirmedAt;
-  String? profilePhoto;
-  int? otp;
-  int? active;
-  String? createdAt;
-  String? updatedAt;
-  String? profilePhotoUrl;
+  dynamic id;
+  dynamic name;
+  dynamic email;
+  dynamic emailVerifiedAt;
+  dynamic dob;
+  dynamic twoFactorConfirmedAt;
+  dynamic mobileNo;
+  dynamic alterMobileNo;
+  dynamic captainDeviceToken;
+  dynamic playerDeviceToken;
+  dynamic organizerDeviceToken;
+  dynamic viceCaptainDeviceToken;
+  dynamic adminDeviceToken;
+  dynamic profilePhoto;
+  dynamic otp;
+  dynamic active;
+  dynamic createdAt;
+  dynamic updatedAt;
+  dynamic profilePhotoUrl;
 
   User(
-      {this.id,
-        this.name,
-        this.email,
-        this.emailVerifiedAt,
-        this.dob,
-        this.mobileNo,
-        this.alterMobileNo,
-        this.twoFactorConfirmedAt,
-        this.profilePhoto,
-        this.otp,
-        this.active,
-        this.createdAt,
-        this.updatedAt,
-        this.profilePhotoUrl});
+      {id,
+        name,
+        email,
+        emailVerifiedAt,
+        dob,
+        twoFactorConfirmedAt,
+        mobileNo,
+        alterMobileNo,
+        captainDeviceToken,
+        playerDeviceToken,
+        organizerDeviceToken,
+        viceCaptainDeviceToken,
+        adminDeviceToken,
+        profilePhoto,
+        otp,
+        active,
+        createdAt,
+        updatedAt,
+        profilePhotoUrl});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -63,9 +73,14 @@ class User {
     email = json['email'];
     emailVerifiedAt = json['email_verified_at'];
     dob = json['dob'];
+    twoFactorConfirmedAt = json['two_factor_confirmed_at'];
     mobileNo = json['mobile_no'];
     alterMobileNo = json['alter_mobile_no'];
-    twoFactorConfirmedAt = json['two_factor_confirmed_at'];
+    captainDeviceToken = json['captain_device_token'];
+    playerDeviceToken = json['player_device_token'];
+    organizerDeviceToken = json['organizer_device_token'];
+    viceCaptainDeviceToken = json['vice_captain_device_token'];
+    adminDeviceToken = json['admin_device_token'];
     profilePhoto = json['profile_photo'];
     otp = json['otp'];
     active = json['active'];
@@ -76,20 +91,25 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['email_verified_at'] = this.emailVerifiedAt;
-    data['dob'] = this.dob;
-    data['mobile_no'] = this.mobileNo;
-    data['alter_mobile_no'] = this.alterMobileNo;
-    data['two_factor_confirmed_at'] = this.twoFactorConfirmedAt;
-    data['profile_photo'] = this.profilePhoto;
-    data['otp'] = this.otp;
-    data['active'] = this.active;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['profile_photo_url'] = this.profilePhotoUrl;
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['email_verified_at'] = emailVerifiedAt;
+    data['dob'] = dob;
+    data['two_factor_confirmed_at'] = twoFactorConfirmedAt;
+    data['mobile_no'] = mobileNo;
+    data['alter_mobile_no'] = alterMobileNo;
+    data['captain_device_token'] = captainDeviceToken;
+    data['player_device_token'] = playerDeviceToken;
+    data['organizer_device_token'] = organizerDeviceToken;
+    data['vice_captain_device_token'] = viceCaptainDeviceToken;
+    data['admin_device_token'] = adminDeviceToken;
+    data['profile_photo'] = profilePhoto;
+    data['otp'] = otp;
+    data['active'] = active;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['profile_photo_url'] = profilePhotoUrl;
     return data;
   }
 }

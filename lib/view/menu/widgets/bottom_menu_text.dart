@@ -14,7 +14,7 @@ class MenuText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(tabName,
         style: fontMedium.copyWith(
-            fontSize: 10.sp,
+            fontSize: 9.sp,
           color: color
         ));
   }

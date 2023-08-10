@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -246,7 +247,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               onSubmit: (value){
                 setState((){
                   otp = value;
-                  enableButton = true;
                 });
 
               },
@@ -292,8 +292,13 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                 ),
               )
             ] else...[
-              !enableButton
-                  ? const SizedBox()
+              otp == "" || otp.length < 4
+                  ? Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 5.w,
+                ),
+                    child: const CustomButton(AppColor.hintColour, "Verify", AppColor.textColor),
+                  )
                   : Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 5.w,
@@ -317,10 +322,14 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     );
   }
 
-  verifyLogin(String? userId){
+  verifyLogin(String? userId) async {
     if(otp == ""){
       Dialogs.snackbar("Enter the OTP", context, isError: true);
     } else{
+      String? token = await FirebaseMessaging.instance.getToken();
+      print(token);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString("device_token" , token.toString());
       setState(() {
         loading = true;
       });
@@ -347,16 +356,21 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     }
   }
 
-  verifyRegister(String? userId){
+  verifyRegister(String? userId) async {
     if(otp == ""){
       Dialogs.snackbar("Enter the OTP", context, isError: true);
     } else{
+      String? token = await FirebaseMessaging.instance.getToken();
+      print(token);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString("device_token" , token.toString());
       setState(() {
         loading = true;
       });
       AuthProvider().registerOtpVerify(userId.toString(), otp)
           .then((value) {
         if(value.status == true){
+          print(value.token.toString());
           Dialogs.snackbar(value.message.toString(), context, isError: false);
           Navigator.pushNamed(context, 'menu_screen');
           setState(() {

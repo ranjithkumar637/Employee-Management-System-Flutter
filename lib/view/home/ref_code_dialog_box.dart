@@ -66,7 +66,7 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("GHYYH1900UI",
+                Text(widget.refCode,
                   textAlign: TextAlign.center,
                   style: fontMedium.copyWith(
                       fontSize: 18.sp,
@@ -74,10 +74,10 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
                   ),),
                 InkWell(
                     onTap: (){
-                      FlutterClipboard.copy("GHYYH1900UI").then(( value ){
+                      FlutterClipboard.copy(widget.refCode).then(( value ){
                         print('copied');
                         Navigator.pop(context);
-                        Dialogs.snackbar("Referral code copied to clipboard", context, isError: false);
+                        Dialogs.snackbar("Referral code ${widget.refCode} is copied to clipboard", context, isError: false);
                       });
 
                     },
@@ -88,22 +88,11 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
           SizedBox(height: 1.h),
           const Spacer(),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Text("Skip",
-                  textAlign: TextAlign.center,
-                  style: fontMedium.copyWith(
-                      fontSize: 10.sp,
-                      color: AppColor.textColor
-                  ),),
-              ),
               Bounceable(
                 onTap: (){
-                  Share.share('BHFHDF9800M', subject: 'Share your referral code');
+                  Share.share(widget.refCode, subject: 'Share your referral code');
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

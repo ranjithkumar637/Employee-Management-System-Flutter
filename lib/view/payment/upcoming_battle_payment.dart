@@ -3,6 +3,8 @@ import 'package:elevens_organizer/view/payment/upcoming_battle_payment_unpaid.da
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/upcoming_matches_payment_model.dart';
+import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 
@@ -17,11 +19,53 @@ class _UpcomingBattlePaymentState extends State<UpcomingBattlePayment> with Sing
 
   late TabController tabController;
 
+  Future<List<UpcomingMatches>>? futureData ;
+  bool loading = false;
+
+
+  List<UpcomingMatches> upcomingMatchespayments = [];
+
+  List<UpcomingMatches> paidUpcomingList = [];
+  List<UpcomingMatches> unpaidUpcomingList = [];
+
+  getUpcomingMatchesList(){
+    futureData = PaymentInfoProvider().getUpcomingMatches().then((value) {
+      setState(() {
+        upcomingMatchespayments = [];
+        upcomingMatchespayments.addAll(value);
+      });
+      filterList();
+      print(upcomingMatchespayments);
+      return upcomingMatchespayments;
+    });
+  }
+
+  filterList(){
+    setState(() {
+      paidUpcomingList = upcomingMatchespayments.where((match) => match.paidStatus.toString() == "1").toList();
+      unpaidUpcomingList = upcomingMatchespayments.where((match) => match.paidStatus.toString() == "0").toList();
+    });
+    print("paid list $paidUpcomingList");
+    print("unpaid list $unpaidUpcomingList");
+  }
+
+  setDelay() async {
+    setState(() {
+      loading = true;
+    });
+    getUpcomingMatchesList();
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      loading = false;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+    setDelay();
   }
 
   @override
@@ -75,9 +119,9 @@ class _UpcomingBattlePaymentState extends State<UpcomingBattlePayment> with Sing
         Expanded(
           child: TabBarView(
               controller: tabController,
-              children: const [
-                UpcomingBattlePaymentPaid(),
-                UpcomingBattlePaymentUnPaid(),
+              children: [
+                UpcomingBattlePaymentPaid(paidUpcomingList),
+                UpcomingBattlePaymentUnPaid(unpaidUpcomingList),
               ]),
         ),
       ],

@@ -3,6 +3,7 @@ import 'package:elevens_organizer/providers/booking_provider.dart';
 import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/providers/team_provider.dart';
 import 'package:elevens_organizer/utils/colours.dart';
+import 'package:elevens_organizer/utils/local_notification_service.dart';
 import 'package:elevens_organizer/utils/strings.dart';
 import 'package:elevens_organizer/view/address/add_address.dart';
 import 'package:elevens_organizer/view/auth/login_screen.dart';
@@ -21,15 +22,24 @@ import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
 import 'package:elevens_organizer/view/splash_screen.dart';
 import 'package:elevens_organizer/view/toss/toss.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+///Receive message when app is in background solution for on message
+Future<void> backgroundHandler(RemoteMessage message) async{
+  print(message.data.toString());
+  print(message.notification!.title);
+  // LocalNotificationService.display(message);
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
   );
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(
@@ -45,8 +55,63 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  initiateNotifications() async {
+    await FirebaseMessaging.instance.requestPermission(
+        sound: true,
+        badge: true,
+        alert: true
+    );
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        sound: true,
+        badge: true,
+        alert: true
+    );
+
+    //terminated state
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if(message?.notification != null){
+        print(message?.notification!.body);
+        print(message?.notification!.title);
+      }
+      // LocalNotificationService.display(message);
+    });
+
+    ///foreground work
+    FirebaseMessaging.onMessage.listen((message) {
+      if(message.notification != null){
+        print(message.notification!.body);
+        print(message.notification!.title);
+      }
+      LocalNotificationService.display(message);
+    });
+
+    ///When the app is in background but opened and user taps
+    ///on the notification
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      if(message.notification != null){
+        print(message.notification!.body);
+        print(message.notification!.title);
+      }
+      // LocalNotificationService.display(message);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initiateNotifications();
+
+  }
 
   @override
   Widget build(BuildContext context) {

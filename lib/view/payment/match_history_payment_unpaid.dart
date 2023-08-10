@@ -1,15 +1,18 @@
+import 'package:elevens_organizer/models/match_history_payment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
+import '../../utils/converter.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import 'organizer_battle_list_card.dart';
 
 class MatchHistoryPaymentUnPaid extends StatefulWidget {
-  const MatchHistoryPaymentUnPaid({Key? key}) : super(key: key);
+  final List<MatchHistory> matchHistoryUnPaid;
+  const MatchHistoryPaymentUnPaid(this.matchHistoryUnPaid,  {Key? key}) : super(key: key);
 
   @override
   State<MatchHistoryPaymentUnPaid> createState() => _MatchHistoryPaymentUnPaidState();
@@ -19,45 +22,6 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
 
   String firstDate = "";
   String lastDate = "";
-
-  List<Map<String, dynamic>> organizerBattlePaidList = [
-    {
-      "image": Images.groundListImage1,
-      "paid_price": "5000",
-      "total_price": "5000",
-      "date": "Aug 21, 2023",
-      "time": "07:00 AM",
-      'team': "Toss & Tails",
-      "status": "Unpaid"
-    },
-    {
-      "image": Images.groundListImage2,
-      "paid_price": "5000",
-      "total_price": "5000",
-      "date": "Aug 21, 2023",
-      "time": "07:00 PM",
-      'team': "Dhoni CC",
-      "status": "Unpaid"
-    },
-    {
-      "image": Images.groundListImage3,
-      "paid_price": "5000",
-      "total_price": "5000",
-      "date": "Aug 21, 2023",
-      "time": "07:00 AM",
-      'team': "Toss & Tails",
-      "status": "Unpaid"
-    },
-    {
-      "image": Images.groundListImage4,
-      "paid_price": "5000",
-      "total_price": "5000",
-      "date": "Aug 21, 2023",
-      "time": "07:00 PM",
-      'team': "Dhoni CC",
-      "status": "Unpaid"
-    }
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -154,16 +118,16 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
               separatorBuilder: (context, _){
                 return SizedBox(height: 1.5.h);
               },
-              itemCount: organizerBattlePaidList.length,
+              itemCount: widget.matchHistoryUnPaid.length,
               itemBuilder: (context, index){
                 return OrganizerBattleListCard(
-                  organizerBattlePaidList[index]["image"],
-                  organizerBattlePaidList[index]["paid_price"],
-                  organizerBattlePaidList[index]["total_price"],
-                  organizerBattlePaidList[index]["date"],
-                  organizerBattlePaidList[index]["time"],
-                  organizerBattlePaidList[index]["team"],
-                  organizerBattlePaidList[index]["status"],
+                  widget.matchHistoryUnPaid[index].logo,
+                  widget.matchHistoryUnPaid[index].paidPrice.toString(),
+                  widget.matchHistoryUnPaid[index].totalPrice.toString(),
+                  widget.matchHistoryUnPaid[index].bookingDate.toString(),
+                  Converter().convertTo12HourFormat(widget.matchHistoryUnPaid[index].bookingSlotStart.toString()),
+                  widget.matchHistoryUnPaid[index].teamName.toString(),
+                  widget.matchHistoryUnPaid[index].paidStatus.toString(),
                 );
               },
             ),

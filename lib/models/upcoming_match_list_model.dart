@@ -1,25 +1,23 @@
-import 'package:elevens_organizer/main.dart';
-
-class UpcomingMatchesListModel {
+class UpcomingMatchListModel {
   bool? status;
-  String? message;
+  dynamic message;
   List<UpcomingMatch>? upcomingMatch;
 
-  UpcomingMatchesListModel({status, message, upcomingMatch});
+  UpcomingMatchListModel({status, message, upcomingMatch});
 
-  UpcomingMatchesListModel.fromJson(Map<String, dynamic> json) {
+  UpcomingMatchListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['upcoming_match'] != null) {
       upcomingMatch = <UpcomingMatch>[];
       json['upcoming_match'].forEach((v) {
-        upcomingMatch!.add(UpcomingMatch.fromJson(v));
+        upcomingMatch!.add(new UpcomingMatch.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = status;
     data['message'] = message;
     if (upcomingMatch != null) {
@@ -32,18 +30,20 @@ class UpcomingMatchesListModel {
 
 class UpcomingMatch {
   dynamic matchId;
-  String? bookingDate;
+  dynamic bookingDate;
   dynamic groundId;
-  String? organizerName;
-  String? groundName;
-  String? groundImage;
-  String? mainImage;
+  dynamic organizerName;
+  dynamic groundName;
+  dynamic groundImage;
+  dynamic mainImage;
   dynamic teamAId;
   dynamic teamBId;
-  String? teamAName;
-  String? teamBName;
-  String? bookingSlotStart;
-  String? bookingSlotEnd;
+  dynamic teamAName;
+  dynamic teamBName;
+  dynamic teamALogo;
+  dynamic teamBLogo;
+  dynamic bookingSlotStart;
+  dynamic bookingSlotEnd;
 
   UpcomingMatch(
       {matchId,
@@ -57,6 +57,8 @@ class UpcomingMatch {
         teamBId,
         teamAName,
         teamBName,
+        teamALogo,
+        teamBLogo,
         bookingSlotStart,
         bookingSlotEnd});
 
@@ -72,12 +74,14 @@ class UpcomingMatch {
     teamBId = json['team_b_id'];
     teamAName = json['team_a_name'];
     teamBName = json['team_b_name'];
+    teamALogo = json['team_a_logo'];
+    teamBLogo = json['team_b_logo'];
     bookingSlotStart = json['booking_slot_start'];
     bookingSlotEnd = json['booking_slot_end'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['match_id'] = matchId;
     data['booking_date'] = bookingDate;
     data['ground_id'] = groundId;
@@ -89,6 +93,8 @@ class UpcomingMatch {
     data['team_b_id'] = teamBId;
     data['team_a_name'] = teamAName;
     data['team_b_name'] = teamBName;
+    data['team_a_logo'] = teamALogo;
+    data['team_b_logo'] = teamBLogo;
     data['booking_slot_start'] = bookingSlotStart;
     data['booking_slot_end'] = bookingSlotEnd;
     return data;

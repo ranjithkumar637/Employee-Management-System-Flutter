@@ -8,7 +8,8 @@ import '../../utils/styles.dart';
 
 
 class CityListDialog extends StatelessWidget {
-  const CityListDialog({Key? key}) : super(key: key);
+  final bool fromOrganizer;
+  const CityListDialog({Key? key, required this.fromOrganizer}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

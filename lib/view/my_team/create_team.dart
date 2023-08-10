@@ -1238,7 +1238,7 @@ class _CreateTeamState extends State<CreateTeam> {
     Provider.of<TeamProvider>(context, listen: false).getStateBasedCityList(stateBasedCityId);
     showDialog(context: context,
         builder: (BuildContext context){
-          return const CityListDialog();
+          return const CityListDialog(fromOrganizer: false,);
         }
     );
   }
@@ -1246,7 +1246,7 @@ class _CreateTeamState extends State<CreateTeam> {
   void openStateSheet() {
     showDialog(context: context,
         builder: (BuildContext context){
-          return const StateListDialog();
+          return const StateListDialog(fromOrganizer: false,);
         }
     );
   }

@@ -1,11 +1,15 @@
 import 'package:elevens_organizer/view/revenue/revenue_list_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
+import '../../models/revenue_team_list_model.dart';
+import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../my_matches/match_history.dart';
+import '../widgets/loader.dart';
 import '../widgets/revenue_refer_data_box.dart';
 
 class RevenueScreen extends StatefulWidget {
@@ -20,26 +24,36 @@ class _RevenueScreenState extends State<RevenueScreen> {
   String firstDate = "";
   String lastDate = "";
 
-  List<Map<String, dynamic>> revenueTeamList = [
-    {
-      "image": Images.groundListImage1,
-      "paid_price": "5000",
-      "total_price": "5000",
-      "date": "Aug 21, 2023",
-      "time": "07:00 AM",
-      "status": "Paid",
-      "team_name": "Toss & Tails"
-    },
-    {
-      "image": Images.groundListImage1,
-      "paid_price": "5000",
-      "total_price": "5000",
-      "date": "Aug 21, 2023",
-      "time": "07:00 PM",
-      "status": "Paid",
-      "team_name": "Dhoni CC"
-    }
-  ];
+  Future<List<TeamsList>>? futureData ;
+  bool loading = false;
+
+  List<TeamsList> revenueTeamList = [];
+  getRevenueTeamList(){
+    futureData = PaymentInfoProvider().getRevenueTeamList().then((value){
+      setState(() {
+        revenueTeamList = [];
+        revenueTeamList.addAll(value.teamsList!);
+      });
+      print(revenueTeamList);
+      return revenueTeamList;
+    });
+  }
+  setDelay() async{
+    setState(() {
+      loading = true;
+    });
+    getRevenueTeamList();
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      loading = false;
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    setDelay();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +69,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                    onTap:(){
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
+                SizedBox(width: 7.w,),
                 Text("Revenue",
                   style: fontMedium.copyWith(
                       fontSize: 16.sp,
@@ -69,8 +79,12 @@ class _RevenueScreenState extends State<RevenueScreen> {
               ],
             ),
           ),
-          const RevenueReferDataBox("250000", 2),
-          Padding(
+          revenueTeamList.isEmpty
+              ? const SizedBox()
+          : const RevenueReferDataBox("250000", 2),
+          revenueTeamList.isEmpty
+              ? const SizedBox()
+              : Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 5.w,
               vertical: 2.h,
@@ -154,26 +168,58 @@ class _RevenueScreenState extends State<RevenueScreen> {
             ),
           ),
           Expanded(
-            child: MediaQuery.removePadding(
+            child: revenueTeamList.isEmpty
+                ? Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 4.h),
+                  SvgPicture.asset(
+                    Images.revenueImage,
+                    width: 40.w,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(height: 3.h),
+                  Text(
+                    "You don’t have any revenue yet",
+                    style: fontMedium.copyWith(
+                        fontSize: 12.sp, color: AppColor.redColor),
+                  ),
+                ],
+              ),
+            )
+                : MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
-                child: ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  separatorBuilder: (context, _){
-                    return SizedBox(height: 1.5.h);
-                  },
-                  itemCount: revenueTeamList.length,
-                  itemBuilder: (context, index){
-                    return RevenueListCard(
-                      revenueTeamList[index]["image"],
-                      revenueTeamList[index]["paid_price"],
-                      revenueTeamList[index]["total_price"],
-                      revenueTeamList[index]["date"],
-                      revenueTeamList[index]["time"],
-                      revenueTeamList[index]["team_name"],
-                      revenueTeamList[index]["status"],
-                    );
-                  },
+                child: FutureBuilder(
+                  future: futureData,
+                  builder: (context, snapshot) {
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return const Loader();
+                    } if(snapshot.connectionState == ConnectionState.done){
+                      return ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        separatorBuilder: (context, _){
+                          return SizedBox(height: 1.5.h);
+                        },
+                        itemCount: revenueTeamList.length,
+                        itemBuilder: (context, index){
+                          return RevenueListCard(
+                            revenueTeamList[index].logo.toString(),
+                            revenueTeamList[index].paidPrice.toString(),
+                            revenueTeamList[index].totalPrice.toString(),
+                            revenueTeamList[index].bookingDate.toString(),
+                            revenueTeamList[index].bookingSlotStart.toString(),
+                            revenueTeamList[index].teamName.toString(),
+                            revenueTeamList[index].paidStatus.toString(),
+                          );
+                        },
+                      );
+                    } else {
+                      return const Loader();
+                    }
+                  }
                 )),
           ),
         ],

@@ -11,8 +11,9 @@ import '../../../../utils/styles.dart';
 import 'add_amount_dialog_box.dart';
 
 class OrganizerBattleListCard extends StatelessWidget {
-  final String image, paidPrice, totalPrice, date, time, team, status;
-  const OrganizerBattleListCard(this.image, this.paidPrice, this.totalPrice, this.date, this.time, this.team, this.status,
+  final String image, paidPrice, totalPrice, date, time, team, status, matchId, teamId;
+  final VoidCallback refresh;
+  const OrganizerBattleListCard(this.image, this.paidPrice, this.totalPrice, this.date, this.time, this.team, this.status, this.matchId, this.teamId, this.refresh,
       {Key? key}) : super(key: key);
 
   @override
@@ -56,7 +57,7 @@ class OrganizerBattleListCard extends StatelessWidget {
                       status == "0"
                       ? InkWell(
                           onTap: (){
-                            showPopupMenu(context);
+                            showPopupMenu(context, paidPrice, totalPrice, team);
                           },
                           child: Icon(Icons.more_vert_rounded, color: AppColor.textColor, size: 5.w,))
                       : const SizedBox(),
@@ -149,7 +150,7 @@ class OrganizerBattleListCard extends StatelessWidget {
     );
   }
 
-  void showPopupMenu(BuildContext context) {
+  void showPopupMenu(BuildContext context, String paidPrice, String totalPrice, String team) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
     final RelativeRect position = RelativeRect.fromRect(
@@ -167,7 +168,8 @@ class OrganizerBattleListCard extends StatelessWidget {
           onTap: (){
             showDialog(context: context,
                 builder: (BuildContext context){
-                  return const AddAmountDialogBox(
+                  return AddAmountDialogBox(
+                      paidPrice, totalPrice, team, matchId, teamId, refresh
                   );
                 }
             );

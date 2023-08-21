@@ -1,15 +1,63 @@
+import 'package:elevens_organizer/models/referral_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/animation/animation_preferences.dart';
 import 'package:flutter_animator/widgets/fading_entrances/fade_in_up.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/loader.dart';
 
-class MyReferrals extends StatelessWidget {
+class MyReferrals extends StatefulWidget {
   const MyReferrals({Key? key}) : super(key: key);
+
+  @override
+  State<MyReferrals> createState() => _MyReferralsState();
+}
+
+class _MyReferralsState extends State<MyReferrals> {
+
+  bool loading = false;
+  Future<List<RefList>>? futureData;
+  List<RefList> refList = [];
+
+  getList(){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      futureData = ProfileProvider().getReferralsList()
+          .then((value) {
+        setState(() {
+          refList = [];
+          refList.addAll(value);
+        });
+        return refList;
+      });
+    });
+  }
+
+  setDelay() async {
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
+    }
+    getList();
+    await Future.delayed(const Duration(seconds: 2));
+    if(mounted){
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setDelay();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +67,30 @@ class MyReferrals extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
-        child: GridView.builder(
-          physics: const BouncingScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 1.5.h,
-              crossAxisSpacing: 3.w,
-              childAspectRatio: 2.6
-          ),
-          itemCount: 27,
-          itemBuilder: (BuildContext context, int index) {
-            return const ReferralsCard("15", "Priyan");
-          },
+        child: FutureBuilder(
+          future: futureData,
+          builder: (context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return const Loader();
+            }
+            if(snapshot.connectionState == ConnectionState.done){
+              return GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 1.5.h,
+                    crossAxisSpacing: 3.w,
+                    childAspectRatio: 2
+                ),
+                itemCount: refList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ReferralsCard(refList[index].points.toString(), refList[index].captainName.toString());
+                },
+              );
+            } else {
+              return const Loader();
+            }
+          }
         ),
       ),
     );
@@ -50,7 +110,7 @@ class ReferralsCard extends StatelessWidget {
       ),
       child: Stack(
         clipBehavior: Clip.none,
-        alignment: Alignment.topRight,
+        alignment: Alignment.center,
         children: [
           Padding(
             padding: EdgeInsets.only(
@@ -60,13 +120,12 @@ class ReferralsCard extends StatelessWidget {
           ),
           Positioned(
             left: 2.w,
-            top: 0.8.h,
             child: Row(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 3.w,
-                    vertical: 1.5.h,
+                    horizontal: 4.w,
+                    vertical: 2.h,
                   ),
                   decoration: const BoxDecoration(
                     color: AppColor.textColor,
@@ -77,13 +136,13 @@ class ReferralsCard extends StatelessWidget {
                        text: 'You got',
                        style: fontRegular.copyWith(
                           color: AppColor.lightColor,
-                          fontSize: 8.sp,
+                          fontSize: 7.sp,
                          ),
                        children: <TextSpan>[
                            TextSpan(text: '\n$points Points',
                             style: fontRegular.copyWith(
                             color: AppColor.primaryColor,
-                            fontSize: 8.sp,
+                            fontSize: 7.sp,
                           ),
                       )
                       ]
@@ -100,6 +159,8 @@ class ReferralsCard extends StatelessWidget {
                           color: AppColor.textColor
                       ),),
                     Text(referral,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                       style: fontMedium.copyWith(
                           fontSize: 10.sp,
                           color: AppColor.textColor

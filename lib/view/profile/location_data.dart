@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:elevens_organizer/models/profile_model.dart';
+import 'package:elevens_organizer/providers/profile_provider.dart';
+import 'package:elevens_organizer/view/address/add_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/ground_details_model.dart';
 import '../../utils/colours.dart';
@@ -39,78 +42,131 @@ class _LocationDataState extends State<LocationData> {
           widget.ground.latitude == null || widget.ground.latitude.toString() == "" ? 13.0827 : double.parse(widget.ground.latitude.toString()),
           widget.ground.longitude == null || widget.ground.longitude.toString() == "" ? 80.2707 : double.parse(widget.ground.longitude.toString()));
     }
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 5.w,
-        vertical: 2.h,
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: 5.w,
-        vertical: 1.5.h,
-      ),
-      decoration: BoxDecoration(
-        color: AppColor.lightColor,
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Location",
-                style: fontMedium.copyWith(
-                    color: AppColor.textColor,
-                    fontSize: 12.sp
-                ),),
-              InkWell(
-                  onTap: (){
-                    Navigator.pushNamed(context, "add_address");
-                  },
-                  child: SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,)),
-            ],
+    return Consumer<ProfileProvider>(
+      builder: (context, profile, child) {
+        print(profile.groundAddress);
+        print(widget.ground.address.toString());
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 5.w,
+            vertical: 2.h,
           ),
-          SizedBox(height: 2.h),
-          SizedBox(
-              width: double.maxFinite,
-              height: 14.h,
-              child: Stack(
-                alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(
+            horizontal: 5.w,
+            vertical: 1.5.h,
+          ),
+          decoration: BoxDecoration(
+            color: AppColor.lightColor,
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                  child: GoogleMap(
-                      myLocationButtonEnabled: true,
-                      myLocationEnabled: true,
-                      zoomControlsEnabled: true,
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: CameraPosition(
-                        target: latLng!,
-                        zoom: 17.0,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    child: Icon(
-                      Icons.my_location, color: AppColor.redColor, size: 5.w,),
-                  ),
+                  Text("Location",
+                    style: fontMedium.copyWith(
+                        color: AppColor.textColor,
+                        fontSize: 12.sp
+                    ),),
+                  InkWell(
+                      onTap: (){
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const AddAddress();
+                        }),
+                      );
+                    },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 1.w,
+                          vertical: 0.5.h
+                        ),
+                        child: SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,),
+                      )),
                 ],
               ),
-          ),
-          widget.ground.address.toString() == "null"
-          ? const SizedBox()
-          : Column(
-            children: [
               SizedBox(height: 2.h),
-              Text(widget.ground.address.toString(),
-                style: fontMedium.copyWith(
-                    color: AppColor.textColor,
-                    fontSize: 10.sp
-                ),),
+              SizedBox(
+                  width: double.maxFinite,
+                  height: 14.h,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                      child: GoogleMap(
+                          myLocationButtonEnabled: true,
+                          myLocationEnabled: true,
+                          zoomControlsEnabled: true,
+                          onMapCreated: _onMapCreated,
+                          initialCameraPosition: CameraPosition(
+                            target: latLng!,
+                            zoom: 17.0,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        child: Icon(
+                          Icons.my_location, color: AppColor.redColor, size: 5.w,),
+                      ),
+                    ],
+                  ),
+              ),
+              SizedBox(height: 1.h),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if(profile.groundAddress != "" && widget.ground.address.toString() != "null")...[
+                    Text("Currently set address",
+                      style: fontMedium.copyWith(
+                          color: AppColor.secondaryColor,
+                          fontSize: 10.sp
+                      ),),
+                    Text(profile.groundAddress,
+                      style: fontMedium.copyWith(
+                          color: AppColor.textColor,
+                          fontSize: 10.sp
+                      ),),
+                    SizedBox(height: 1.h),
+                    Text("Your address",
+                      style: fontMedium.copyWith(
+                          color: AppColor.secondaryColor,
+                          fontSize: 10.sp
+                      ),),
+                    Text(widget.ground.address.toString(),
+                      style: fontMedium.copyWith(
+                          color: AppColor.textColor,
+                          fontSize: 10.sp
+                      ),),
+                  ] else if(profile.groundAddress != "" && widget.ground.address.toString() == "null")...[
+                    Text(profile.groundAddress,
+                      style: fontMedium.copyWith(
+                          color: AppColor.textColor,
+                          fontSize: 10.sp
+                      ),)
+                  ] else if(profile.groundAddress == "" && widget.ground.address.toString() != "null")...[
+                    Text("Your address",
+                      style: fontMedium.copyWith(
+                          color: AppColor.secondaryColor,
+                          fontSize: 10.sp
+                      ),),
+                    Text(widget.ground.address.toString() == "null" ? "" : widget.ground.address.toString(),
+                      style: fontMedium.copyWith(
+                          color: AppColor.textColor,
+                          fontSize: 10.sp
+                      ),)
+                  ] else if(profile.groundAddress == "" && widget.ground.address.toString() == "null")...[
+                    const SizedBox()
+                  ] ,
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 }

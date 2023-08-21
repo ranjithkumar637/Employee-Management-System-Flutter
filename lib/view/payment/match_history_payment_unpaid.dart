@@ -12,7 +12,8 @@ import 'organizer_battle_list_card.dart';
 
 class MatchHistoryPaymentUnPaid extends StatefulWidget {
   final List<MatchHistory> matchHistoryUnPaid;
-  const MatchHistoryPaymentUnPaid(this.matchHistoryUnPaid,  {Key? key}) : super(key: key);
+  final VoidCallback refresh;
+  const MatchHistoryPaymentUnPaid(this.matchHistoryUnPaid, this.refresh,  {Key? key}) : super(key: key);
 
   @override
   State<MatchHistoryPaymentUnPaid> createState() => _MatchHistoryPaymentUnPaidState();
@@ -128,6 +129,8 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
                   Converter().convertTo12HourFormat(widget.matchHistoryUnPaid[index].bookingSlotStart.toString()),
                   widget.matchHistoryUnPaid[index].teamName.toString(),
                   widget.matchHistoryUnPaid[index].paidStatus.toString(),
+                  widget.matchHistoryUnPaid[index].matchId.toString(),
+                  widget.matchHistoryUnPaid[index].teamId.toString(), widget.refresh
                 );
               },
             ),

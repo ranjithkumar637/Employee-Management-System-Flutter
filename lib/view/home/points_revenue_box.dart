@@ -1,3 +1,4 @@
+import 'package:elevens_organizer/view/refer_and_earn/refer_and_earn_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,7 +23,12 @@ class PointsAndRevenueBox extends StatelessWidget {
         if(id == 2){
           Navigator.pushNamed(context, "revenue_screen");
         } else if(id == 1){
-          Navigator.pushNamed(context, "refer_and_earn_screen");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return ReferAndEarnScreen(value);
+            }),
+          );
         }
       },
       child: Container(

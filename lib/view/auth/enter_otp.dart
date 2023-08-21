@@ -33,6 +33,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool loading = false;
   bool enableButton = false;
   String otp = "";
+  bool incomplete = true;
 
   @override
   void initState() {
@@ -220,7 +221,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: 15.w,
               ),
-              child: Text("Please enter your the 4 digit code sent to ${widget.mobileNumber}",
+              child: Text("Please enter your the 4 digit code (${widget.otp}) sent to ${widget.mobileNumber}",
                 textAlign: TextAlign.center,
                 style: fontRegular.copyWith(
                     color: AppColor.textColor,
@@ -248,7 +249,23 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                 setState((){
                   otp = value;
                 });
-
+                setState((){
+                  incomplete = false;
+                });
+              },
+              onCodeChanged: (value){
+                setState((){
+                  otp = value;
+                });
+                if(value.length < 4){
+                  setState((){
+                    incomplete = true;
+                  });
+                } else{
+                  setState((){
+                    incomplete = false;
+                  });
+                }
               },
               focusedBorderColor: AppColor.primaryColor,
               enabledBorderColor: Colors.transparent,
@@ -292,13 +309,13 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                 ),
               )
             ] else...[
-              otp == "" || otp.length < 4
+              incomplete
                   ? Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 5.w,
                 ),
-                    child: const CustomButton(AppColor.hintColour, "Verify", AppColor.textColor),
-                  )
+                child: CustomButton(AppColor.hintColour.withOpacity(0.2), "Verify", AppColor.textColor),
+              )
                   : Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 5.w,

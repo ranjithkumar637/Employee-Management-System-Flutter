@@ -1,3 +1,4 @@
+import 'package:elevens_organizer/models/total_revenue-model.dart';
 import 'package:elevens_organizer/view/home/points_revenue_box.dart';
 import 'package:elevens_organizer/view/home/ref_code_dialog_box.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../models/slot_list_model.dart';
 import '../../providers/booking_provider.dart';
+import '../../providers/payment_info_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
@@ -20,6 +22,7 @@ import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
 import 'custom_date_picker.dart';
 import 'home_grid_options.dart';
+import 'notification_dot.dart';
 import 'offing_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,6 +43,22 @@ class _HomeScreenState extends State<HomeScreen> {
   String slotTime = "", slotTime24 = "";
   List<SlotTimeList> slotsList = [];
 
+  Future<List<Offings>>? futureData;
+  List<Offings> offingsList = [];
+
+  getOffingsList(){
+    futureData = PaymentInfoProvider().offingsList()
+        .then((value) {
+          if(mounted){
+            setState(() {
+              offingsList = [];
+              offingsList.addAll(value);
+            });
+          }
+          return offingsList;
+    });
+  }
+
   String convertTo12HourFormat(String time) {
     DateFormat inputFormat = DateFormat('HH:mm:ss');
     DateFormat outputFormat = DateFormat('hh:mm a');
@@ -50,15 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return formattedTime;
   }
 
-  checkTodayDate(){
-    final ground = Provider.of<ProfileProvider>(context, listen: false);
-    final isSlotDate = ground.slotList.any((slot) => slot.date == bookingDate.toString().split(' ')[0]);
-    // setState(() {
-    //   canBook = isSlotDate ? true : false;
-    // });
-  }
-
   getSlotsList(String groundId){
+    print("get slots ground id $groundId");
     BookingProvider().getSlotsTimeList(groundId, bookingDate)
         .then((value){
       if(value.status == true){
@@ -81,13 +93,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getProfile();
+      getOffingsList();
     });
     await Future.delayed(const Duration(seconds: 1));
-    // showReferralCode();
     if(mounted){
       setState(() {
         loading = false;
       });
+    }
+    await Future.delayed(const Duration(seconds: 2));
+    if(mounted){
+      final profile = Provider.of<ProfileProvider>(context, listen: false);
+      getSlotsList(profile.organizerDetails.groundId.toString());
     }
   }
 
@@ -99,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  getProfile(){
+  getProfile() async {
     Provider.of<ProfileProvider>(context, listen: false).getProfile();
+    Provider.of<ProfileProvider>(context, listen: false).getReferralsList();
   }
 
   @override
@@ -172,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     //referral points & revenue aomount
                     Positioned(
-                      bottom: -90.0,
+                      top: 18.h,
                       right: 5.w,
                       left: 5.w,
                       child: Row(
@@ -228,11 +246,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              GestureDetector(
-                                  onTap:(){
-                                    Navigator.pushNamed(context, "notification_screen");
-                                  },
-                                  child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.5.w,)),
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  GestureDetector(
+                                      onTap:(){
+                                        Navigator.pushNamed(context, "notification_screen");
+                                      },
+                                      child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.5.w,)),
+                                  profile.profileModel.notifyCount.toString() == "0"
+                                      ? const SizedBox()
+                                      : const Positioned(
+                                      right: -2.0,
+                                      top: -2.0,
+                                      child: NotificationDot()),
+                                ],
+                              ),
                               SizedBox(height: 2.h),
                               profile.organizerDetails.adminApprove == 1 ? Bounceable(
                                 onTap: (){
@@ -258,7 +287,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ),
-                              ) : const SizedBox(),
+                              ) : Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 3.w,
+                                  vertical: 0.6.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  color: AppColor.redColor
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.pending_actions, color: AppColor.lightColor, size: 4.w,),
+                                    SizedBox(width: 2.w),
+                                    Text("Pending approval",
+                                      style: fontRegular.copyWith(
+                                          fontSize: 10.sp,
+                                          color: AppColor.lightColor
+                                      ),),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -266,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 12.h),
                 Expanded(
                   child: MediaQuery.removePadding(
                     removeTop: true,
@@ -290,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("This Week Battle",
+                              Text("Booking Information",
                                 style: fontMedium.copyWith(
                                     color: AppColor.textColor,
                                     fontSize: 12.sp
@@ -333,7 +382,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: AppColor.redColor,
                                     fontSize: 11.sp
                                 ),)
-                                  : Column(
+                                  :
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Slot Time",
@@ -343,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),),
                                   SizedBox(height: 1.5.h),
                                   SizedBox(
-                                    height: 13.h,
+                                    height: 10.h,
                                     child: ListView.separated(
                                       separatorBuilder: (context, _){
                                         return SizedBox(width: 2.w);
@@ -353,8 +403,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                       itemCount: slotsList.length,
                                       itemBuilder: (context, index){
-
-                                        return Column(
+                                        String timeString = slotsList[index].start.toString();
+                                        String timeStringLastSlot = slotsList.last.start.toString();
+                                        print("last slot start time $timeString");
+                                        DateTime dynamicDate = DateFormat("yyyy-MM-dd").parse(bookingDate.toString());
+                                        DateTime dateTimeWithDynamicDate = DateFormat("yyyy-MM-dd HH:mm:ss").parse(
+                                          "${DateFormat("yyyy-MM-dd").format(dynamicDate)} $timeString",
+                                        );
+                                        DateTime dateTimeWithDynamicDate1 = DateFormat("yyyy-MM-dd HH:mm:ss").parse(
+                                          "${DateFormat("yyyy-MM-dd").format(dynamicDate)} $timeStringLastSlot",
+                                        );
+                                        if (dateTimeWithDynamicDate.isBefore(DateTime.now())) {
+                                          print("Time is in the past, hide it.");
+                                        } else {
+                                          print("Time is in the future, show it.");
+                                        }
+                                        return dateTimeWithDynamicDate.isBefore(DateTime.now())
+                                            ? const SizedBox()
+                                            : dateTimeWithDynamicDate1.isBefore(DateTime.now())
+                                            ? Text("Slots not available",
+                                          style: fontMedium.copyWith(
+                                              color: AppColor.redColor,
+                                              fontSize: 11.sp
+                                          ),)
+                                            : Column(
                                           children: [
                                             if(slotsList[index].booked.toString() == "0" && slotsList[index].left.toString() == "0")...[
                                               Text("2 Left",
@@ -428,15 +500,32 @@ class _HomeScreenState extends State<HomeScreen> {
                         const HomeGridOptions(),
                         SizedBox(height: 3.h),
                         //in the offing title
-                        Padding(
+                        offingsList.isEmpty
+                        ? const SizedBox()
+                        : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "In The Offing",
-                                style: fontMedium.copyWith(
-                                    fontSize: 12.sp, color: AppColor.textColor),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "In The Offing",
+                                    style: fontMedium.copyWith(
+                                        fontSize: 12.sp, color: AppColor.textColor),
+                                  ),
+                                  InkWell(
+                                    onTap: (){
+
+                                    },
+                                    child: Text(
+                                      "View all",
+                                      style: fontMedium.copyWith(
+                                          fontSize: 10.sp, color: AppColor.redColor),
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 2.h),
                               //horizontal listview
@@ -447,9 +536,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   separatorBuilder: (context ,_){
                                     return SizedBox(width: 2.w,);
                                   },
-                                  itemCount: 2,
+                                  itemCount: offingsList.length,
                                   itemBuilder: (context, index){
-                                    return const OffingCard();
+                                    final offing = offingsList[index];
+                                    return OffingCard(offing);
                                   },
                                 ),
                               ),
@@ -457,7 +547,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(height: 4.h),
-
                       ],
                     ),
                   ),

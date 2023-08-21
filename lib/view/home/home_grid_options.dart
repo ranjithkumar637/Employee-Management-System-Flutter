@@ -3,6 +3,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/images.dart';
+import '../toss/flip_call_upcoming_list.dart';
 import 'grid_item.dart';
 
 class HomeGridOptions extends StatelessWidget {
@@ -29,7 +30,8 @@ class HomeGridOptions extends StatelessWidget {
               SizedBox(width: 5.w),
               Expanded(child: Bounceable(
                   onTap: (){
-                    Navigator.pushNamed(context, "toss");
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const FlipCallUpcomingList()));
                   },
                   child: const GridItem("Flip / Call\n(Toss)", Images.gridImage3, Color(0xffE6E6E6)))),
             ],

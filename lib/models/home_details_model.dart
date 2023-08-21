@@ -1,37 +1,31 @@
-class ProfileModel {
+class HomeDetailsModel {
   dynamic message;
   bool? status;
   dynamic groundCount;
   dynamic totalRevenue;
-  dynamic refPoints;
-  dynamic notifyCount;
   OrganizerDetails? organizerDetails;
-  List<SlotList>? slotList;
+  List<Offings>? offings;
 
-  ProfileModel(
+  HomeDetailsModel(
       {message,
         status,
-        notifyCount,
         groundCount,
         totalRevenue,
-        refPoints,
         organizerDetails,
-        slotList});
+        offings});
 
-  ProfileModel.fromJson(Map<String, dynamic> json) {
+  HomeDetailsModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
-    notifyCount = json['notify_count'];
     groundCount = json['ground_count'];
     totalRevenue = json['total_revenue'];
-    refPoints = json['ref_points'];
     organizerDetails = json['organizer_details'] != null
         ? new OrganizerDetails.fromJson(json['organizer_details'])
         : null;
-    if (json['slotList'] != null) {
-      slotList = <SlotList>[];
-      json['slotList'].forEach((v) {
-        slotList!.add(new SlotList.fromJson(v));
+    if (json['offings'] != null) {
+      offings = <Offings>[];
+      json['offings'].forEach((v) {
+        offings!.add(new Offings.fromJson(v));
       });
     }
   }
@@ -40,15 +34,13 @@ class ProfileModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = message;
     data['status'] = status;
-    data['notify_count'] = notifyCount;
     data['ground_count'] = groundCount;
     data['total_revenue'] = totalRevenue;
-    data['ref_points'] = refPoints;
     if (organizerDetails != null) {
       data['organizer_details'] = organizerDetails!.toJson();
     }
-    if (slotList != null) {
-      data['slotList'] = slotList!.map((v) => v.toJson()).toList();
+    if (offings != null) {
+      data['offings'] = offings!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -70,17 +62,11 @@ class OrganizerDetails {
   dynamic address;
   dynamic houseNo;
   dynamic pincode;
-  dynamic orgPincode;
   dynamic streetName;
   dynamic groundId;
   dynamic adminApprove;
   dynamic groundContactNumber;
   dynamic groundSecondaryNumber;
-  dynamic groundCityId;
-  dynamic groundCityName;
-  dynamic groundStateId;
-  dynamic groundStateName;
-  dynamic organizerRefCode;
   dynamic paymentUpi;
   dynamic qrCode;
   dynamic companyName;
@@ -103,17 +89,11 @@ class OrganizerDetails {
         address,
         houseNo,
         pincode,
-        orgPincode,
         streetName,
         groundId,
         adminApprove,
         groundContactNumber,
         groundSecondaryNumber,
-        groundCityId,
-        groundCityName,
-        groundStateId,
-        groundStateName,
-        organizerRefCode,
         paymentUpi,
         qrCode,
         companyName,
@@ -136,17 +116,11 @@ class OrganizerDetails {
     address = json['address'];
     houseNo = json['house_no'];
     pincode = json['pincode'];
-    orgPincode = json['org_pincode'];
     streetName = json['street_name'];
     groundId = json['ground_id'];
     adminApprove = json['admin_approve'];
     groundContactNumber = json['ground_contact_number'];
     groundSecondaryNumber = json['ground_secondary_number'];
-    groundCityId = json['ground_city_id'];
-    groundCityName = json['ground_city_name'];
-    groundStateId = json['ground_state_id'];
-    groundStateName = json['ground_state_name'];
-    organizerRefCode = json['organizer_ref_code'];
     paymentUpi = json['payment_upi'];
     qrCode = json['qr_code'];
     companyName = json['company_name'];
@@ -171,17 +145,11 @@ class OrganizerDetails {
     data['address'] = address;
     data['house_no'] = houseNo;
     data['pincode'] = pincode;
-    data['org_pincode'] = orgPincode;
     data['street_name'] = streetName;
     data['ground_id'] = groundId;
     data['admin_approve'] = adminApprove;
     data['ground_contact_number'] = groundContactNumber;
     data['ground_secondary_number'] = groundSecondaryNumber;
-    data['ground_city_id'] = groundCityId;
-    data['ground_city_name'] = groundCityName;
-    data['ground_state_id'] = groundStateId;
-    data['ground_state_name'] = groundStateName;
-    data['organizer_ref_code'] = organizerRefCode;
     data['payment_upi'] = paymentUpi;
     data['qr_code'] = qrCode;
     data['company_name'] = companyName;
@@ -191,21 +159,59 @@ class OrganizerDetails {
   }
 }
 
-class SlotList {
-  dynamic date;
-  dynamic day;
+class Offings {
+  dynamic matchId;
+  dynamic teamAName;
+  dynamic teamBName;
+  dynamic teamALogo;
+  dynamic teamBLogo;
+  dynamic bookingDate;
+  dynamic bookingSlotStart;
+  dynamic cityId;
+  dynamic stateId;
+  dynamic cityName;
+  dynamic stateName;
 
-  SlotList({date, day});
+  Offings(
+      {matchId,
+        teamAName,
+        teamBName,
+        teamALogo,
+        teamBLogo,
+        bookingDate,
+        bookingSlotStart,
+        cityId,
+        stateId,
+        cityName,
+        stateName});
 
-  SlotList.fromJson(Map<String, dynamic> json) {
-    date = json['date'];
-    day = json['day'];
+  Offings.fromJson(Map<String, dynamic> json) {
+    matchId = json['match_id'];
+    teamAName = json['team_a_name'];
+    teamBName = json['team_b_name'];
+    teamALogo = json['team_a_logo'];
+    teamBLogo = json['team_b_logo'];
+    bookingDate = json['booking_date'];
+    bookingSlotStart = json['booking_slot_start '];
+    cityId = json['city_id'];
+    stateId = json['state_id'];
+    cityName = json['city_name'];
+    stateName = json['state_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = date;
-    data['day'] = day;
+    data['match_id'] = matchId;
+    data['team_a_name'] = teamAName;
+    data['team_b_name'] = teamBName;
+    data['team_a_logo'] = teamALogo;
+    data['team_b_logo'] = teamBLogo;
+    data['booking_date'] = bookingDate;
+    data['booking_slot_start '] = bookingSlotStart;
+    data['city_id'] = cityId;
+    data['state_id'] = stateId;
+    data['city_name'] = cityName;
+    data['state_name'] = stateName;
     return data;
   }
 }

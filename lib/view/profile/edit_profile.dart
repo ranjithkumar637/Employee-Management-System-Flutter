@@ -133,18 +133,18 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 5.h,
-                    right: 5.w,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Icon(Icons.favorite_border_rounded, color: AppColor.lightColor, size: 6.w,),
-                        // SizedBox(width: 5.w),
-                        SvgPicture.asset(Images.share, color: AppColor.lightColor, width: 6.w,)
-                      ],
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: 5.h,
+                  //   right: 5.w,
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: [
+                  //       // Icon(Icons.favorite_border_rounded, color: AppColor.lightColor, size: 6.w,),
+                  //       // SizedBox(width: 5.w),
+                  //       SvgPicture.asset(Images.share, color: AppColor.lightColor, width: 6.w,)
+                  //     ],
+                  //   ),
+                  // ),
                   Positioned(
                     bottom: 1.h,
                     child: ground.groundDetails.groundName == null || ground.groundDetails.groundName.toString() == ""
@@ -243,22 +243,22 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                             ),
                           ),
                         ),
-                        Positioned(
-                          bottom: 1.h,
-                          right: 2.w,
-                          child: ground.groundImages.isEmpty
-                          ? const SizedBox()
-                          : InkWell(
-                            onTap: (){
-
-                            },
-                            child: Text("${ground.groundImages.length - 1}+ photos",
-                              style: fontMedium.copyWith(
-                                  fontSize: 10.sp,
-                                  color: AppColor.lightColor
-                              ),),
-                          ),
-                        ),
+                        // Positioned(
+                        //   bottom: 1.h,
+                        //   right: 2.w,
+                        //   child: ground.groundImages.isEmpty
+                        //   ? const SizedBox()
+                        //   : InkWell(
+                        //     onTap: (){
+                        //
+                        //     },
+                        //     child: Text("${ground.groundImages.length - 1}+ photos",
+                        //       style: fontMedium.copyWith(
+                        //           fontSize: 10.sp,
+                        //           color: AppColor.lightColor
+                        //       ),),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

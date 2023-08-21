@@ -39,14 +39,18 @@ class _RevenueScreenState extends State<RevenueScreen> {
     });
   }
   setDelay() async{
-    setState(() {
-      loading = true;
-    });
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
+    }
     getRevenueTeamList();
     await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      loading = false;
-    });
+    if(mounted){
+      setState(() {
+        loading = false;
+      });
+    }
   }
   @override
   void initState() {
@@ -189,7 +193,9 @@ class _RevenueScreenState extends State<RevenueScreen> {
                 ],
               ),
             )
-                : MediaQuery.removePadding(
+                : loading
+                ? const Loader()
+            : MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
                 child: FutureBuilder(

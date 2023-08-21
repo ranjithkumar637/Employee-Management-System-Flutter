@@ -65,10 +65,14 @@ class CustomDatePickerState extends State<CustomDatePicker> {
   List<DateTime> getDates() {
     List<DateTime> dates = [];
     DateTime currentDate = DateTime.now();
-    DateTime startDate = currentDate.subtract(Duration(days: currentDate.weekday ));
-    DateTime endDate = startDate.add(const Duration(days: 7));
 
-    for (DateTime date = startDate; date.isBefore(endDate); date = date.add(const Duration(days: 1))) {
+    // Calculate the difference in days from Monday (1) to the current weekday
+    int daysUntilMonday = (currentDate.weekday - DateTime.monday + 7) % 7;
+
+    DateTime startDate = currentDate.subtract(Duration(days: daysUntilMonday));
+    DateTime endDate = startDate.add(const Duration(days: 6)); // Saturday is 6 days from Monday
+
+    for (DateTime date = startDate; date.isBefore(endDate.add(const Duration(days: 1))); date = date.add(const Duration(days: 1))) {
       dates.add(date);
     }
 

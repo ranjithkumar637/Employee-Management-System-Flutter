@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elevens_organizer/utils/app_constants.dart';
 import 'package:elevens_organizer/utils/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -7,7 +9,8 @@ import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 
 class TossSummaryDialog extends StatefulWidget {
-  const TossSummaryDialog({Key? key}) : super(key: key);
+  final String result, logo;
+  const TossSummaryDialog(this.result, this.logo, {Key? key}) : super(key: key);
 
   @override
   State<TossSummaryDialog> createState() => _TossSummaryDialogState();
@@ -23,13 +26,16 @@ class _TossSummaryDialogState extends State<TossSummaryDialog> {
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: 5.w
+      ),
       child: contentBox(context),
     );
   }
 
   contentBox(BuildContext context){
     return Container(
-      height: 34.h,
+      height: 35.h,
       padding: EdgeInsets.symmetric(
         horizontal: 4.w,
         vertical: 3.h,
@@ -40,9 +46,17 @@ class _TossSummaryDialogState extends State<TossSummaryDialog> {
       ),
       child: Column(
         children: [
-          ClipOval(child: Image.asset(Images.groundListImage1, width: 24.w, height: 12.h, fit: BoxFit.cover,)),
+          ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${widget.logo}",
+                width: 20.w, height: 10.h, fit: BoxFit.cover,
+                errorWidget: (context, url, error){
+                  return Image.asset(Images.groundListImage1, width: 20.w, height: 10.h, fit: BoxFit.cover,);
+                },
+              )
+          ),
           SizedBox(height: 2.h),
-          Text("Toss and Tails won the toss and choose to Batting",
+          Text(widget.result,
             textAlign: TextAlign.center,
             style: fontMedium.copyWith(
                 fontSize: 14.sp,
@@ -54,6 +68,8 @@ class _TossSummaryDialogState extends State<TossSummaryDialog> {
             children: [
               Bounceable(
                 onTap: (){
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                   Navigator.pop(context);
                 },
                 child: Padding(

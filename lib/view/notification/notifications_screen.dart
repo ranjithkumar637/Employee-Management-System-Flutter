@@ -2,8 +2,11 @@ import 'package:elevens_organizer/view/notification/regular_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/notification_list_model.dart';
+import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
+import '../widgets/loader.dart';
 import 'notification_count_card.dart';
 
 class Notifications extends StatefulWidget {
@@ -14,6 +17,43 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+
+  Future<List<NotificationList>>? futureData;
+  List<NotificationList> notificationList = [];
+  bool loading = false;
+
+  getNotifications(){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      futureData = ProfileProvider().getNotificationList()
+          .then((value) {
+        setState(() {
+          notificationList = [];
+          notificationList.addAll(value);
+        });
+        return notificationList;
+      });
+    });
+  }
+
+  setDelay() async{
+    setState(() {
+      loading = true;
+    });
+    getNotifications();
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      loading = false;
+    });
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setDelay();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +85,7 @@ class _NotificationsState extends State<Notifications> {
             ),
           ),
           //notification count
-          const NotificationCountCard(),
+          // const NotificationCountCard(),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 5.w, vertical: 2.h
@@ -56,8 +96,50 @@ class _NotificationsState extends State<Notifications> {
                   color: AppColor.textColor
               ),),
           ),
-          const RegularNotification("Next Match", "Toss & Tails VS Dhoni CC", false),
-          SizedBox(height: 2.h),
+          loading
+              ? const Loader()
+              : notificationList.isEmpty
+              ? Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 5.w, vertical: 2.h
+            ),
+            child: Text("No notifications found",
+              style: fontMedium.copyWith(
+                  fontSize: 11.sp,
+                  color: AppColor.redColor
+              ),),
+          )
+              : Expanded(
+            child: FutureBuilder(
+                future: futureData,
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return const Loader();
+                  }
+                  if(snapshot.connectionState == ConnectionState.done){
+                    return MediaQuery.removePadding(
+                      removeTop: true,
+                      context: context,
+                      child: ListView.separated(
+                          separatorBuilder: (context, _){
+                            return SizedBox(height: 2.h);
+                          },
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: notificationList.length,
+                          itemBuilder: (context, index){
+                            return RegularNotification(
+                                notificationList[index].title.toString(),
+                                notificationList[index].note.toString(),
+                                notificationList[index].groundImage.toString());
+                          }
+                      ),
+                    );
+                  } else {
+                    return const Loader();
+                  }
+                }
+            ),
+          ),
         ],
       ),
     );

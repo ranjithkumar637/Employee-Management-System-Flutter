@@ -358,6 +358,7 @@ class _CreateTeamState extends State<CreateTeam> {
                                           cursorColor: AppColor.secondaryColor,
                                           inputFormatters: [
                                             LengthLimitingTextInputFormatter(10),
+                                            FilteringTextInputFormatter.digitsOnly
                                           ],
                                           style: fontRegular.copyWith(
                                               fontSize: 10.sp,
@@ -402,6 +403,7 @@ class _CreateTeamState extends State<CreateTeam> {
                                           cursorColor: AppColor.secondaryColor,
                                           inputFormatters: [
                                             LengthLimitingTextInputFormatter(10),
+                                            FilteringTextInputFormatter.digitsOnly
                                           ],
                                           style: fontRegular.copyWith(
                                               fontSize: 10.sp,

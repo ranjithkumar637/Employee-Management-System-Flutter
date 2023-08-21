@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +7,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../utils/colours.dart';
 import '../../../../utils/images.dart';
 import '../../../../utils/styles.dart';
+import '../../utils/app_constants.dart';
 
 class RevenueListCard extends StatelessWidget {
   final String image, paidPrice, totalPrice, date, time, organizer, status;
@@ -34,7 +36,13 @@ class RevenueListCard extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(image, fit: BoxFit.cover, width: 28.w, height: 14.h,)),
+                child: CachedNetworkImage(
+                  imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}$image",
+                  fit: BoxFit.cover,
+                  height: 12.h,
+                  width: 24.w,
+                )
+            ),
             SizedBox(width: 4.w),
             Expanded(
               child: Column(
@@ -110,11 +118,11 @@ class RevenueListCard extends StatelessWidget {
                             vertical: 0.4.h
                         ),
                         decoration: BoxDecoration(
-                          color: status == "Paid" ? const Color(0xff57BB8A) : status == "Unpaid" ? const Color(0xffE67C73) : null,
+                          color: status == "1" ? const Color(0xff57BB8A) : status == "0" ? const Color(0xffE67C73) : null,
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: Center(
-                          child: Text(status,
+                          child: Text(status == "0" ? "Unpaid" : "Paid",
                             style: fontRegular.copyWith(
                                 color: AppColor.lightColor,
                                 fontSize: 10.sp

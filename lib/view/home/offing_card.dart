@@ -1,13 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elevens_organizer/models/total_revenue-model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class OffingCard extends StatelessWidget {
-  const OffingCard({
+  final Offings offing;
+  const OffingCard(this.offing, {
     Key? key,
   }) : super(key: key);
 
@@ -30,22 +34,32 @@ class OffingCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image.asset(Images.team1, height: 8.5.h, width: 17.w,),
+                ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: "${
+                        AppConstants.imageBaseUrl
+                    }${AppConstants.imageBaseUrlTeam}${offing.teamALogo}",
+                    errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 4.w, fit: BoxFit.cover,),
+                    width: 17.w,
+                    height: 8.5.h,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      text: 'Toss and Tails\n',
+                      text: '${offing.teamAName}\n',
                       style: fontBold.copyWith(
                         color: AppColor.textColor,
                         fontSize: 11.sp,
                       ),
                       children: <TextSpan>[
-                        TextSpan(text: 'VS\n',
+                        TextSpan(text: 'vs\n',
                             style: fontMedium.copyWith(
-                              color: AppColor.textColor,
+                              color: AppColor.redColor,
                               fontSize: 11.sp,
                             )),
-                        TextSpan(text: 'Dhoni CC',
+                        TextSpan(text: offing.teamBName,
                           style: fontBold.copyWith(
                             color: AppColor.textColor,
                             fontSize: 11.sp,
@@ -53,7 +67,17 @@ class OffingCard extends StatelessWidget {
                       ]
                   ),
                 ),
-                Image.asset(Images.team2, height: 8.5.h, width: 17.w,),
+                ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: "${
+                        AppConstants.imageBaseUrl
+                    }${AppConstants.imageBaseUrlTeam}${offing.teamBLogo}",
+                    errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 4.w, fit: BoxFit.cover,),
+                    width: 17.w,
+                    height: 8.5.h,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ],
             ),
           ),
@@ -94,7 +118,7 @@ class OffingCard extends StatelessWidget {
                                   color: AppColor.textMildColor
                               ),),
                             FittedBox(
-                              child: Text("Aug 21, 2023",
+                              child: Text(offing.bookingDate.toString(),
                                 style: fontMedium.copyWith(
                                     fontSize: 9.sp,
                                     color: AppColor.textColor
@@ -131,7 +155,7 @@ class OffingCard extends StatelessWidget {
                                   fontSize: 8.sp,
                                   color: AppColor.textMildColor
                               ),),
-                            Text("06:00 AM",
+                            Text(offing.bookingSlotStart.toString(),
                               style: fontMedium.copyWith(
                                   fontSize: 9.sp,
                                   color: AppColor.textColor
@@ -167,7 +191,7 @@ class OffingCard extends StatelessWidget {
                                   fontSize: 8.sp,
                                   color: AppColor.textMildColor
                               ),),
-                            Text("Chrompet",
+                            Text(offing.cityName.toString(),
                               style: fontMedium.copyWith(
                                   fontSize: 9.sp,
                                   color: AppColor.textColor

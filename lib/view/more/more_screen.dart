@@ -14,6 +14,7 @@ import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../toss/flip_call_upcoming_list.dart';
 import '../widgets/snackbar.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
 
   getProfile(){
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProfileProvider>(context, listen: false).getProfile();
     });
   }
@@ -269,7 +270,27 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ],
                           )
-                              : const SizedBox();
+                              : Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 3.w,
+                              vertical: 1.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: AppColor.redColor
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.pending_actions, color: AppColor.lightColor, size: 5.w,),
+                                SizedBox(width: 3.w),
+                                Text("Admin has to approve you. Please wait...",
+                                  style: fontRegular.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.lightColor
+                                  ),),
+                              ],
+                            ),
+                          );
                         }
                     ),
 
@@ -302,7 +323,8 @@ class _MoreScreenState extends State<MoreScreen> {
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, "toss");
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => const FlipCallUpcomingList()));
                         },
                         child: const ProfileOption("Flip/Call toss")),
                     const Divider(thickness: 0.7,),

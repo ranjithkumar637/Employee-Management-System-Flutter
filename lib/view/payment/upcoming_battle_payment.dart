@@ -29,7 +29,7 @@ class _UpcomingBattlePaymentState extends State<UpcomingBattlePayment> with Sing
   List<UpcomingMatches> unpaidUpcomingList = [];
 
   getUpcomingMatchesList(){
-    futureData = PaymentInfoProvider().getUpcomingMatches().then((value) {
+    futureData = PaymentInfoProvider().getUpcomingMatchesPayment().then((value) {
       setState(() {
         upcomingMatchespayments = [];
         upcomingMatchespayments.addAll(value);
@@ -120,8 +120,8 @@ class _UpcomingBattlePaymentState extends State<UpcomingBattlePayment> with Sing
           child: TabBarView(
               controller: tabController,
               children: [
-                UpcomingBattlePaymentPaid(paidUpcomingList),
-                UpcomingBattlePaymentUnPaid(unpaidUpcomingList),
+                UpcomingBattlePaymentPaid(paidUpcomingList, setDelay),
+                UpcomingBattlePaymentUnPaid(unpaidUpcomingList, setDelay),
               ]),
         ),
       ],

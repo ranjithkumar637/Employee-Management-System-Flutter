@@ -8,12 +8,15 @@ import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
+import '../../models/today_matches_toss_model.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/snackbar.dart';
 
 class Toss extends StatefulWidget {
-  const Toss({Key? key}) : super(key: key);
+  final String teamAName, teamAId,teamBName,teamBId,matchId,teamALogo,teamBLogo;
+  const Toss(this.teamAName,this.teamAId,this.teamBName,this.teamBId,this.matchId, this.teamALogo,this.teamBLogo,  {Key? key}) : super(key: key);
 
   @override
   State<Toss> createState() => _TossState();
@@ -21,19 +24,28 @@ class Toss extends StatefulWidget {
 
 class _TossState extends State<Toss> with TickerProviderStateMixin{
 
-late TabController tabController;
+  String? dropdownValue;
+  List<String> teams = [];
+  late TabController tabController;
 
-late AnimationController _controller;
+  late AnimationController _controller;
   late Animation<double> _spinAnimation;
 
   String _tossResult = '';
   double height = 200.0;
   double width = 200.0;
 
+  addTeam(){
+    teams.add(widget.teamAName);
+    teams.add(widget.teamBName);
+    print(teams);
+  }
+
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+    addTeam();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
@@ -58,7 +70,7 @@ late AnimationController _controller;
           }
         }
       });
-    tossHandle();
+    // tossHandle();
   }
 
   @override
@@ -78,6 +90,11 @@ late AnimationController _controller;
         final random = Random();
         _tossResult = random.nextBool() ? 'head' : 'tail';
       });
+      if(_tossResult == "head"){
+        tabController.animateTo(0);
+      } else if(_tossResult == "tail"){
+        tabController.animateTo(1);
+      }
     });
   }
 
@@ -216,7 +233,7 @@ late AnimationController _controller;
                 top: 18.h,
                 left: 5.w,
                 right: 5.w,
-                child: Text("Toss & Tails\nvs\nDhoni CC",
+                child: Text("${widget.teamAName}\nvs\n${widget.teamBName}",
                   textAlign: TextAlign.center,
                   style: fontMedium.copyWith(
                       fontSize: 20.sp,
@@ -232,28 +249,31 @@ late AnimationController _controller;
                     color: AppColor.textColor,
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  child: TabBar(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 1.w,
-                      vertical: 0.5.h,
-                    ),
-                    controller: tabController,
-                    indicator: BoxDecoration(
-                      color: AppColor.lightColor,
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
+                  child: IgnorePointer(
+                    child: TabBar(
+                      isScrollable: false,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 1.w,
+                        vertical: 0.5.h,
+                      ),
+                      controller: tabController,
+                      indicator: BoxDecoration(
+                        color: AppColor.lightColor,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
                       indicatorColor: Colors.transparent,
                       labelColor: AppColor.textColor,
                       labelStyle: fontMedium.copyWith(
-                        fontSize: 14.sp
+                          fontSize: 14.sp
                       ),
                       unselectedLabelColor: AppColor.lightColor,
                       unselectedLabelStyle: fontMedium.copyWith(
-                        fontSize: 14.sp
+                          fontSize: 14.sp
                       ),
                       tabs: tabs.map((String value){
                         return Tab(text: value,);
                       }).toList(),
+                    ),
                   ),
                 ),
               ),
@@ -262,65 +282,85 @@ late AnimationController _controller;
                 left: 5.w,
                 right: 5.w,
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 5.w,
-                    vertical: 1.6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffFBFAF7),
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Toss & Tails",
-                          style: fontRegular.copyWith(
-                              color: AppColor.textColor,
-                              fontSize: 10.sp
+                    height: 5.h,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColor.lightColor,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: DropdownButton<String>(
+                      onTap: (){
+                        if(_tossResult == ""){
+                          Dialogs.snackbar("Flip the coin, then choose the team", context, isError: true);
+                        }
+                      },
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      hint: Text("Which team won ?",
+                      style: fontRegular.copyWith(
+                        color: AppColor.textMildColor,
+                        fontSize: 10.sp
+                      ),),
+                      value: dropdownValue,
+                      items: teams
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                              value,
+                              style: fontMedium.copyWith(fontSize: 10.sp,color: AppColor.textColor)
                           ),
-                        ),
-                      ),
-                      Icon(Icons.keyboard_arrow_down_sharp, color: AppColor.textMildColor, size: 5.w,),
-                    ],
-                  ),
+                        );
+                      }).toList(),
+                      // Step 5.
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                        showDialog(context: context,
+                            builder: (BuildContext context){
+                              return TossResultDialog(
+                                  widget.teamALogo,
+                                  widget.teamAName,
+                                  widget.teamBLogo,
+                                  widget.teamBName,
+                                  widget.matchId,
+                                widget.teamAName == dropdownValue ? true : false
+                              );
+                            });
+                      },
+                    )
                 ),
               ),
               Positioned(
                 top: 55.h,
-                child: GestureDetector(
-                  onTap: (){
-                    showDialog(context: context,
-                        builder: (BuildContext context){
-                          return const TossResultDialog(
-                          );
-                        });
-                  },
-                  child: Transform(
-                    transform: Matrix4.rotationX(
-                      _controller.value < 0.5
-                          ? pi * _controller.value
-                          : pi - pi * _controller.value,
-                    )..rotateZ(_spinAnimation.value * pi / 360),
-                    alignment: Alignment.center,
-                    child: AnimatedContainer(
-                      height: height,
-                      width: width,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          image: DecorationImage(
-                              image: AssetImage(
-                                'assets/images/${_tossResult.isEmpty ? 'head' : _tossResult}.png',
-                              )),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(-1, 1),
-                                blurRadius: 7.0,
-                                spreadRadius: 5.0),
-                          ]),
-                      duration: const Duration(milliseconds: 250),
-                    ),
+                child: Transform(
+                  transform: Matrix4.rotationX(
+                    _controller.value < 0.5
+                        ? pi * _controller.value
+                        : pi - pi * _controller.value,
+                  )..rotateZ(_spinAnimation.value * pi / 360),
+                  alignment: Alignment.center,
+                  child: AnimatedContainer(
+                    height: height,
+                    width: width,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        image: DecorationImage(
+                            image: AssetImage(
+                              'assets/images/${_tossResult.isEmpty ? 'head' : _tossResult}.png',
+                            )),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(-1, 1),
+                              blurRadius: 7.0,
+                              spreadRadius: 5.0),
+                        ]),
+                    duration: const Duration(milliseconds: 250),
                   ),
                 ),
               ),
@@ -328,7 +368,9 @@ late AnimationController _controller;
           ),
           const Spacer(),
           SizedBox(height: 15.h),
-          Padding(
+          _tossResult != ""
+          ? const SizedBox()
+          : Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 10.w,
             ),

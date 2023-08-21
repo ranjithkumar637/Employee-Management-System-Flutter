@@ -110,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Center(
                             child: TextFormField(
                               controller: mobileController,
+                              autofillHints: const <String>[AutofillHints.telephoneNumberNational],
                               cursorColor: AppColor.secondaryColor,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(10),

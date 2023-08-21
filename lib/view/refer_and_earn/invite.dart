@@ -1,6 +1,9 @@
+import 'package:clipboard/clipboard.dart';
+import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
@@ -8,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/snackbar.dart';
 
 class InviteScreen extends StatelessWidget {
   const InviteScreen({Key? key}) : super(key: key);
@@ -45,40 +49,85 @@ class InviteScreen extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 10.w,
-            vertical: 5.h
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 1.h,
-                  ),
-                  decoration: BoxDecoration(
-                      color: const Color(0xffFAEDD0),
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: RDottedLineBorder.all(color: AppColor.primaryColor)
-                  ),
-                  child: Text("GHYYH1900UI",
-                    textAlign: TextAlign.center,
-                    style: fontMedium.copyWith(
-                        fontSize: 14.sp,
-                        color: AppColor.secondaryColor
-                    ),),
-                ),
+        Consumer<ProfileProvider>(
+          builder: (context, profile, child) {
+            return profile.organizerDetails.adminApprove == 1
+                ? Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 5.h
               ),
-              SizedBox(width: 10.w),
-              InkWell(
-                onTap: (){
-                  Share.share('BHFHDF9800M', subject: 'Share your referral code');
-                },
-                  child: SvgPicture.asset(Images.share, color: AppColor.secondaryColor, width: 6.w,))
-            ],
-          ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 1.h,
+                      ),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffFAEDD0),
+                          borderRadius: BorderRadius.circular(5.0),
+                          border: RDottedLineBorder.all(color: AppColor.primaryColor)
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(profile.organizerDetails.organizerRefCode.toString(),
+                              textAlign: TextAlign.center,
+                              style: fontMedium.copyWith(
+                                  fontSize: 14.sp,
+                                  color: AppColor.secondaryColor
+                              ),),
+                          ),
+                          InkWell(
+                              onTap: (){
+                                FlutterClipboard.copy(profile.organizerDetails.organizerRefCode.toString()).then(( value ){
+                                  print('copied');
+                                  Dialogs.snackbar("Referral code ${profile.organizerDetails.organizerRefCode.toString()} is copied to clipboard", context, isError: false);
+                                });
+
+                              },
+                              child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  InkWell(
+                    onTap: (){
+                      Share.share(profile.organizerDetails.organizerRefCode.toString(), subject: 'Share your referral code');
+                    },
+                      child: SvgPicture.asset(Images.share, color: AppColor.secondaryColor, width: 6.w,))
+                ],
+              ),
+            )
+            : Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: 5.w,
+                  vertical: 5.h
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 3.w,
+                vertical: 1.5.h,
+              ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: AppColor.redColor
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.pending_actions, color: AppColor.lightColor, size: 4.w,),
+                  SizedBox(width: 2.w),
+                  Text("Pending approval",
+                    style: fontRegular.copyWith(
+                        fontSize: 10.sp,
+                        color: AppColor.lightColor
+                    ),),
+                ],
+              ),
+            );
+          }
         ),
         Padding(
           padding: EdgeInsets.symmetric(

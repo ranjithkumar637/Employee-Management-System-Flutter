@@ -28,7 +28,7 @@ class _MatchHistoryPaymentState extends State<MatchHistoryPayment> with SingleTi
   List<MatchHistory> matchHistoryUnPaid = [];
 
   getMatchHistoryList(){
-    futureData = PaymentInfoProvider().getMatchHistory().then((value) {
+    futureData = PaymentInfoProvider().getMatchHistoryPayment().then((value) {
       setState(() {
         matchHistoryPayment =[];
         matchHistoryPayment.addAll(value);
@@ -105,8 +105,8 @@ class _MatchHistoryPaymentState extends State<MatchHistoryPayment> with SingleTi
           child: TabBarView(
               controller: tabController,
               children: [
-                MatchHistoryPaymentPaid(matchHistoryPaid),
-                MatchHistoryPaymentUnPaid(matchHistoryUnPaid),
+                MatchHistoryPaymentPaid(matchHistoryPaid, setDelay),
+                MatchHistoryPaymentUnPaid(matchHistoryUnPaid, setDelay),
               ]),
         ),
       ],

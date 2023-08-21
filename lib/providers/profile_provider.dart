@@ -5,12 +5,14 @@ import 'package:elevens_organizer/models/ground_details_model.dart';
 import 'package:elevens_organizer/models/match_history_list_model.dart';
 import 'package:elevens_organizer/models/profile_model.dart';
 import 'package:elevens_organizer/models/profile_update_model.dart';
+import 'package:elevens_organizer/models/referral_list_model.dart';
 import 'package:elevens_organizer/models/response_model.dart';
 import 'package:elevens_organizer/models/upcoming_match_list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/notification_list_model.dart';
 import '../utils/app_constants.dart';
 
 
@@ -39,17 +41,27 @@ class ProfileProvider extends ChangeNotifier{
   List<String> newGroundImages = [];
   List<String> mainImage = [];
 
-  String pitch = "", boundaryLine = "";
-  int floodLight = 0;
-  String description = "";
+  //storing locally
+  String groundAddress = "";
+    String groundStreet = "";
+    String groundHouseNo = "", groundPinCode = "";
+    String groundLatitude = "", groundLongitude = "";
+    String stateIdGround = "", cityIdGround = "";
+
+    //from api
   String address = "", street = "";
   String houseNo = "", pinCode = "";
   String latitude = "", longitude = "";
-  String stateIdGround = "", cityIdGround = "";
+  String stateId = "", cityId = ""; // for ground
   String mainImg = "";
+
+    String pitch = "", boundaryLine = "";
+    int floodLight = 0;
+    String description = "";
 
     //save ground information locally
   saveGroundInfo(String value1, String value2, int value3){
+    print("pitch value $value1");
     pitch = value1;
     boundaryLine = value2;
     floodLight = value3;
@@ -77,12 +89,12 @@ class ProfileProvider extends ChangeNotifier{
   //save ground address locally
   void saveGroundAddress(String streetData, String subLocality, String locality, String pin, String lat, String long, String houseNumber, String sId, String cId) {
     print(streetData);
-    address = "$streetData, $subLocality, $locality, $pin";
-    latitude = lat;
-    street = streetData;
-    houseNo = houseNumber;
-    pinCode = pin;
-    longitude = long;
+    groundAddress = "$streetData, $subLocality, $locality, $pin";
+    groundLatitude = lat;
+    groundStreet = streetData;
+    groundHouseNo = houseNumber;
+    groundPinCode = pin;
+    groundLongitude = long;
     stateIdGround = sId;
     cityIdGround = cId;
     notifyListeners();
@@ -111,9 +123,90 @@ class ProfileProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-    List<SlotList> slotList = [];
+  List<SlotList> slotList = [];
 
-  //organizer match history list
+    NotificationListModel notificationListModel = NotificationListModel();
+    List<NotificationList> notificationList = [];
+
+    //notification list
+    Future<List<NotificationList>> getNotificationList() async {
+      notificationList = [];
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      try {
+        final response = await http.get(
+          Uri.parse(AppConstants.notificationList),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accToken',
+          },
+        );
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        if (response.statusCode == 200) {
+          notificationListModel = NotificationListModel.fromJson(decodedJson);
+          for (var data in decodedJson['notification']) {
+            notificationList.add(NotificationList.fromJson(data));
+            notifyListeners();
+          }
+          notifyListeners();
+        } else {
+          throw const HttpException('Failed to load data');
+        }
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('notification list - Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return notificationList;
+    }
+
+
+    ReferralListModel referralListModel = ReferralListModel();
+    List<RefList> refList = [];
+
+    //referrals list
+    Future<List<RefList>> getReferralsList() async {
+      refList = [];
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      try {
+        final response = await http.get(
+          Uri.parse(AppConstants.referralList),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accToken',
+          },
+        );
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        if (response.statusCode == 200) {
+          referralListModel = ReferralListModel.fromJson(decodedJson);
+          for (var data in decodedJson['ref_list']) {
+            refList.add(RefList.fromJson(data));
+            notifyListeners();
+          }
+          notifyListeners();
+        } else {
+          throw const HttpException('Failed to load data');
+        }
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('referrals list - Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return refList;
+    }
+
+    //organizer match history list
   Future<List<MatchHistoryList>> getOrganizerMatchHistoryList() async {
     matchHistoryList = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -322,6 +415,8 @@ class ProfileProvider extends ChangeNotifier{
           latitude = groundDetails.latitude.toString();
           longitude = groundDetails.longitude.toString();
           mainImg = groundDetails.mainImage.toString();
+          stateId = groundDetails.stateId.toString();
+          cityId = groundDetails.cityId.toString();
           print(mainImg);
           notifyListeners();
         }
@@ -353,6 +448,7 @@ class ProfileProvider extends ChangeNotifier{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
+    // try {
     var uri = Uri.parse(AppConstants.groundDetailsUpdate);
     final request = http.MultipartRequest("POST", uri);
     request.headers.addAll({
@@ -414,6 +510,10 @@ class ProfileProvider extends ChangeNotifier{
       print(
           "something went wrong : update ground details api ${res.statusCode}");
     }
+    // }
+    // on FileSystemException {
+    //   // throw const FileSystemException('Failed to send request');
+    // }
     notifyListeners();
     return responseModel;
   }

@@ -1,6 +1,10 @@
 class AppConstants {
+
   static const String baseUrl = 'https://11s-dev.rezndus.com/api';
   static const String imageBaseUrl = 'https://11s-dev.rezndus.com/';
+
+  // static const String baseUrl = "https://11s-staging.rezndus.com/api";
+  // static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
 
   static const String imageBaseUrlGallery = 'storage/app/public/ground/';
 
@@ -65,12 +69,20 @@ class AppConstants {
   static const String paymentgeto  = '$baseUrl/organizer/payment-get';
 
   //payment update
-  static const String paymentUpdateo  = '$baseUrl/organizer/payment-update';
+  static const String paymentUpdate  = '$baseUrl/organizer/payment-update';
 
   //toss won by
   static const String tosswon = '$baseUrl/organizer/toss-won-by';
 
   static const String homeDetails  = '$baseUrl/organizer/get-home-details';
+
+  static const String notificationList  = '$baseUrl/organizer/organizer-notification-list';
+
+  static const String referralList  = '$baseUrl/organizer/referral-list';
+
+  static const String matchInfo  = '$baseUrl/organizer/match-info';
+  static const String getSquadOfMatch = '$baseUrl/match-players-list';
+
 
 
 

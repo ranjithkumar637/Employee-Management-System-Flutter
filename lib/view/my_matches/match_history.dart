@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:elevens_organizer/view/my_matches/match_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/match_history_list_model.dart';
+import '../../providers/booking_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
@@ -159,7 +162,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                 SizedBox(height: 16.h),
                 Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
                 SizedBox(height: 3.h),
-                Text("You don’t have any upcoming matches",
+                Text("You don’t have any match history",
                   style: fontMedium.copyWith(
                       fontSize: 12.sp,
                       color: AppColor.redColor
@@ -186,7 +189,16 @@ class _MatchHistoryState extends State<MatchHistory> {
                       itemBuilder: (context, index){
                         return Bounceable(
                             onTap: (){
-                            },
+                              Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
+                              Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
+                              Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return MatchInfoScreen(matchId: matchHistoryList[index].id.toString());
+                                            }),
+                                          );
+                                        },
                             child:  Padding(
                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: Container(
@@ -210,7 +222,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                                               imageUrl: "${
                                                   AppConstants.imageBaseUrl
                                               }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamBLogo}",
-                                              errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
+                                              errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
                                               width: 20.w,
                                               height: 10.h,
                                               fit: BoxFit.cover,

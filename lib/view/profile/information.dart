@@ -39,7 +39,7 @@ class _InformationState extends State<Information> {
                 physics: const BouncingScrollPhysics(),
                 children: [
                   //your slots
-                  const YourSlots(),
+                  // const YourSlots(),
                   //ground information
                   GroundInformation(widget.ground),
                   //location
@@ -73,6 +73,10 @@ class _InformationState extends State<Information> {
   }
 
   validate(){
+    final profile = Provider.of<ProfileProvider>(context, listen: false);
+    List<String> gallery = [];
+    List<String> mainImg = [];
+    String stateId = "", cityId = "";
     String description = Provider.of<ProfileProvider>(context, listen: false).description;
     String pitch = Provider.of<ProfileProvider>(context, listen: false).pitch;
     String boundaryLine = Provider.of<ProfileProvider>(context, listen: false).boundaryLine;
@@ -82,14 +86,29 @@ class _InformationState extends State<Information> {
     String street = Provider.of<ProfileProvider>(context, listen: false).street;
     String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
     String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
-    String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
-    String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
+    if(profile.stateId == "" && profile.cityId == ""){
+      stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
+      cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
+    } else {
+      stateId = profile.stateId;
+      cityId = profile.cityId;
+    }
     int floodLight = Provider.of<ProfileProvider>(context, listen: false).floodLight;
-    List<String> gallery = Provider.of<ProfileProvider>(context, listen: false).newGroundImages;
-    List<String> mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;if(mainImg.isEmpty){
+    // if(profile.newGroundImages.isEmpty){
+    //   gallery = Provider.of<ProfileProvider>(context, listen: false).groundImages;
+    // } else {
+      gallery = Provider.of<ProfileProvider>(context, listen: false).newGroundImages;
+    // }
+    // if(profile.mainImage.isEmpty){
+    //   mainImg.add(Provider.of<ProfileProvider>(context, listen: false).mainImg);
+    // } else {
+      mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;
+    // }
+    print(gallery);
+    if(profile.mainImg == "" && mainImg.isEmpty){
       Dialogs.snackbar("Upload main ground image", context, isError: true);
     }
-    else if(gallery.isEmpty){
+    else if(gallery.isEmpty && profile.groundImages.isEmpty){
       Dialogs.snackbar("Upload gallery images", context, isError: true);
     } else if(pitch == ""){
       Dialogs.snackbar("Set pitch data", context, isError: true);

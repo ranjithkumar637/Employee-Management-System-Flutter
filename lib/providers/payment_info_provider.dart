@@ -70,16 +70,19 @@ class PaymentInfoProvider extends ChangeNotifier {
   //payment update
   PaymentUpdateModel paymentUpdateModel = PaymentUpdateModel();
 
-  Future<PaymentUpdateModel> paymentUpdates(String matchId, String teamId) async {
+  Future<PaymentUpdateModel> paymentUpdate(String matchId, String teamId, String paidPrice, String totalPrice) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
+    print("matchId $matchId team id $teamId paid price $paidPrice total price $totalPrice");
     var body = jsonEncode({
       'match_id': matchId,
       'team_id': teamId,
+      'paid_price': paidPrice,
+      'total_price': totalPrice
     });
     try {
       final response = await http.post(
-        Uri.parse(AppConstants.paymentUpdateo),
+        Uri.parse(AppConstants.paymentUpdate),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accToken',
@@ -141,9 +144,8 @@ class PaymentInfoProvider extends ChangeNotifier {
     return revenueTeamListModel;
   }
 
-//upcomingmatches payment
-
-  Future<List<UpcomingMatches>> getUpcomingMatches() async {
+//upcoming matches payment
+  Future<List<UpcomingMatches>> getUpcomingMatchesPayment() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
 
@@ -182,7 +184,7 @@ class PaymentInfoProvider extends ChangeNotifier {
 
   //upcomingmatches payment match history
 
-  Future<List<MatchHistory>> getMatchHistory() async {
+  Future<List<MatchHistory>> getMatchHistoryPayment() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     try {
@@ -217,6 +219,7 @@ class PaymentInfoProvider extends ChangeNotifier {
     return matchHistoryPayment;
   }
 
+  //revenue amount
   Future<TotalRevenueModel> totalRevenueAmount() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
@@ -247,4 +250,42 @@ class PaymentInfoProvider extends ChangeNotifier {
     }
     return totalRevenueModel;
   }
+
+  List<Offings> offings = [];
+
+  //offings list
+  Future<List<Offings>> offingsList() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    try {
+      final response = await http.get(
+        Uri.parse(AppConstants.totalrevenue),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        totalRevenueModel = TotalRevenueModel.fromJson(decodedJson);
+        for (var list in decodedJson['offings']) {
+          offings.add(Offings.fromJson(list));
+        }
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('offings list- Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return offings;
+  }
+
 }

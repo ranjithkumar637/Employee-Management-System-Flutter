@@ -1,14 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class RegularNotification extends StatefulWidget {
-  final String title, body;
-  final bool old;
-  const RegularNotification(this.title, this.body, this.old, {Key? key}) : super(key: key);
+  final String title, body, image;
+  const RegularNotification(this.title, this.body, this.image, {Key? key}) : super(key: key);
 
   @override
   State<RegularNotification> createState() => _RegularNotificationState();
@@ -19,30 +20,32 @@ class _RegularNotificationState extends State<RegularNotification> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 3.w,
-        vertical: 1.5.h
+          horizontal: 5.w,
+          vertical: 2.h
       ),
       margin: EdgeInsets.symmetric(
         horizontal: 5.w,
       ),
       decoration: BoxDecoration(
-        color: widget.old ? AppColor.oldNotificationBgColor : AppColor.lightColor,
+        color: AppColor.lightColor,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            height: 6.h,
-            width: 12.w,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(Images.groundImage))
+          ClipOval(
+            child: CachedNetworkImage(
+              imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.image}",
+              height: 7.h,
+              width: 14.w,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, widget){
+                return Image.asset(Images.groundListImage2, fit: BoxFit.cover, height: 7.h,
+                  width: 14.w,);
+              },
             ),
           ),
-          SizedBox(width: 4.w),
+          SizedBox(width: 3.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,18 +55,19 @@ class _RegularNotificationState extends State<RegularNotification> {
                       fontSize: 11.sp,
                       color: AppColor.redColor
                   ),),
-                SizedBox(height: 0.5.h),
+                SizedBox(height: 1.h),
                 Text(widget.body,
                   style: fontRegular.copyWith(
-                      fontSize: 11.sp,
+                      fontSize: 10.sp,
                       color: AppColor.textColor
                   ),),
               ],
             ),
           ),
-          widget.old ? const SizedBox() : const CircleAvatar(
+          SizedBox(width: 3.w),
+          const CircleAvatar(
             radius: 4,
-            backgroundColor: AppColor.primaryColor,
+            backgroundColor: AppColor.secondaryColor,
           ),
         ],
       ),

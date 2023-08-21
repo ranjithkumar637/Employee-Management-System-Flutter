@@ -152,7 +152,7 @@ class _ProfileState extends State<Profile> {
                                     vertical: 1.5.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColor.lightColor,
+                                    color: groundNameController.text.isEmpty ? AppColor.lightColor : AppColor.textFieldBg,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: Center(
@@ -207,13 +207,14 @@ class _ProfileState extends State<Profile> {
                                     vertical: 1.5.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColor.lightColor,
+                                    color: groundMobileController.text.isEmpty ? AppColor.lightColor : AppColor.textFieldBg,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: Center(
                                     child: TextFormField(
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(10),
+                                        FilteringTextInputFormatter.digitsOnly
                                       ],
                                       controller: groundMobileController,
                                       readOnly: groundMobileController.text.isEmpty ? false : true,
@@ -335,7 +336,7 @@ class _ProfileState extends State<Profile> {
                                     vertical: 1.5.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColor.lightColor,
+                                    color: AppColor.textFieldBg,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: Center(
@@ -390,7 +391,7 @@ class _ProfileState extends State<Profile> {
                                     vertical: 1.5.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColor.lightColor,
+                                    color: AppColor.textFieldBg,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: Center(
@@ -398,6 +399,7 @@ class _ProfileState extends State<Profile> {
                                       readOnly: true,
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(10),
+                                        FilteringTextInputFormatter.digitsOnly
                                       ],
                                       controller: mobileNumberController,
                                       cursorColor: AppColor.secondaryColor,
@@ -512,7 +514,20 @@ class _ProfileState extends State<Profile> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const FieldHeading("State"),
+                                Row(
+                                  children: [
+                                    const FieldHeading("State"),
+                                    const Spacer(),
+                                    editState ? InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            editState = false;
+                                          });
+                                        },
+                                        child: Icon(Icons.close, color: AppColor.secondaryColor, size: 5.w,))
+                                        : const SizedBox(),
+                                  ],
+                                ),
                                 SizedBox(height:1.h),
                                 Consumer<TeamProvider>(
                                     builder: (context, team, child) {
@@ -553,7 +568,7 @@ class _ProfileState extends State<Profile> {
                                               )
                                           : Row(
                                             children: [
-                                              Text(team.state,
+                                              Text(team.state == "" ? "Choose state" : team.state,
                                                 style: fontRegular.copyWith(
                                                     color: AppColor.textColor
                                                 ),),
@@ -566,13 +581,30 @@ class _ProfileState extends State<Profile> {
                                     }
                                 ),
                                 SizedBox(height: 2.h),
-                                const FieldHeading("City"),
+                                Row(
+                                  children: [
+                                    const FieldHeading("City"),
+                                    const Spacer(),
+                                    editCity ? InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            editCity = false;
+                                          });
+                                        },
+                                        child: Icon(Icons.close, color: AppColor.secondaryColor, size: 5.w,))
+                                        : const SizedBox(),
+                                  ],
+                                ),
                                 SizedBox(height:1.h),
                                 Consumer<TeamProvider>(
                                     builder: (context, team, child) {
                                       return InkWell(
                                         onTap: (){
-                                          openCitySheet(team.stateId);
+                                          if(team.stateId == ""){
+                                            Dialogs.snackbar("Choose state first", context, isError: true);
+                                          } else {
+                                            openCitySheet(team.stateId);
+                                          }
                                         },
                                         child: Container(
                                           width: double.infinity,
@@ -606,7 +638,7 @@ class _ProfileState extends State<Profile> {
                                           )
                                           : Row(
                                             children: [
-                                              Text(team.stateBasedCity,
+                                              Text(team.stateBasedCity == "" ? "Choose city" : team.stateBasedCity,
                                                 style: fontRegular.copyWith(
                                                     color: AppColor.textColor
                                                 ),),
@@ -648,6 +680,7 @@ class _ProfileState extends State<Profile> {
                                     child: TextFormField(
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(6),
+                                        FilteringTextInputFormatter.digitsOnly
                                       ],
                                       controller: orgPinCodeController,
                                       cursorColor: AppColor.secondaryColor,
@@ -704,18 +737,41 @@ class _ProfileState extends State<Profile> {
   }
 
   validate(){
-    String address = Provider.of<ProfileProvider>(context, listen: false).address;
-    String houseNo = Provider.of<ProfileProvider>(context, listen: false).houseNo;
-    String pinCode = Provider.of<ProfileProvider>(context, listen: false).pinCode;
-    String street = Provider.of<ProfileProvider>(context, listen: false).street;
-    String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
-    String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
+    final profile = Provider.of<ProfileProvider>(context, listen: false);
+    String address = "", houseNo = "", pinCode = "", street = "", latitude = "", longitude = "";
+    String cityIdG = "", stateIdG = "";
 
+    if(profile.address == "" && profile.groundAddress == "") {
+      Dialogs.snackbar("Set ground address", context, isError: true);
+    }
+    else if(profile.groundAddress == ""){
+      address = Provider.of<ProfileProvider>(context, listen: false).address;
+      houseNo = Provider.of<ProfileProvider>(context, listen: false).houseNo;
+      pinCode = Provider.of<ProfileProvider>(context, listen: false).pinCode;
+      street = Provider.of<ProfileProvider>(context, listen: false).street;
+      latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
+      longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
+    }
+    else {
+      address = Provider.of<ProfileProvider>(context, listen: false).groundAddress;
+      houseNo = Provider.of<ProfileProvider>(context, listen: false).groundHouseNo;
+      pinCode = Provider.of<ProfileProvider>(context, listen: false).groundPinCode;
+      street = Provider.of<ProfileProvider>(context, listen: false).groundStreet;
+      latitude = Provider.of<ProfileProvider>(context, listen: false).groundLatitude;
+      longitude = Provider.of<ProfileProvider>(context, listen: false).groundLongitude;
+    }
+    //profile
     String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
     String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
 
-    String groundCityId = Provider.of<ProfileProvider>(context, listen: false).cityIdGround;
-    String groundStateId = Provider.of<ProfileProvider>(context, listen: false).stateIdGround;
+    //ground
+    if(profile.cityIdGround == "" && profile.stateIdGround == ""){
+      cityIdG = Provider.of<ProfileProvider>(context, listen: false).cityId;
+      stateIdG = Provider.of<ProfileProvider>(context, listen: false).stateId;
+    } else {
+      cityIdG = Provider.of<ProfileProvider>(context, listen: false).cityIdGround;
+      stateIdG = Provider.of<ProfileProvider>(context, listen: false).stateIdGround;
+    }
 
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -727,7 +783,7 @@ class _ProfileState extends State<Profile> {
           nameController.text.toString(),
           date == "" ? "" : date,
           location.toString() == "null" ? "" : location.toString(),
-          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street, cityId, stateId, groundCityId, groundStateId, orgPinCodeController.text)
+          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street, cityId, stateId, cityIdG, stateIdG, orgPinCodeController.text)
       .then((value) {
         if(value.status == true){
           Dialogs.snackbar("Profile updated successfully", context, isError: false);
@@ -746,13 +802,14 @@ class _ProfileState extends State<Profile> {
           });
         }
       });
-    } else{
-      _scrollController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
     }
+    // else{
+    //   _scrollController.animateTo(
+    //     0.0,
+    //     duration: const Duration(milliseconds: 500),
+    //     curve: Curves.ease,
+    //   );
+    // }
   }
 
 }

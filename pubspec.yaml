@@ -73,6 +73,8 @@ dependencies:
   permission_handler: ^10.3.0
   flutter_otp_text_field: ^1.1.1
   flutter_local_notifications: ^8.2.0
+  search_map_place_updated: ^0.0.4
+  maps_launcher: ^2.2.0
 
 dev_dependencies:
   flutter_test:

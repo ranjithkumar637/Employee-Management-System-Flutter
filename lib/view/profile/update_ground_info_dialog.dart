@@ -25,9 +25,11 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
   bool floodLight = false;
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
+  List<String> pitchTypes = ["Green", "Dry", "Hard"];
+  String? dropDownValue;
 
   setData(){
-    pitchController.text = widget.pitch;
+    // pitchController.text = widget.pitch;
     boundaryLineController.text = widget.boundaryLine;
     floodLight = widget.floodLight == 1 ? true : false;
   }
@@ -91,31 +93,30 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
                     color: const Color(0xffFBFAF7),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  child: Center(
-                    child: TextFormField(
-                      controller: pitchController,
-                      cursorColor: AppColor.secondaryColor,
+                  child: DropdownButton<String>(
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    hint: Text("Select Pitch type",
                       style: fontRegular.copyWith(
-                          fontSize: 10.sp,
-                          color: AppColor.textColor
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Enter pitch';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        border: InputBorder.none,
-                        hintText: "Ex: Green",
-                        hintStyle: fontRegular.copyWith(
-                            fontSize: 10.sp,
-                            color: AppColor.hintColour
-                        ),),
-                    ),
+                          color: AppColor.textMildColor,
+                          fontSize: 10.sp
+                      ),),
+                    value: dropDownValue,
+                    items: pitchTypes
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                            value,
+                            style: fontMedium.copyWith(fontSize: 10.sp,color: AppColor.textColor)
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropDownValue = newValue!;
+                      });
+                    },
                   ),
                 ),
               ],
@@ -226,10 +227,16 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
       setState(() {
         loading = true;
       });
-      Provider.of<ProfileProvider>(context, listen: false).saveGroundInfo(pitchController.text, boundaryLineController.text, floodLight == true ? 1 : 0);
-      setState(() {
-        loading = false;
-      });
+      if(dropDownValue == null){
+        setState(() {
+          loading = false;
+        });
+      } else {
+        Provider.of<ProfileProvider>(context, listen: false).saveGroundInfo(dropDownValue.toString(), boundaryLineController.text, floodLight == true ? 1 : 0);
+        setState(() {
+          loading = false;
+        });
+      }
       Navigator.pop(context);
     }
   }

@@ -9,7 +9,8 @@ import '../widgets/revenue_refer_data_box.dart';
 import 'my_referrals.dart';
 
 class ReferAndEarnScreen extends StatefulWidget {
-  const ReferAndEarnScreen({Key? key}) : super(key: key);
+  final String value;
+  const ReferAndEarnScreen(this.value, {Key? key}) : super(key: key);
 
   @override
   State<ReferAndEarnScreen> createState() => _ReferAndEarnScreenState();
@@ -54,7 +55,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> with SingleTick
               ],
             ),
           ),
-          const RevenueReferDataBox("250.00 pt", 1),
+          RevenueReferDataBox(widget.value, 1),
           SizedBox(height: 1.h),
           TabBar(
               isScrollable: true,

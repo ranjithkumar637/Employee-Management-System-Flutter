@@ -41,14 +41,18 @@ class _RecentBookingsState extends State<RecentBookings> {
   }
 
   setDelay() async {
-    setState(() {
-      loading = true;
-    });
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
+    }
     getRecentBookingsList();
     await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      loading = false;
-    });
+    if(mounted){
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override

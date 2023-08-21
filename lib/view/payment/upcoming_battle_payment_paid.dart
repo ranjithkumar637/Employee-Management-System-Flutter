@@ -10,7 +10,8 @@ import 'organizer_battle_list_card.dart';
 
 class UpcomingBattlePaymentPaid extends StatelessWidget {
   final List<UpcomingMatches> paidUpcomingList;
-  const UpcomingBattlePaymentPaid(this.paidUpcomingList, {Key? key}) : super(key: key);
+  final VoidCallback refresh;
+  const UpcomingBattlePaymentPaid(this.paidUpcomingList, this.refresh, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,9 @@ class UpcomingBattlePaymentPaid extends StatelessWidget {
           Converter().convertTo12HourFormat(paidUpcomingList[index].bookingSlotStart.toString()),
           paidUpcomingList[index].teamName.toString(),
           paidUpcomingList[index].paidStatus.toString(),
+          paidUpcomingList[index].matchId.toString(),
+          paidUpcomingList[index].teamId.toString(),
+          refresh
         );
       },
     );

@@ -11,6 +11,7 @@ import '../models/state_based_city_list_model.dart';
 import '../models/state_list_model.dart';
 import '../models/team_list_model.dart';
 import '../models/team_view_model.dart';
+import '../models/today_matches_toss_model.dart';
 import '../utils/app_constants.dart';
 
 class TeamProvider extends ChangeNotifier{
@@ -65,6 +66,46 @@ class TeamProvider extends ChangeNotifier{
     stateBasedCity = "";
     stateBasedCityId = "";
     notifyListeners();
+  }
+
+  TodayMatchListForTossModel todayMatchListForTossModel =TodayMatchListForTossModel();
+  List<TodayMatches> todayMatches=[];
+
+  //today matches for toss
+  Future<List<TodayMatches>> getTodayMatch() async {
+    todayMatches= [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    try {
+      final response = await http.get(
+        Uri.parse(AppConstants.matchesfortoss ),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        todayMatchListForTossModel = TodayMatchListForTossModel.fromJson(decodedJson);
+        for( var matches in decodedJson['today_matches']){
+          todayMatches.add(TodayMatches.fromJson(matches));
+          notifyListeners();
+        }
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('Recent Bookings- Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return todayMatches;
   }
 
   //state list

@@ -11,6 +11,7 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location_platform_interface/location_platform_interface.dart';
 import 'package:provider/provider.dart';
+import 'package:search_map_place_updated/search_map_place_updated.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/profile_provider.dart';
@@ -22,6 +23,7 @@ import '../my_team/city_list_dialog.dart';
 import '../my_team/create_team.dart';
 import '../my_team/state_list_dialog.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/snackbar.dart';
 
 class AddAddress extends StatefulWidget {
   const AddAddress({Key? key}) : super(key: key);
@@ -34,7 +36,7 @@ class _AddAddressState extends State<AddAddress> {
 
   bool showFirst = true;
   bool loading = false;
-  double initHeight = 70.h;
+  double initHeight = 75.h;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController houseController = TextEditingController();
   final TextEditingController streetController = TextEditingController();
@@ -48,6 +50,7 @@ class _AddAddressState extends State<AddAddress> {
   late CameraPosition cameraPosition;
   String? street, subLocality, locality, postalCode, country;
   String? lat, long;
+  String trackLocation = "";
 
   getCityList(){
     Provider.of<TeamProvider>(context, listen: false).getCityList();
@@ -98,7 +101,10 @@ class _AddAddressState extends State<AddAddress> {
   }
 
   Future<void> _requestLocationPermission() async {
-    await Permission.location.request();
+    print("requesting location permission");
+    if(await Permission.location.isDenied){
+      await Permission.location.request();
+    }
   }
 
   getUserAddress() async {
@@ -116,6 +122,7 @@ class _AddAddressState extends State<AddAddress> {
       long = _latLong.longitude.toString();
       streetController.text =
       "${street.toString()}.";
+      trackLocation = "${subLocality.toString()}, ${locality.toString()}, ${postalCode.toString()}";
       streetController.text = street.toString();
       pinCodeController.text = postalCode.toString();
     });
@@ -168,183 +175,229 @@ class _AddAddressState extends State<AddAddress> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.bgColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Stack(
-              alignment: Alignment.center,
+    return WillPopScope(
+      onWillPop: () async{
+        if(!showFirst){
+          setState(() {
+            showFirst = true;
+            initHeight = 75.h;
+          });
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: GestureDetector(
+        onTap: (){
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColor.bgColor,
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                AnimatedContainer(
-                  width: double.maxFinite,
-                  height: initHeight,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
-                      )
-                  ),
-                  duration: const Duration(milliseconds: 300),
-                  child: GoogleMap(
-                    gestureRecognizers: <
-                        Factory <OneSequenceGestureRecognizer>>{
-                      Factory <OneSequenceGestureRecognizer>(
-                            () => EagerGestureRecognizer(),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AnimatedContainer(
+                      width: double.maxFinite,
+                      height: initHeight,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0),
+                          )
                       ),
-                    },
-                    myLocationButtonEnabled: true,
-                    myLocationEnabled: true,
-                    zoomControlsEnabled: true,
-                    initialCameraPosition: CameraPosition(
-                      target: _latLong,
-                      zoom: 17,
-                    ),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                    onCameraMove: (CameraPosition position) async {
-                      cameraPosition = position;
-                      locating = true;
-                      _latLong = position.target;
-                      if (kDebugMode) {
-                        print("${_latLong.latitude}  ${_latLong.longitude}");
-                      }
-                    },
-                    onCameraIdle: () async {
-                      setState(() {
-                        getUserAddress();
-                        locating = false;
-                      });
-                    },
-                  ),
-                ),
-                Positioned(
-                  top: 2.h,
-                  left: 5.w,
-                  child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, color: AppColor.textColor,
-                        size: 7.w,)),
-                ),
-                Positioned(
-                  top: 2.h,
-                  child: Text("Add Address",
-                    style: fontMedium.copyWith(
-                        fontSize: 16.sp,
-                        color: AppColor.textColor
-                    ),),
-                ),
-                Positioned(
-                  child: Icon(
-                    Icons.my_location, color: AppColor.redColor, size: 8.w,),
-                ),
-              ],
-            ),
-            Container(
-              width: double.maxFinite,
-              margin: EdgeInsets.symmetric(
-                horizontal: 5.w,
-                vertical: 3.h,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 4.w,
-                vertical: 1.5.h,
-              ),
-              decoration: BoxDecoration(
-                color: AppColor.primaryColor,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 3.w,
-                      vertical: 1.5.h,
-                    ),
-                    decoration: const BoxDecoration(
-                        color: Color(0xff333333),
-                        shape: BoxShape.circle
-                    ),
-                    child: SvgPicture.asset(
-                      Images.currentLocationImage,
-                      color: AppColor.primaryColor, width: 6.w,),
-                  ),
-                  SizedBox(width: 3.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Your Address",
-                          style: fontMedium.copyWith(
-                              fontSize: 12.sp,
-                              color: AppColor.textColor
-                          ),),
-                        SizedBox(height: 0.5.h),
-                        Text("$street, $subLocality, $locality",
-                          style: fontRegular.copyWith(
-                              fontSize: 10.sp,
-                              color: AppColor.textColor
-                          ),),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (Widget child,
-                      Animation<double> animation) {
-                    final scaleAnimation = Tween<double>(
-                      begin: 0.0,
-                      end: 1.0,
-                    ).animate(animation);
-
-                    return ScaleTransition(
-                      scale: scaleAnimation,
-                      child: child,
-                    );
-                  },
-                  child: showFirst
-                      ? MediaQuery.removePadding(
-                    removeTop: true,
-                    context: context,
-                    child: ListView(
-                      children: [
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
+                      duration: const Duration(milliseconds: 300),
+                      child: GoogleMap(
+                        gestureRecognizers: <
+                            Factory <OneSequenceGestureRecognizer>>{
+                          Factory <OneSequenceGestureRecognizer>(
+                                () => EagerGestureRecognizer(),
                           ),
-                          child: Bounceable(
-                              onTap: () {
-                                setState(() {
-                                  showFirst = !showFirst;
-                                  initHeight = 25.h;
-                                });
-                              },
-                              child: const CustomButton(
-                                  AppColor.textColor, 'Confirm Location',
-                                  AppColor.lightColor)),
+                        },
+                        myLocationButtonEnabled: true,
+                        myLocationEnabled: true,
+                        zoomControlsEnabled: true,
+                        initialCameraPosition: CameraPosition(
+                          target: _latLong,
+                          zoom: 17,
                         ),
-                      ],
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                        onCameraMove: (CameraPosition position) async {
+                          cameraPosition = position;
+                          locating = true;
+                          _latLong = position.target;
+                          if (kDebugMode) {
+                            print("${_latLong.latitude}  ${_latLong.longitude}");
+                          }
+                        },
+                        onCameraIdle: () async {
+                          setState(() {
+                            getUserAddress();
+                            locating = false;
+                          });
+                        },
+                      ),
                     ),
-                  )
-                      : Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 5.w
+                    Positioned(
+                      top: 5.h,
+                      left: 5.w,
+                      child: GestureDetector(
+                          onTap: () {
+                            if(!showFirst){
+                              setState(() {
+                                showFirst = true;
+                                initHeight = 75.h;
+                              });
+                            } else {
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Icon(Icons.arrow_back, color: AppColor.textColor,
+                            size: 7.w,)),
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: MediaQuery.removePadding(
-                        removeTop: true,
-                        context: context,
-                        child: ListView(
+                    Positioned(
+                      top: 5.h,
+                      child: Text("Add Address",
+                        style: fontMedium.copyWith(
+                            fontSize: 16.sp,
+                            color: AppColor.textColor
+                        ),),
+                    ),
+                    Positioned(
+                      child: Icon(
+                        Icons.my_location, color: AppColor.redColor, size: 5.w,),
+                    ),
+                    Positioned(
+                      top: 12.h,
+                      left: 5.w,
+                      right: 5.w,
+                      child: SearchMapPlaceWidget(
+                        apiKey: "AIzaSyC4RAObrZV1IG-a1o2IF2nRrrA7BR28yxI",
+                        language: 'en',
+                        placeholder: "Enter your address",
+                        iconColor: AppColor.textColor,
+                        hasClearButton: true,
+                        bgColor: Colors.white,
+                        textColor: const Color(0xff333333),
+                        // The position used to give better recomendations. In this case we are using the user position
+                        location: _latLong,
+                        radius: 100000,
+                        onSelected: (Place place) async {
+                          final geolocation = await place.geolocation;
+                          // Will animate the GoogleMap camera, taking us to the selected position with an appropriate zoom
+                          final GoogleMapController controller = await _controller.future;
+                          controller.animateCamera(CameraUpdate.newLatLng(geolocation?.coordinates));
+                          controller.animateCamera(CameraUpdate.newLatLngBounds(geolocation?.bounds, 0));
+                        },
+                      ),
+                    ),
+
+                  ],
+                ),
+
+                AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (Widget child,
+                        Animation<double> animation) {
+                      final scaleAnimation = Tween<double>(
+                        begin: 0.0,
+                        end: 1.0,
+                      ).animate(animation);
+
+                      return ScaleTransition(
+                        scale: scaleAnimation,
+                        child: child,
+                      );
+                    },
+                    child: showFirst
+                        ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Container(
+                              width: double.maxFinite,
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 3.h,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 1.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.textColor,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 3.w,
+                                      vertical: 1.5.h,
+                                    ),
+                                    decoration: const BoxDecoration(
+                                        color: AppColor.primaryColor,
+                                        shape: BoxShape.circle
+                                    ),
+                                    child: SvgPicture.asset(
+                                      Images.currentLocationImage,
+                                      color: AppColor.textColor, width: 6.w,),
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Current location",
+                                          style: fontMedium.copyWith(
+                                              fontSize: 12.sp,
+                                              color: AppColor.lightColor
+                                          ),),
+                                        SizedBox(height: 0.5.h),
+                                        Text(trackLocation == "" ? "Getting your location" : trackLocation,
+                                          style: fontRegular.copyWith(
+                                              fontSize: 10.sp,
+                                              color: AppColor.lightColor
+                                          ),),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5.w
+                              ),
+                              child: Bounceable(
+                                  onTap: () {
+                                    setState(() {
+                                      showFirst = !showFirst;
+                                      initHeight = 45.h;
+                                    });
+                                  },
+                                  child: const CustomButton(
+                                      AppColor.primaryColor, 'Confirm Location',
+                                      AppColor.textColor)),
+                            ),
+                          ],
+                        )
+                        : Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 5.w
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4.h),
                             Text("Add Address details",
                               style: fontMedium.copyWith(
                                   color: AppColor.textColor,
@@ -504,6 +557,10 @@ class _AddAddressState extends State<AddAddress> {
                                     builder: (context, team, child) {
                                       return InkWell(
                                         onTap: (){
+                                          FocusScopeNode currentFocus = FocusScope.of(context);
+                                          if (!currentFocus.hasPrimaryFocus) {
+                                            currentFocus.unfocus();
+                                          }
                                           getStateList();
                                           openStateSheet();
                                         },
@@ -519,7 +576,7 @@ class _AddAddressState extends State<AddAddress> {
                                           ),
                                           child: Row(
                                             children: [
-                                              Text(team.state,
+                                              Text(team.state == "" ? "Choose state" : team.state,
                                                 style: fontRegular.copyWith(
                                                     color: AppColor.textColor
                                                 ),),
@@ -538,7 +595,15 @@ class _AddAddressState extends State<AddAddress> {
                                     builder: (context, team, child) {
                                       return InkWell(
                                         onTap: (){
-                                          openCitySheet(team.stateId);
+                                          FocusScopeNode currentFocus = FocusScope.of(context);
+                                          if (!currentFocus.hasPrimaryFocus) {
+                                            currentFocus.unfocus();
+                                          }
+                                          if(team.stateId == ""){
+                                            Dialogs.snackbar("Choose your state", context, isError: true);
+                                          } else {
+                                            openCitySheet(team.stateId);
+                                          }
                                         },
                                         child: Container(
                                           width: double.infinity,
@@ -552,7 +617,7 @@ class _AddAddressState extends State<AddAddress> {
                                           ),
                                           child: Row(
                                             children: [
-                                              Text(team.stateBasedCity,
+                                              Text(team.stateBasedCity == "" ? "Choose city" : team.stateBasedCity,
                                                 style: fontRegular.copyWith(
                                                     color: AppColor.textColor
                                                 ),),
@@ -581,11 +646,11 @@ class _AddAddressState extends State<AddAddress> {
                           ],
                         ),
                       ),
-                    ),
-                  )
-              ),
+                    )
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -178,9 +178,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: Center(
                                 child: TextFormField(
                                   controller: mobileController,
+                                  autofillHints: const <String>[AutofillHints.telephoneNumberNational],
                                   cursorColor: AppColor.secondaryColor,
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(10),
+                                    FilteringTextInputFormatter.digitsOnly
                                   ],
                                   validator: (value) {
                                     if (value!.isEmpty) {

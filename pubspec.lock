@@ -590,6 +590,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.2"
+  maps_launcher:
+    dependency: "direct main"
+    description:
+      name: maps_launcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   matcher:
     dependency: transitive
     description:
@@ -828,6 +835,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  search_map_place_updated:
+    dependency: "direct main"
+    description:
+      name: search_map_place_updated
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   share_plus:
     dependency: "direct main"
     description:

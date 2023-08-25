@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:elevens_organizer/providers/auth_provider.dart';
 import 'package:elevens_organizer/providers/booking_provider.dart';
 import 'package:elevens_organizer/providers/profile_provider.dart';
@@ -22,6 +24,7 @@ import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
 import 'package:elevens_organizer/view/splash_screen.dart';
 import 'package:elevens_organizer/view/toss/toss.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +45,12 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
   runApp(
     MultiProvider(
       providers: [
@@ -110,7 +119,6 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     initiateNotifications();
-
   }
 
   @override

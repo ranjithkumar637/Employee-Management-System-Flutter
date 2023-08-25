@@ -75,6 +75,12 @@ dependencies:
   flutter_local_notifications: ^8.2.0
   search_map_place_updated: ^0.0.4
   maps_launcher: ^2.2.0
+  firebase_crashlytics: ^3.3.5
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/icon.png"
 
 dev_dependencies:
   flutter_test:

@@ -13,9 +13,9 @@ import '../../utils/styles.dart';
 import '../widgets/snackbar.dart';
 
 class TossResultDialog extends StatefulWidget {
-  final String teamALogo, teamAName, teamBLogo, teamBName, matchId;
+  final String teamALogo, teamAName, teamBLogo, teamBName, matchId, coinSide;
   final bool whoWon;
-  const TossResultDialog(this.teamALogo,this.teamAName,this.teamBLogo,this.teamBName, this.matchId, this.whoWon, {Key? key}) : super(key: key);
+  const TossResultDialog(this.teamALogo,this.teamAName,this.teamBLogo,this.teamBName, this.matchId, this.whoWon, this.coinSide, {Key? key}) : super(key: key);
 
   @override
   State<TossResultDialog> createState() => _TossResultDialogState();
@@ -262,7 +262,7 @@ class _TossResultDialogState extends State<TossResultDialog> {
                   BookingProvider().tossWonBy(
                     widget.matchId,
                     selectedTeamA ? "team_a" : "team_b",
-                    batting ? "Batting" : "Bowling",
+                    batting ? "Batting" : "Bowling", widget.coinSide
                   ).then((value) {
                     if(value.status==true){
                       setState(() {

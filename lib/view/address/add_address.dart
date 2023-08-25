@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 
 import 'package:flutter/material.dart';
@@ -407,7 +408,7 @@ class _AddAddressState extends State<AddAddress> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("House No / Flat No",
+                                Text("Plot No",
                                   style: fontRegular.copyWith(
                                       fontSize: 9.sp,
                                       color: AppColor.textColor
@@ -522,6 +523,11 @@ class _AddAddressState extends State<AddAddress> {
                                     child: TextFormField(
                                       controller: pinCodeController,
                                       cursorColor: AppColor.secondaryColor,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(6),
+                                        FilteringTextInputFormatter.digitsOnly
+                                        // Restrict input to only numbers
+                                      ],
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'Enter pincode';

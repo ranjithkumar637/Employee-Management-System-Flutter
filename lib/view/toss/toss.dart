@@ -328,7 +328,8 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                                   widget.teamBLogo,
                                   widget.teamBName,
                                   widget.matchId,
-                                widget.teamAName == dropdownValue ? true : false
+                                widget.teamAName == dropdownValue ? true : false,
+                                _tossResult
                               );
                             });
                       },

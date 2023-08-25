@@ -49,13 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
   getOffingsList(){
     futureData = PaymentInfoProvider().offingsList()
         .then((value) {
-          if(mounted){
-            setState(() {
-              offingsList = [];
-              offingsList.addAll(value);
-            });
-          }
-          return offingsList;
+      if(mounted){
+        setState(() {
+          offingsList = [];
+          offingsList.addAll(value);
+        });
+      }
+      return offingsList;
     });
   }
 
@@ -84,6 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
+  bool reduceHeight = false;
+  bool refreshSlots = false;
 
   setDelay() async {
     if(mounted){
@@ -206,8 +208,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Images.revenueAmountImage,
                                 "Total Revenue\nAmount",
                                 profile.profileModel.totalRevenue.toString() == "null"
-                                ? "0"
-                                : "₹ ${profile.profileModel.totalRevenue.toString()}",
+                                    ? "0"
+                                    : "₹ ${profile.profileModel.totalRevenue.toString()}",
                                 2),
                           ),
                         ],
@@ -293,8 +295,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   vertical: 0.6.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  color: AppColor.redColor
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    color: AppColor.redColor
                                 ),
                                 child: Row(
                                   children: [
@@ -336,7 +338,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: AppColor.lightColor,
                             borderRadius: BorderRadius.circular(15.0),
                           ),
-                          child: Column(
+                          child: refreshSlots
+                              ? Center(
+                            child: Text("Refreshing slots...",
+                              style: fontMedium.copyWith(
+                                  color: AppColor.textColor,
+                                  fontSize: 12.sp
+                              ),),
+                          )
+                              : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Booking Information",
@@ -393,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),),
                                   SizedBox(height: 1.5.h),
                                   SizedBox(
-                                    height: 10.h,
+                                    height: reduceHeight ? 4.h : 10.h,
                                     child: ListView.separated(
                                       separatorBuilder: (context, _){
                                         return SizedBox(width: 2.w);
@@ -413,19 +423,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                         DateTime dateTimeWithDynamicDate1 = DateFormat("yyyy-MM-dd HH:mm:ss").parse(
                                           "${DateFormat("yyyy-MM-dd").format(dynamicDate)} $timeStringLastSlot",
                                         );
+                                        if(dateTimeWithDynamicDate.isBefore(DateTime.now()) && dateTimeWithDynamicDate1.isBefore(DateTime.now())){
+                                          reduceHeight = true;
+                                          refreshSlots = true;
+                                          Future.delayed(const Duration(milliseconds: 500));
+                                          refreshSlots = false;
+                                        } else {
+                                          reduceHeight = false;
+                                          refreshSlots = true;
+                                          Future.delayed(const Duration(milliseconds: 500));
+                                          refreshSlots = false;
+                                        }
                                         if (dateTimeWithDynamicDate.isBefore(DateTime.now())) {
                                           print("Time is in the past, hide it.");
                                         } else {
                                           print("Time is in the future, show it.");
                                         }
-                                        return dateTimeWithDynamicDate.isBefore(DateTime.now())
+                                        return dateTimeWithDynamicDate.isBefore(DateTime.now()) && dateTimeWithDynamicDate1.isBefore(DateTime.now())
+                                            ? Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w,
+                                              vertical: 0.5.h
+                                          ),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                              color: AppColor.redColor.withOpacity(0.1)
+                                          ),
+                                          child: Center(
+                                            child: Text("Slot ${index + 1} ended",
+                                              textAlign: TextAlign.center,
+                                              style: fontMedium.copyWith(
+                                                  color: AppColor.redColor,
+                                                  fontSize: 10.sp
+                                              ),),
+                                          ),
+                                        )
+                                            : dateTimeWithDynamicDate.isBefore(DateTime.now())
                                             ? const SizedBox()
-                                            : dateTimeWithDynamicDate1.isBefore(DateTime.now())
-                                            ? Text("Slots not available",
-                                          style: fontMedium.copyWith(
-                                              color: AppColor.redColor,
-                                              fontSize: 11.sp
-                                          ),)
                                             : Column(
                                           children: [
                                             if(slotsList[index].booked.toString() == "0" && slotsList[index].left.toString() == "0")...[
@@ -489,6 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ],
                               ),
+                              reduceHeight ? SizedBox(height: 1.h) : const SizedBox(),
                               !canBook
                                   ? const SizedBox()
                                   : slotsList.isEmpty
@@ -501,8 +536,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 3.h),
                         //in the offing title
                         offingsList.isEmpty
-                        ? const SizedBox()
-                        : Padding(
+                            ? const SizedBox()
+                            : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

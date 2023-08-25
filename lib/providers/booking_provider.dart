@@ -186,13 +186,14 @@ class BookingProvider extends ChangeNotifier{
   //toss won by
   TossWonModel tossWonModel=TossWonModel();
 
-  Future<TossWonModel> tossWonBy(String matchId, String tossWonBy,String tossResult) async {
+  Future<TossWonModel> tossWonBy(String matchId, String tossWonBy,String tossResult, String headsOrTails) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     var body = jsonEncode({
       "match_id": matchId,
       "toss_won_by": tossWonBy,
       "toss_result": tossResult,
+      "toss_won_result": headsOrTails == "head" ? "Heads" : "Tails"
     });
     try {
       final response = await http.post(

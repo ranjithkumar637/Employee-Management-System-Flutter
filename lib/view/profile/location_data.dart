@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/ground_details_model.dart';
+import '../../providers/team_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
@@ -72,6 +73,7 @@ class _LocationDataState extends State<LocationData> {
                     ),),
                   InkWell(
                       onTap: (){
+                        Provider.of<TeamProvider>(context, listen: false).clearData();
                         Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {

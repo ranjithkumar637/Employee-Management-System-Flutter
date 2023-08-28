@@ -111,49 +111,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                     SizedBox(
                       width: double.infinity,
                       height: moveToTop ? 10.h : 32.h,
-                      child: ClipPath(
-                        clipper: ProsteBezierCurve(
-                          position: ClipPosition.bottom,
-                          list: [
-                            BezierCurveSection(
-                              start: Offset(0, moveToTop ? 10.h : 27.h),
-                              top: Offset(MediaQuery.of(context).size.width / 2, moveToTop ? 10.h : 32.h),
-                              end: Offset(MediaQuery.of(context).size.width, moveToTop ? 10.h : 27.h),
-                            ),
-                          ],
-                        ),
-                        child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
-                      ),
-                    ),
-                    Positioned(
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: moveToTop ? 10.h : 32.h,
-                        child: ClipPath(
-                          clipper: ProsteBezierCurve(
-                            position: ClipPosition.bottom,
-                            list: [
-                              BezierCurveSection(
-                                start: Offset(0, moveToTop ? 10.h : 27.h),
-                                top: Offset(MediaQuery.of(context).size.width / 2, moveToTop ? 10.h : 32.h),
-                                end: Offset(MediaQuery.of(context).size.width, moveToTop ? 10.h : 27.h),
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color(0xff333334),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
                     ),
                     Positioned(
                       top: 5.h,

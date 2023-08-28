@@ -13,19 +13,11 @@ class PlayerImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipOval(
-      child: Container(
-        height: imageHeight,
-        width: imageWidth,
-        padding: EdgeInsets.symmetric(
-          horizontal: 2.w,
-        ),
-        decoration: const BoxDecoration(
-          color: AppColor.primaryColor,
-        ),
-        child: CachedNetworkImage(
-          imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlCaptain}$imageUrl', fit: BoxFit.cover,
-          errorWidget: (context, url, error) => const Icon(Icons.person_outline_rounded),
-        ),
+      child: CachedNetworkImage(
+        imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlCaptain}$imageUrl', height: imageHeight,
+        width: imageWidth, fit: BoxFit.cover,
+        errorWidget: (context, url, error) =>  Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: imageHeight,
+          width: imageWidth,),
       ),
     );
   }

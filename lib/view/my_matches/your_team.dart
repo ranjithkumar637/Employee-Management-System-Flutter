@@ -132,7 +132,7 @@ class _YourTeamState extends State<YourTeam> {
                               child: PlayerListCard(captainList[index].name.toString(),
                                   captainList[index].role.toString(),
                                   captainList[index].profilePhoto.toString(), false,
-                                  "", '', "", player
+                                  "", '', "", player, captainList[index].playerId.toString()
                               ),
                             );
                           }
@@ -174,7 +174,7 @@ class _YourTeamState extends State<YourTeam> {
                               child: PlayerListCard(vcList[index].name.toString(),
                                   vcList[index].role.toString(),
                                   vcList[index].profilePhoto.toString(), false,
-                                  "", '', "", player
+                                  "", '', "", player, vcList[index].playerId.toString()
                               ),
                             );
                           }
@@ -216,7 +216,7 @@ class _YourTeamState extends State<YourTeam> {
                               child: PlayerListCard(adminList[index].name.toString(),
                                   adminList[index].role.toString(),
                                   adminList[index].profilePhoto.toString(), false,
-                                  "", '', "", player
+                                  "", '', "", player, adminList[index].playerId.toString()
                               ),
                             );
                           }
@@ -258,7 +258,7 @@ class _YourTeamState extends State<YourTeam> {
                                 child: PlayerListCard(playerList[index].name.toString(),
                                     playerList[index].role.toString(),
                                     playerList[index].profilePhoto.toString(), false,
-                                    "", '', "", player
+                                    "", '', "", player, playerList[index].playerId.toString()
                                 ),
                               );
                             }

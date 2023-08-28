@@ -15,54 +15,59 @@ class UpcomingBattlePaymentUnPaid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        unpaidUpcomingList.isEmpty
-            ? Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 16.h),
-              Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
-              SizedBox(height: 3.h),
-              Text("You don’t have any unpaid list",
-                style: fontMedium.copyWith(
-                    fontSize: 12.sp,
-                    color: AppColor.redColor
-                ),),
-            ],
-          ),
-        )
-            : Expanded(
-          child: MediaQuery.removePadding(
-            removeTop: true,
-            context: context,
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              separatorBuilder: (context, _){
-                return SizedBox(height: 1.5.h);
-              },
-              itemCount: unpaidUpcomingList.length,
-              itemBuilder: (context, index){
-                print(unpaidUpcomingList[index].paidPrice.toString());
-                return OrganizerBattleListCard(
-                  unpaidUpcomingList[index].logo,
-                  unpaidUpcomingList[index].paidPrice.toString(),
-                  unpaidUpcomingList[index].totalPrice.toString(),
-                  unpaidUpcomingList[index].bookingDate.toString(),
-                  unpaidUpcomingList[index].bookingSlotStart.toString(),
-                  unpaidUpcomingList[index].teamName,
-                  unpaidUpcomingList[index].paidStatus.toString(),
-                  unpaidUpcomingList[index].matchId.toString(),
-                  unpaidUpcomingList[index].teamId.toString(),
-                  refresh
-                );
-              },
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 2.h
+      ),
+      child: Column(
+        children: [
+          unpaidUpcomingList.isEmpty
+              ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 16.h),
+                Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+                SizedBox(height: 3.h),
+                Text("You don’t have any unpaid list",
+                  style: fontMedium.copyWith(
+                      fontSize: 12.sp,
+                      color: AppColor.redColor
+                  ),),
+              ],
+            ),
+          )
+              : Expanded(
+            child: MediaQuery.removePadding(
+              removeTop: true,
+              context: context,
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                separatorBuilder: (context, _){
+                  return SizedBox(height: 1.5.h);
+                },
+                itemCount: unpaidUpcomingList.length,
+                itemBuilder: (context, index){
+                  print(unpaidUpcomingList[index].paidPrice.toString());
+                  return OrganizerBattleListCard(
+                    unpaidUpcomingList[index].logo,
+                    unpaidUpcomingList[index].paidPrice.toString(),
+                    unpaidUpcomingList[index].totalPrice.toString(),
+                    unpaidUpcomingList[index].bookingDate.toString(),
+                    unpaidUpcomingList[index].bookingSlotStart.toString(),
+                    unpaidUpcomingList[index].teamName,
+                    unpaidUpcomingList[index].paidStatus.toString(),
+                    unpaidUpcomingList[index].matchId.toString(),
+                    unpaidUpcomingList[index].teamId.toString(),
+                    refresh
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

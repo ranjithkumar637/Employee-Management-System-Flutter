@@ -102,7 +102,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
+                          lastDate: DateTime.now(),
                           builder: (context, child) {
                             return Theme(
                               data: Theme.of(context).copyWith(
@@ -139,7 +139,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
+                          lastDate: DateTime.now(),
                           builder: (context, child) {
                             return Theme(
                               data: Theme.of(context).copyWith(

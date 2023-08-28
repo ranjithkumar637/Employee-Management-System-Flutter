@@ -1,4 +1,5 @@
 import 'package:elevens_organizer/models/total_revenue-model.dart';
+import 'package:elevens_organizer/view/home/in_the_offing_screen.dart';
 import 'package:elevens_organizer/view/home/points_revenue_box.dart';
 import 'package:elevens_organizer/view/home/ref_code_dialog_box.dart';
 import 'package:flutter/material.dart';
@@ -6,18 +7,20 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/slot_list_model.dart';
+import '../../models/upcoming_match_list_model.dart';
 import '../../providers/booking_provider.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../my_matches/upcoming_battle.dart';
+import '../widgets/loader.dart';
 import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
 import 'custom_date_picker.dart';
@@ -45,6 +48,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<Offings>>? futureData;
   List<Offings> offingsList = [];
+
+  Future<List<UpcomingMatch>>? futureData1;
+  List<UpcomingMatch> upcomingMatchList = [];
+
+  getUpcomingMatchList() {
+    futureData1 =
+        ProfileProvider().getOrganizerUpcomingMatchList().then((value) {
+          if (mounted) {
+            setState(() {
+              upcomingMatchList = [];
+              upcomingMatchList.addAll(value);
+            });
+          }
+          print(upcomingMatchList);
+          return upcomingMatchList;
+        });
+  }
 
   getOffingsList(){
     futureData = PaymentInfoProvider().offingsList()
@@ -96,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getProfile();
       getOffingsList();
+      getUpcomingMatchList();
     });
     await Future.delayed(const Duration(seconds: 1));
     if(mounted){
@@ -146,75 +167,43 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       width: double.infinity,
                       height: 28.h,
-                      child: ClipPath(
-                        clipper: ProsteBezierCurve(
-                          position: ClipPosition.bottom,
-                          list: [
-                            BezierCurveSection(
-                              start: Offset(0, 22.h),
-                              top: Offset(MediaQuery.of(context).size.width / 2, 28.h),
-                              end: Offset(MediaQuery.of(context).size.width, 22.h),
+                      child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
+                    ),
+                    //referral points & revenue amount
+                    if(profile.profileModel.refPoints.toString() != "null")...[
+                      Positioned(
+                        top: 18.h,
+                        right: 5.w,
+                        left: 5.w,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: PointsAndRevenueBox(
+                                  Images.refPointsImage,
+                                  "Total Referral\nPoints",
+                                  profile.profileModel.refPoints.toString() == "null"
+                                      ? "0"
+                                      : "${profile.profileModel.refPoints.toString()} pts",
+                                  1),
+                            ),
+                            SizedBox(width: 4.w),
+                            Expanded(
+                              child: PointsAndRevenueBox(
+                                  Images.revenueAmountImage,
+                                  "Total Revenue\nAmount",
+                                  profile.profileModel.totalRevenue.toString() == "null"
+                                      ? "0"
+                                      : "₹ ${profile.profileModel.totalRevenue.toString()}",
+                                  2),
                             ),
                           ],
                         ),
-                        child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
                       ),
-                    ),
-                    Positioned(
-                      child: SizedBox(
-                        height: 28.h,
-                        width: double.infinity,
-                        child: ClipPath(
-                          clipper: ProsteBezierCurve(
-                            position: ClipPosition.bottom,
-                            list: [
-                              BezierCurveSection(
-                                start: Offset(0, 22.h),
-                                top: Offset(MediaQuery.of(context).size.width / 2, 28.h),
-                                end: Offset(MediaQuery.of(context).size.width, 22.h),
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color(0xff383838),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    //referral points & revenue aomount
-                    Positioned(
-                      top: 18.h,
-                      right: 5.w,
-                      left: 5.w,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: PointsAndRevenueBox(Images.refPointsImage, "Total Referral\nPoints", profile.profileModel.refPoints.toString() == "null"
-                                ? "0"
-                                : "${profile.profileModel.refPoints.toString()} pts", 1),
-                          ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: PointsAndRevenueBox(
-                                Images.revenueAmountImage,
-                                "Total Revenue\nAmount",
-                                profile.profileModel.totalRevenue.toString() == "null"
-                                    ? "0"
-                                    : "₹ ${profile.profileModel.totalRevenue.toString()}",
-                                2),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ] else ...[
+                      Positioned(
+                        bottom: -4.h,
+                          child: RevenueOnly(profile.profileModel.totalRevenue.toString())),
+                    ],
                     Positioned(
                       top: 5.h,
                       left: 5.w,
@@ -317,7 +306,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.h),
+                profile.profileModel.refPoints.toString() != "null"
+                ? SizedBox(height: 12.h) : SizedBox(height: 6.h),
                 Expanded(
                   child: MediaQuery.removePadding(
                     removeTop: true,
@@ -363,7 +353,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       slotTime = "";
                                       slotTime24 = "";
                                     });
-                                    // widget.refresh();
                                     final currentDate = DateTime.now();
                                     if(date.isBefore(currentDate)){
                                       setState(() {
@@ -381,7 +370,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     });
                                     if(canBook){
                                       getSlotsList(profile.organizerDetails.groundId.toString());
-                                      // Provider.of<BookingProvider>(context, listen: false).getSlotsTimeList(widget.groundId, bookingDate);
                                     }
                                   },
                                   itemWidth: 15.w),
@@ -403,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),),
                                   SizedBox(height: 1.5.h),
                                   SizedBox(
-                                    height: reduceHeight ? 4.h : 10.h,
+                                    height: 10.h,
                                     child: ListView.separated(
                                       separatorBuilder: (context, _){
                                         return SizedBox(width: 2.w);
@@ -423,17 +411,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         DateTime dateTimeWithDynamicDate1 = DateFormat("yyyy-MM-dd HH:mm:ss").parse(
                                           "${DateFormat("yyyy-MM-dd").format(dynamicDate)} $timeStringLastSlot",
                                         );
-                                        if(dateTimeWithDynamicDate.isBefore(DateTime.now()) && dateTimeWithDynamicDate1.isBefore(DateTime.now())){
-                                          reduceHeight = true;
-                                          refreshSlots = true;
-                                          Future.delayed(const Duration(milliseconds: 500));
-                                          refreshSlots = false;
-                                        } else {
-                                          reduceHeight = false;
-                                          refreshSlots = true;
-                                          Future.delayed(const Duration(milliseconds: 500));
-                                          refreshSlots = false;
-                                        }
                                         if (dateTimeWithDynamicDate.isBefore(DateTime.now())) {
                                           print("Time is in the past, hide it.");
                                         } else {
@@ -441,6 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         }
                                         return dateTimeWithDynamicDate.isBefore(DateTime.now()) && dateTimeWithDynamicDate1.isBefore(DateTime.now())
                                             ? Container(
+                                          height: 4.h,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
                                               vertical: 0.5.h
@@ -536,7 +514,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 3.h),
                         //in the offing title
                         offingsList.isEmpty
-                            ? const SizedBox()
+                            ? Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 2.h,
+                              horizontal: 4.w
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.redColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Text("No offings found",
+                            style: fontMedium.copyWith(
+                                color: AppColor.redColor,
+                                fontSize: 11.sp
+                            ),),
+                        )
                             : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Column(
@@ -552,7 +547,91 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   InkWell(
                                     onTap: (){
-
+                                      Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                  return InTheOffing(offingsList);
+                                                }),
+                                              );
+                                            },
+                                    child: Text(
+                                      "View all",
+                                      style: fontMedium.copyWith(
+                                          fontSize: 10.sp, color: AppColor.redColor),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 2.h),
+                              //horizontal listview
+                              SizedBox(
+                                height: 19.h,
+                                child: FutureBuilder(
+                                  future: futureData,
+                                  builder: (context, snapshot) {
+                                    if(snapshot.connectionState == ConnectionState.waiting){
+                                      return const Loader();
+                                    }
+                                    if(snapshot.connectionState == ConnectionState.done){
+                                      return ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        separatorBuilder: (context ,_){
+                                          return SizedBox(width: 2.w,);
+                                        },
+                                        itemCount: offingsList.length,
+                                        itemBuilder: (context, index){
+                                          final offing = offingsList[index];
+                                          return OffingCard(offing);
+                                        },
+                                      );
+                                    } else {
+                                      return const Loader();
+                                    }
+                                  }
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        //my matches title
+                        upcomingMatchList.isEmpty
+                            ? Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 2.h,
+                            horizontal: 4.w
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.redColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                          child: Text("No matches found",
+                          style: fontMedium.copyWith(
+                            color: AppColor.redColor,
+                            fontSize: 11.sp
+                          ),),
+                        )
+                            : Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "My Matches",
+                                    style: fontMedium.copyWith(
+                                        fontSize: 12.sp, color: AppColor.textColor),
+                                  ),
+                                  InkWell(
+                                    onTap: (){
+                                      Provider.of<ProfileProvider>(context, listen: false)
+                                          .moveToMatches();
                                     },
                                     child: Text(
                                       "View all",
@@ -566,22 +645,34 @@ class _HomeScreenState extends State<HomeScreen> {
                               //horizontal listview
                               SizedBox(
                                 height: 19.h,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  separatorBuilder: (context ,_){
-                                    return SizedBox(width: 2.w,);
-                                  },
-                                  itemCount: offingsList.length,
-                                  itemBuilder: (context, index){
-                                    final offing = offingsList[index];
-                                    return OffingCard(offing);
-                                  },
+                                child: FutureBuilder(
+                                    future: futureData,
+                                    builder: (context, snapshot) {
+                                      if(snapshot.connectionState == ConnectionState.waiting){
+                                        return const Loader();
+                                      }
+                                      if(snapshot.connectionState == ConnectionState.done){
+                                        return ListView.separated(
+                                          scrollDirection: Axis.horizontal,
+                                          separatorBuilder: (context ,_){
+                                            return SizedBox(width: 2.w,);
+                                          },
+                                          itemCount: 3,
+                                          itemBuilder: (context, index){
+                                            final match = upcomingMatchList[index];
+                                            return UpcomingMatchCard(match);
+                                          },
+                                        );
+                                      } else {
+                                        return const Loader();
+                                      }
+                                    }
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 2.h),
                       ],
                     ),
                   ),
@@ -589,6 +680,90 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             );
           }
+      ),
+    );
+  }
+}
+
+class RevenueOnly extends StatelessWidget {
+  final String amount;
+  const RevenueOnly(this.amount, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: (){
+          Navigator.pushNamed(context, "revenue_screen");
+      },
+      child: Container(
+        height: 14.h,
+        width: 90.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColor.secondaryColor,
+              AppColor.primaryColor,
+            ],
+          ),
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+                right: 5.0,
+                child: SvgPicture.asset(Images.revenueAmountImage, width: 23.w,)),
+            Positioned(
+              left: 5.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Total Revenue amount",
+                    style: fontMedium.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColor.textColor
+                    ),),
+                  SizedBox(height: 1.5.h),
+                  Text("₹ $amount",
+                    style: fontMedium.copyWith(
+                        fontSize: 18.sp,
+                        color: AppColor.textColor
+                    ),),
+                ],
+              ),
+            ),
+            Positioned(
+              right: 5.w,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: (){
+                  Navigator.pushNamed(context, "revenue_screen");
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.w,
+                    vertical: 0.6.h,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: AppColor.lightColor
+                  ),
+                  child: Center(
+                    child: Text("View Details",
+                      style: fontRegular.copyWith(
+                          fontSize: 10.sp,
+                          color: AppColor.textColor
+                      ),),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

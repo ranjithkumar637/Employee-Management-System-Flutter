@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,7 +13,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/in_the_offing_list_model.dart';
+import '../models/match_details_model.dart';
 import '../models/notification_list_model.dart';
+import '../models/player_info_model.dart';
+import '../models/player_match_history_list_model.dart';
+import '../models/player_upcoming_match_list_model.dart';
 import '../utils/app_constants.dart';
 
 
@@ -127,6 +133,189 @@ class ProfileProvider extends ChangeNotifier{
 
     NotificationListModel notificationListModel = NotificationListModel();
     List<NotificationList> notificationList = [];
+
+    PlayerInfoModel playerInfoModel = PlayerInfoModel();
+    PlayerInfo playerInfo = PlayerInfo();
+
+    PlayerMatchHistoryListModel playerMatchHistoryListModel = PlayerMatchHistoryListModel();
+    List<PlayerMatchHistory> matchHistoryPlayer = [];
+
+    PlayerUpcomingMatchListModel playerUpcomingMatchListModel = PlayerUpcomingMatchListModel();
+    List<PlayerUpcomingMatch> upcomingMatchPlayer = [];
+
+    MatchDetailsModel matchDetailsModel = MatchDetailsModel();
+    MatchDetails matchDetails = MatchDetails();
+
+    //match history details
+    Future<MatchDetailsModel> getMatchDetails(String matchId) async {
+      matchDetailsModel = MatchDetailsModel();
+      matchDetails = MatchDetails();
+      print("match id $matchId");
+      var body = jsonEncode({
+        'id': matchId,
+      });
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      try {
+        final response = await http.post(
+          Uri.parse(AppConstants.matchDetails),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accToken',
+          },
+          body: body,
+        ).timeout(const Duration(seconds: 15));
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        if (response.statusCode == 200) {
+          matchDetailsModel = MatchDetailsModel.fromJson(decodedJson);
+          matchDetails = MatchDetails.fromJson(decodedJson['match_details']);
+          notifyListeners();
+        } else {
+          throw const HttpException('Failed to load data');
+        }
+      } on TimeoutException {
+        print('Request timed out');
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('cap match details - Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return matchDetailsModel;
+    }
+
+    Future<List<PlayerUpcomingMatch>> getPlayerUpcomingMatchList(String playerId) async {
+      upcomingMatchPlayer = [];
+      var body = jsonEncode({
+        'player_id': playerId,
+      });
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      try {
+        final response = await http.post(
+            Uri.parse(AppConstants.playerUpcomingMatches),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': 'Bearer $accToken',
+            },
+            body: body
+        ).timeout(const Duration(seconds: 15));
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        if (response.statusCode == 200) {
+          playerUpcomingMatchListModel = PlayerUpcomingMatchListModel.fromJson(decodedJson);
+          for (var state in decodedJson['upcoming_match']) {
+            upcomingMatchPlayer.add(PlayerUpcomingMatch.fromJson(state));
+            notifyListeners();
+          }
+          notifyListeners();
+        } else {
+          // API call was not successful
+          throw const HttpException('Failed to load data');
+        }
+      } on TimeoutException{
+        print("Request timed out");
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('player upcoming matches - Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return upcomingMatchPlayer;
+    }
+
+    //player match history list
+    Future<List<PlayerMatchHistory>> getPlayerMatchHistoryList(String playerId) async {
+      matchHistoryPlayer = [];
+      var body = jsonEncode({
+        'player_id': playerId,
+      });
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      try {
+        final response = await http.post(
+            Uri.parse(AppConstants.playerMatchHistory),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': 'Bearer $accToken',
+            },
+            body: body
+        ).timeout(const Duration(seconds: 15));
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        if (response.statusCode == 200) {
+          playerMatchHistoryListModel = PlayerMatchHistoryListModel.fromJson(decodedJson);
+          for (var state in decodedJson['match_history']) {
+            matchHistoryPlayer.add(PlayerMatchHistory.fromJson(state));
+            notifyListeners();
+          }
+          notifyListeners();
+        } else {
+          // API call was not successful
+          throw const HttpException('Failed to load data');
+        }
+      } on TimeoutException{
+        print("Request timed out");
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('player match history - Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return matchHistoryPlayer;
+    }
+
+    //get player information
+    Future<PlayerInfoModel> getPlayerInfo(String playerId) async {
+      print("player id $playerId");
+      playerInfoModel = PlayerInfoModel();
+      playerInfo = PlayerInfo();
+      var body = jsonEncode({
+        'player_id': playerId,
+      });
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      try {
+        final response = await http.post(
+          Uri.parse(AppConstants.playerInfo),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accToken',
+          },
+          body: body,
+        ).timeout(const Duration(seconds: 15));
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        if (response.statusCode == 200) {
+          playerInfoModel = PlayerInfoModel.fromJson(decodedJson);
+          playerInfo = PlayerInfo.fromJson(decodedJson['player-info']);
+          notifyListeners();
+        } else {
+          throw const HttpException('Failed to load data');
+        }
+      } on TimeoutException {
+        print('Request timed out');
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('player info - Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return playerInfoModel;
+    }
 
     //notification list
     Future<List<NotificationList>> getNotificationList() async {

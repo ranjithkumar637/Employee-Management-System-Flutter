@@ -7,6 +7,7 @@ import 'package:elevens_organizer/view/toss/toss.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/today_matches_toss_model.dart';
@@ -61,6 +62,29 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
     }
   }
 
+  String checkTimeDifference(String end){
+    DateTime currentTime = DateTime.now();
+
+    // Parse end time string into a DateTime object (with today's date)
+    DateFormat format = DateFormat("h:mm a");
+    DateTime endTime = DateTime(
+      currentTime.year,
+      currentTime.month,
+      currentTime.day,
+      format.parse(end).hour,
+      format.parse(end).minute,
+    );
+
+    // Calculate the time difference in minutes
+    int timeDifferenceInMinutes = endTime.difference(currentTime).inMinutes + 1;
+
+    // Format the result as "X minutes"
+    String formattedTimeDifference = '$timeDifferenceInMinutes minutes';
+
+    print('Time difference: $formattedTimeDifference');
+    return timeDifferenceInMinutes.toString();
+  }
+
 
   List<TodayMatches> todayMatches=[];
 
@@ -94,7 +118,6 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
   }
   @override
   Widget build(BuildContext context) {
-    checkTossGraceTimePassed("12:07 PM");
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: Padding(
@@ -115,7 +138,9 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               ],
             ),
             SizedBox(height: 3.h,),
-            Container(
+            todayMatches.isEmpty
+            ? const SizedBox()
+            : Container(
               height: 5.h,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -130,7 +155,8 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                   ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: pendingTime,style: fontMedium.copyWith(
+                        text: checkTimeDifference(todayMatches.first.teamAData!.bookingSlotStart.toString()),
+                          style: fontMedium.copyWith(
                         fontSize: 11.sp,
                         color: AppColor.redColor
                       )

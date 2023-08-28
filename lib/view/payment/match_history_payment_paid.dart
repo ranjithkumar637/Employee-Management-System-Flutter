@@ -28,7 +28,9 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
+        widget.matchHistoryPaid.isEmpty
+        ? const SizedBox()
+        : Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: 5.w, vertical: 2.5.h
             ),
@@ -41,7 +43,7 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
+                          lastDate: DateTime.now(),
                           builder: (context, child) {
                             return Theme(
                               data: Theme.of(context).copyWith(
@@ -78,7 +80,7 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
+                          lastDate: DateTime.now(),
                           builder: (context, child) {
                             return Theme(
                               data: Theme.of(context).copyWith(

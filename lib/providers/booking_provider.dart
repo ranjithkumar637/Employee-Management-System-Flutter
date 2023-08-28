@@ -95,6 +95,8 @@ class BookingProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+
+
   //get match detail info
   Future<MatchInfoModel> getMatchInfo(String matchId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

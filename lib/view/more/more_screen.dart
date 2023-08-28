@@ -53,49 +53,7 @@ class _MoreScreenState extends State<MoreScreen> {
               SizedBox(
                 width: double.infinity,
                 height: 28.h,
-                child: ClipPath(
-                  clipper: ProsteBezierCurve(
-                    position: ClipPosition.bottom,
-                    list: [
-                      BezierCurveSection(
-                        start: Offset(0, 24.h),
-                        top: Offset(MediaQuery.of(context).size.width / 2, 28.h),
-                        end: Offset(MediaQuery.of(context).size.width, 24.h),
-                      ),
-                    ],
-                  ),
-                  child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
-                ),
-              ),
-              Positioned(
-                child: SizedBox(
-                  height: 28.h,
-                  width: double.infinity,
-                  child: ClipPath(
-                    clipper: ProsteBezierCurve(
-                      position: ClipPosition.bottom,
-                      list: [
-                        BezierCurveSection(
-                          start: Offset(0, 24.h),
-                          top: Offset(MediaQuery.of(context).size.width / 2, 28.h),
-                          end: Offset(MediaQuery.of(context).size.width, 24.h),
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            const Color(0xff333333).withOpacity(0.7),
-                            const Color(0xff333333).withOpacity(0.7),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
               ),
               Positioned(
                 top: 5.h,

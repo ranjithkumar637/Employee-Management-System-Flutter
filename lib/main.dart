@@ -139,7 +139,6 @@ class _MyAppState extends State<MyApp> {
               'menu_screen': (context) => const MenuScreen(),
               'my_matches': (context) => const MyMatchesScreen(),
               'notification_screen': (context) => const Notifications(),
-              'revenue_screen': (context) => const RevenueScreen(),
               'edit_profile': (context) => const EditProfile(),
               'add_address': (context) => const AddAddress(),
               'payment_information': (context) => const PaymentInformation(),

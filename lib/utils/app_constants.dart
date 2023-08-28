@@ -15,6 +15,9 @@ class AppConstants {
   static const String imageBaseUrlTeam = 'storage/app/public/team/';
 
   static const String slotsTimeList = '$baseUrl/slots-list';
+  static const String playerInfo= '$baseUrl/player-info';
+  static const String playerUpcomingMatches= '$baseUrl/player-upcoming-match-list';
+  static const String playerMatchHistory= '$baseUrl/player-match-history';
 
   static const String organizerRegister = '$baseUrl/auth/organizer/register';
   static const String organizerRegisterOtpCheck = '$baseUrl/auth/organizer/register-otp-check';
@@ -50,6 +53,7 @@ class AppConstants {
 
   //revenue
   static const String revenuelist = '$baseUrl/organizer/get-revenue';
+  static const String matchDetails = '$baseUrl/match-details';
 
   //upcomingmatchespayment
   static const String upcomingmatchespayment = '$baseUrl/organizer/payment-upcoming-matches';

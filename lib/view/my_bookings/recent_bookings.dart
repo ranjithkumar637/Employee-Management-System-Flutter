@@ -31,10 +31,12 @@ class _RecentBookingsState extends State<RecentBookings> {
   getRecentBookingsList(){
     futureData = BookingProvider().getRecentBooking().then((value) {
       print(value);
-      setState(() {
-        recentBooking = [];
-        recentBooking.addAll(value);
-      });
+      if(mounted){
+        setState(() {
+          recentBooking = [];
+          recentBooking.addAll(value);
+        });
+      }
       print(recentBooking);
       return recentBooking;
     });

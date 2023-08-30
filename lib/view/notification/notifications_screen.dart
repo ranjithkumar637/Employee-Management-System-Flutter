@@ -1,12 +1,16 @@
 import 'package:elevens_organizer/view/notification/regular_notification.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/notification_list_model.dart';
 import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
+import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/loader.dart';
+import '../widgets/no_internet_view.dart';
 import 'notification_count_card.dart';
 
 class Notifications extends StatefulWidget {
@@ -56,6 +60,10 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: Column(
@@ -86,28 +94,34 @@ class _NotificationsState extends State<Notifications> {
           ),
           //notification count
           // const NotificationCountCard(),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 5.w, vertical: 2.h
-            ),
-            child: Text("Today",
-              style: fontMedium.copyWith(
-                  fontSize: 12.sp,
-                  color: AppColor.textColor
-              ),),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //     horizontal: 5.w, vertical: 2.h
+          //   ),
+          //   child: Text("Today",
+          //     style: fontMedium.copyWith(
+          //         fontSize: 12.sp,
+          //         color: AppColor.textColor
+          //     ),),
+          // ),
           loading
               ? const Loader()
               : notificationList.isEmpty
-              ? Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 5.w, vertical: 2.h
+              ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 16.h),
+                Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+                SizedBox(height: 3.h),
+                Text("You don’t have any notifications",
+                  style: fontMedium.copyWith(
+                      fontSize: 12.sp,
+                      color: AppColor.redColor
+                  ),),
+              ],
             ),
-            child: Text("No notifications found",
-              style: fontMedium.copyWith(
-                  fontSize: 11.sp,
-                  color: AppColor.redColor
-              ),),
           )
               : Expanded(
             child: FutureBuilder(

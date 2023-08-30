@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/no_internet_view.dart';
 import '../widgets/snackbar.dart';
 import 'enter_otp.dart';
 
@@ -31,6 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return WillPopScope(
       onWillPop: () async {
         return openExitSheet();

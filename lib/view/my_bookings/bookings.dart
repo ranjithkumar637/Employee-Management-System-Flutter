@@ -1,9 +1,12 @@
 import 'package:elevens_organizer/view/my_bookings/recent_bookings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/styles.dart';
+import '../widgets/no_internet_view.dart';
 import 'booking_history.dart';
 
 class MyBookings extends StatefulWidget {
@@ -26,6 +29,10 @@ class _MyBookingsState extends State<MyBookings> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: Column(
@@ -39,11 +46,6 @@ class _MyBookingsState extends State<MyBookings> with SingleTickerProviderStateM
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // InkWell(
-                //     onTap:(){
-                //       Navigator.pop(context);
-                //     },
-                //     child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
                 SizedBox(width: 7.w,),
                 Text("Bookings",
                   style: fontMedium.copyWith(

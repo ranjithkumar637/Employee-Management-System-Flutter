@@ -61,7 +61,22 @@ class _MyReferralsState extends State<MyReferrals> {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInUp(
+    return  refList.isEmpty
+        ? Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+          SizedBox(height: 3.h),
+          Text("No referrals found",
+            style: fontMedium.copyWith(
+                fontSize: 12.sp,
+                color: AppColor.redColor
+            ),),
+        ],
+      ),
+    ) : FadeInUp(
       preferences: const AnimationPreferences(
           duration: Duration(milliseconds: 400)
       ),

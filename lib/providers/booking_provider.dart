@@ -292,7 +292,7 @@ class BookingProvider extends ChangeNotifier{
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer login- Invalid data format');
+      print('booking history- Invalid data format');
     } catch (e) {
       print(e);
     }

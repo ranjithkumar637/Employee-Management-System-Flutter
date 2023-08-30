@@ -32,6 +32,7 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
     // pitchController.text = widget.pitch;
     boundaryLineController.text = widget.boundaryLine;
     floodLight = widget.floodLight == 1 ? true : false;
+    dropDownValue = widget.pitch;
   }
 
   @override

@@ -5,21 +5,24 @@ import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/offing_list_model.dart';
 import '../../models/total_revenue-model.dart';
 import '../../providers/profile_provider.dart';
 import '../../providers/team_provider.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/loader.dart';
+import '../widgets/no_internet_view.dart';
 import 'offing_match_info.dart';
 import 'offing_opponent_team.dart';
 import 'offing_your_team.dart';
 
 class OffingDetailScreen extends StatefulWidget {
   final String matchId;
-  final Offings offing;
+  final OffingsList offing;
   const OffingDetailScreen(this.matchId, this.offing, {Key? key}) : super(key: key);
 
   @override
@@ -58,6 +61,10 @@ class _OffingDetailScreenState extends State<OffingDetailScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       body: loading
         ? const Loader()

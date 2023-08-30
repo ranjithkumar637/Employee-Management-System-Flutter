@@ -37,6 +37,7 @@ class SlotTimeList {
   String? blockReason;
   String? start;
   String? end;
+  String? overs;
 
   SlotTimeList(
       {booked,
@@ -46,7 +47,8 @@ class SlotTimeList {
         block,
         blockReason,
         start,
-        end});
+        end,
+      overs});
 
   SlotTimeList.fromJson(Map<String, dynamic> json) {
     booked = json['booked'];
@@ -57,6 +59,7 @@ class SlotTimeList {
     blockReason = json['block_reason'];
     start = json['start'];
     end = json['end'];
+    overs = json['overs'];
   }
 
   Map<String, dynamic> toJson() {
@@ -69,6 +72,7 @@ class SlotTimeList {
     data['block_reason'] = blockReason;
     data['start'] = start;
     data['end'] = end;
+    data['overs'] = overs;
     return data;
   }
 }

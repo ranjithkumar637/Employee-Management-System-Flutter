@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/offing_list_model.dart';
 import '../../models/total_revenue-model.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
-class OffingsList extends StatelessWidget {
+class OffingsListView extends StatelessWidget {
   final String image, date, time, location, teamAName, teamBName;
-  final Offings offing;
-  const OffingsList(this.image, this.date, this.time, this.location, this.teamAName, this.teamBName, this.offing,  {Key? key}) : super(key: key);
+  final OffingsList offing;
+  const OffingsListView(this.image, this.date, this.time, this.location, this.teamAName, this.teamBName, this.offing,  {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +35,10 @@ class OffingsList extends StatelessWidget {
           ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: CachedNetworkImage(
-                imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${image}',
+                imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$image',
                 fit: BoxFit.cover,
-                width: 28.w,
-                height: 14.h,
+                width: 20.w,
+                height: 9.h,
                 errorWidget:(context, url, error) =>
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:elevens_organizer/models/total_revenue-model.dart';
 import 'package:elevens_organizer/view/home/in_the_offing_screen.dart';
 import 'package:elevens_organizer/view/home/points_revenue_box.dart';
@@ -11,15 +13,21 @@ import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/offing_list_model.dart';
 import '../../models/slot_list_model.dart';
 import '../../models/upcoming_match_list_model.dart';
 import '../../providers/booking_provider.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../providers/profile_provider.dart';
+import '../../providers/team_provider.dart';
+import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
+import '../../utils/scale_route.dart';
 import '../../utils/styles.dart';
+import '../my_matches/match_info_screen.dart';
 import '../my_matches/upcoming_battle.dart';
+import '../my_matches/upcoming_match_card.dart';
 import '../widgets/loader.dart';
 import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
@@ -27,6 +35,7 @@ import 'custom_date_picker.dart';
 import 'home_grid_options.dart';
 import 'notification_dot.dart';
 import 'offing_card.dart';
+import 'offing_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -46,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String slotTime = "", slotTime24 = "";
   List<SlotTimeList> slotsList = [];
 
-  Future<List<Offings>>? futureData;
-  List<Offings> offingsList = [];
+  Future<List<OffingsList>>? futureData;
+  List<OffingsList> offingsList = [];
 
   Future<List<UpcomingMatch>>? futureData1;
   List<UpcomingMatch> upcomingMatchList = [];
@@ -66,8 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  getOffingsList(){
-    futureData = PaymentInfoProvider().offingsList()
+  getOffingsList(String cityId){
+    futureData = PaymentInfoProvider().getOffingsList(cityId)
         .then((value) {
       if(mounted){
         setState(() {
@@ -115,7 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getProfile();
-      getOffingsList();
+      final profile = Provider.of<ProfileProvider>(context, listen: false);
+      getOffingsList(profile.organizerDetails.cityId.toString());
       getUpcomingMatchList();
     });
     await Future.delayed(const Duration(seconds: 1));
@@ -391,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),),
                                   SizedBox(height: 1.5.h),
                                   SizedBox(
-                                    height: 10.h,
+                                    height: 11.h,
                                     child: ListView.separated(
                                       separatorBuilder: (context, _){
                                         return SizedBox(width: 2.w);
@@ -416,29 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         } else {
                                           print("Time is in the future, show it.");
                                         }
-                                        return dateTimeWithDynamicDate.isBefore(DateTime.now()) && dateTimeWithDynamicDate1.isBefore(DateTime.now())
-                                            ? Container(
-                                          height: 4.h,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w,
-                                              vertical: 0.5.h
-                                          ),
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              color: AppColor.redColor.withOpacity(0.1)
-                                          ),
-                                          child: Center(
-                                            child: Text("Slot ${index + 1} ended",
-                                              textAlign: TextAlign.center,
-                                              style: fontMedium.copyWith(
-                                                  color: AppColor.redColor,
-                                                  fontSize: 10.sp
-                                              ),),
-                                          ),
-                                        )
-                                            : dateTimeWithDynamicDate.isBefore(DateTime.now())
-                                            ? const SizedBox()
-                                            : Column(
+                                        return Column(
                                           children: [
                                             if(slotsList[index].booked.toString() == "0" && slotsList[index].left.toString() == "0")...[
                                               Text("2 Left",
@@ -494,6 +482,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               ),
                                             ),
+                                            SizedBox(height: 0.5.h),
+                                            Text("${slotsList[index].overs.toString()} overs",
+                                              style: fontRegular.copyWith(
+                                                  color: AppColor.secondaryColor,
+                                                  fontSize: 9.sp
+                                              ),),
                                           ],
                                         );
                                       },
@@ -502,9 +496,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               reduceHeight ? SizedBox(height: 1.h) : const SizedBox(),
-                              !canBook
-                                  ? const SizedBox()
-                                  : slotsList.isEmpty
+                              slotsList.isEmpty
                                   ? const SizedBox() : const SlotColourInfo(),
                             ],
                           ),
@@ -547,6 +539,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   InkWell(
                                     onTap: (){
+                                      Provider.of<TeamProvider>(context, listen: false).removeFilterCity();
                                       Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -582,7 +575,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         itemCount: offingsList.length,
                                         itemBuilder: (context, index){
                                           final offing = offingsList[index];
-                                          return OffingCard(offing);
+                                          return Bounceable(
+                                              onTap: (){
+                                                Navigator.push(context, ScaleRoute(page: OffingDetailScreen(offing.matchId.toString(), offing)));
+                                              },
+                                              child: OffingCard(offing, offingsList.length));
                                         },
                                       );
                                     } else {
@@ -644,7 +641,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: 2.h),
                               //horizontal listview
                               SizedBox(
-                                height: 19.h,
+                                height: 21.h,
                                 child: FutureBuilder(
                                     future: futureData,
                                     builder: (context, snapshot) {
@@ -660,7 +657,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           itemCount: 3,
                                           itemBuilder: (context, index){
                                             final match = upcomingMatchList[index];
-                                            return UpcomingMatchCard(match);
+                                            return UpcomingCard(match, upcomingMatchList.length);
                                           },
                                         );
                                       } else {
@@ -762,6 +759,150 @@ class RevenueOnly extends StatelessWidget {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UpcomingCard extends StatelessWidget {
+  final UpcomingMatch match;
+  final int length;
+  const UpcomingCard(this.match, this.length, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Bounceable(
+      onTap: (){
+        Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
+        Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) {
+                return MatchInfoScreen(matchId: match.matchId.toString());
+              }),
+        );
+      },
+      child: Container(
+        width: length == 1 ? 90.w : 80.w,
+        padding: EdgeInsets.symmetric(
+            horizontal: 4.w, vertical: 2.h),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment:
+              MainAxisAlignment.spaceBetween,
+              children: [
+                ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.teamALogo}",
+                    fit: BoxFit.cover,
+                    width: 20.w,
+                    height: 9.h,
+                    errorWidget: (context, url, widget){
+                      return ClipOval(
+                        child: Image.asset(Images.groundListImage2, fit: BoxFit.cover, width: 20.w,
+                          height: 9.h,),
+                      );
+                    },
+                  ),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      match.teamAName.toString(),
+                      style: fontMedium.copyWith(
+                        fontSize: 11.5.sp,
+                        color: AppColor.textColor,
+                      ),
+                    ),
+                    Text(
+                      "vs",
+                      style: fontMedium.copyWith(
+                        fontSize: 11.sp,
+                        color: AppColor.redColor,
+                      ),
+                    ),
+                    Text(
+                      match.teamBName.toString() == "" ? "TBA" : match.teamBName.toString(),
+                      style: fontMedium.copyWith(
+                        fontSize: 11.5.sp,
+                        color: AppColor.textColor,
+                      ),
+                    ),
+                  ],
+                ),
+                ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.teamBLogo}",
+                    fit: BoxFit.cover,
+                    width: 20.w,
+                    height: 9.h,
+                    errorWidget: (context, url, widget){
+                      return ClipOval(
+                        child: Image.asset(Images.groundListImage2, fit: BoxFit.cover, width: 20.w,
+                          height: 9.h,),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            DottedLine(
+              dashColor: AppColor.hintColour.withOpacity(0.4),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 0.6.w,
+                            vertical: 0.3.h),
+                        decoration: BoxDecoration(
+                            color: AppColor.iconBgColor,
+                            borderRadius:
+                            BorderRadius.circular(20)),
+                        child: Icon(
+                          Icons.access_time,
+                          color: AppColor.iconColour,
+                          size: 2.h,
+                        )),
+                    SizedBox(
+                      width: 2.w,
+                    ),
+                    Text(
+                      match
+                          .bookingSlotStart
+                          .toString(),
+                      style: fontMedium.copyWith(
+                        fontSize: 10.sp,
+                        color: AppColor.textColor,
+                      ),
+                    )
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  match
+                      .bookingDate
+                      .toString(),
+                  style: fontMedium.copyWith(
+                    fontSize: 10.sp,
+                    color: AppColor.textColor,
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),

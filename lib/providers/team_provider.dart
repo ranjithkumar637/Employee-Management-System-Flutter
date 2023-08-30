@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import '../models/state_based_city_list_model.dart';
 import '../models/state_list_model.dart';
 import '../models/team_list_model.dart';
 import '../models/team_view_model.dart';
+import '../models/tn_city_list_model.dart';
 import '../models/today_matches_toss_model.dart';
 import '../utils/app_constants.dart';
 
@@ -66,6 +68,61 @@ class TeamProvider extends ChangeNotifier{
     stateBasedCity = "";
     stateBasedCityId = "";
     notifyListeners();
+  }
+
+  String locationFilterCity = "";
+
+  storeLocationFilterCity(String city){
+    locationFilterCity = city;
+    notifyListeners();
+  }
+
+  removeFilterCity(){
+    locationFilterCity = "";
+    notifyListeners();
+  }
+
+  TNCityListModel tnCityListModel = TNCityListModel();
+  List<TnCity> tnCityList = [];
+
+  //get tamilnadu city list
+  Future<List<TnCity>> getTNCityList() async {
+    tnCityList = [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    try {
+      final response = await http.get(
+        Uri.parse(AppConstants.tnCityList),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+      ).timeout(const Duration(seconds: 15));
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        tnCityListModel = TNCityListModel.fromJson(decodedJson);
+        for (var data in decodedJson['city']) {
+          tnCityList.add(TnCity.fromJson(data));
+          notifyListeners();
+        }
+        notifyListeners();
+      } else {
+        // API call was not successful
+        throw const HttpException('Failed to load data');
+      }
+    } on TimeoutException{
+      print("Request timed out");
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('tn city list - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return tnCityList;
   }
 
   TodayMatchListForTossModel todayMatchListForTossModel =TodayMatchListForTossModel();

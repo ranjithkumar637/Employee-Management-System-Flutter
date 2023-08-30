@@ -1,9 +1,12 @@
 import 'package:elevens_organizer/view/my_matches/upcoming_battle.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/styles.dart';
+import '../widgets/no_internet_view.dart';
 import 'match_history.dart';
 
 class MyMatchesScreen extends StatefulWidget {
@@ -26,6 +29,10 @@ class _MyMatchesScreenState extends State<MyMatchesScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: Column(

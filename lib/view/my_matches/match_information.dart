@@ -35,7 +35,7 @@ class _MatchInformationState extends State<MatchInformation> {
               Icons.people_alt_outlined,
               "Teams",
               "${widget.teamAName} vs ${widget.teamBName.toString() == "null" ? "TBA" : widget.teamBName.toString()}"),
-          // InfoRow(Icons.gps_not_fixed_rounded, "Organizer &\nGround", '${widget.organizer}\n${widget.ground}'),
+          InfoRow(Icons.gps_not_fixed_rounded, "Ground", widget.groundName),
           // InfoRow(Icons.location_on_outlined, "Location", widget.location),
           Padding(
             padding: EdgeInsets.symmetric(

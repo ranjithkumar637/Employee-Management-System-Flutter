@@ -70,9 +70,29 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return widget.matchHistoryUnPaid.isEmpty
+        ? Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 4.h),
+          Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+          SizedBox(height: 3.h),
+          Text("You don’t have any unpaid list",
+            style: fontMedium.copyWith(
+                fontSize: 12.sp,
+                color: AppColor.redColor
+            ),),
+        ],
+      ),
+    )
+        : Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
+        widget.matchHistoryUnPaid.isEmpty
+            ? const SizedBox()
+            : Column(
           children: [
             Padding(
                 padding: EdgeInsets.symmetric(
@@ -202,6 +222,40 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
             ),
           ],
         ),
+        if(filter && filteredItems.isNotEmpty)...[
+          Padding(
+            padding: EdgeInsets.only(
+                top: 2.h,
+                bottom: 2.h,
+                left: 5.w
+            ),
+            child: Text(
+              "Results",
+              style: fontBold.copyWith(
+                  color: Colors.black,
+                  fontSize: 12.sp),
+            ),
+          )
+        ]
+        else if(filter && filteredItems.isEmpty)...[
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 5.w,
+                  top: 5.h
+              ),
+              child: Text(
+                "No Results found",
+                style: fontMedium.copyWith(
+                    color: AppColor.redColor,
+                    fontSize: 12.sp),
+              ),
+            ),
+          )
+        ]
+        else ...[
+            const SizedBox()
+          ],
         !filter
             ? Expanded(
           child: MediaQuery.removePadding(

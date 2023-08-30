@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:elevens_organizer/models/offing_list_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,7 +61,7 @@ class PaymentInfoProvider extends ChangeNotifier {
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer login- Invalid data format');
+      print('payment get - Invalid data format');
     } catch (e) {
       print(e);
     }
@@ -102,7 +103,7 @@ class PaymentInfoProvider extends ChangeNotifier {
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer login- Invalid data format');
+      print('payment update - Invalid data format');
     } catch (e) {
       print(e);
     }
@@ -137,7 +138,7 @@ class PaymentInfoProvider extends ChangeNotifier {
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer login- Invalid data format');
+      print('revenue list - Invalid data format');
     } catch (e) {
       print(e);
     }
@@ -175,7 +176,7 @@ class PaymentInfoProvider extends ChangeNotifier {
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
-      print('organizer login- Invalid data format');
+      print('upcoming matches - Invalid data format');
     } catch (e) {
       print(e);
     }
@@ -251,26 +252,33 @@ class PaymentInfoProvider extends ChangeNotifier {
     return totalRevenueModel;
   }
 
-  List<Offings> offings = [];
+  List<OffingsList> offingsList = [];
+
+  OffingsListModel offingsListModel = OffingsListModel();
 
   //offings list
-  Future<List<Offings>> offingsList() async {
+  Future<List<OffingsList>> getOffingsList(String cityId) async {
+    offingsList = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
+    var body = jsonEncode({
+      'city_id': cityId,
+    });
     try {
-      final response = await http.get(
-        Uri.parse(AppConstants.totalrevenue),
+      final response = await http.post(
+        Uri.parse(AppConstants.intheoffing),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accToken',
         },
+        body: body
       );
       var decodedJson = json.decode(response.body);
       print(decodedJson);
       if (response.statusCode == 200) {
-        totalRevenueModel = TotalRevenueModel.fromJson(decodedJson);
+        offingsListModel = OffingsListModel.fromJson(decodedJson);
         for (var list in decodedJson['offings']) {
-          offings.add(Offings.fromJson(list));
+          offingsList.add(OffingsList.fromJson(list));
         }
         notifyListeners();
       } else {
@@ -285,7 +293,7 @@ class PaymentInfoProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    return offings;
+    return offingsList;
   }
 
 }

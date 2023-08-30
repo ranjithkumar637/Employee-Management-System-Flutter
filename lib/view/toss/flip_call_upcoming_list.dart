@@ -8,12 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/today_matches_toss_model.dart';
 import '../../utils/app_constants.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../widgets/loader.dart';
+import '../widgets/no_internet_view.dart';
 import '../widgets/snackbar.dart';
 
 class FlipCallUpcomingList extends StatefulWidget {
@@ -78,11 +81,48 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
     // Calculate the time difference in minutes
     int timeDifferenceInMinutes = endTime.difference(currentTime).inMinutes + 1;
 
+    // Calculate time difference in hours and remaining minutes
+    int timeDifferenceInHours = timeDifferenceInMinutes ~/ 60;
+    int remainingMinutes = timeDifferenceInMinutes % 60;
+
+    String formattedTimeDifference = "";
+
+    if (timeDifferenceInHours > 0) {
+      formattedTimeDifference =
+      '$timeDifferenceInHours hour${timeDifferenceInHours > 1 ? 's' : ''} ';
+    }
+
+    if (remainingMinutes > 0) {
+      formattedTimeDifference =
+      '$formattedTimeDifference$remainingMinutes minute${remainingMinutes > 1 ? 's' : ''}';
+    }
+
+    print('Time difference: $formattedTimeDifference');
+    return formattedTimeDifference;
+
+  }
+
+  int checkTimePassed(String end){
+    DateTime currentTime = DateTime.now();
+
+    // Parse end time string into a DateTime object (with today's date)
+    DateFormat format = DateFormat("h:mm a");
+    DateTime endTime = DateTime(
+      currentTime.year,
+      currentTime.month,
+      currentTime.day,
+      format.parse(end).hour,
+      format.parse(end).minute,
+    );
+
+    // Calculate the time difference in minutes
+    int timeDifferenceInMinutes = endTime.difference(currentTime).inMinutes + 1;
+
     // Format the result as "X minutes"
     String formattedTimeDifference = '$timeDifferenceInMinutes minutes';
 
     print('Time difference: $formattedTimeDifference');
-    return timeDifferenceInMinutes.toString();
+    return timeDifferenceInMinutes;
   }
 
 
@@ -118,6 +158,10 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
   }
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: Padding(
@@ -138,7 +182,8 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               ],
             ),
             SizedBox(height: 3.h,),
-            todayMatches.isEmpty
+            todayMatches.isEmpty || checkTimePassed(todayMatches.first.teamAData!.bookingSlotStart) == 0
+                || checkTimePassed(todayMatches.first.teamAData!.bookingSlotStart) < 0
             ? const SizedBox()
             : Container(
               height: 5.h,
@@ -155,7 +200,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                   ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: checkTimeDifference(todayMatches.first.teamAData!.bookingSlotStart.toString()),
+                        text: "${checkTimeDifference(todayMatches.first.teamAData!.bookingSlotStart.toString())}",
                           style: fontMedium.copyWith(
                         fontSize: 11.sp,
                         color: AppColor.redColor
@@ -199,10 +244,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                   itemBuilder: (context, int index) {
                     return Bounceable(
                       onTap: (){
-                        // if(checkTossGraceTimePassed(todayMatches[index].teamAData!.bookingSlotStart.toString())){
-                        //   Dialogs.snackbar("You cannot toss now for this match", context, isError: true);
-                        // } else {
-
+                        if(todayMatches[index].freezeCount.toString() == "2"){
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) =>
                                   Toss(
@@ -221,7 +263,9 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                     todayMatches[index].teamBData!.logo
                                         .toString(),
                                   )));
-                        // }
+                        } else {
+                          Dialogs.snackbar("Both teams must be frozen to flip a toss", context, isError: true);
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -239,15 +283,36 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: [
-                                  ClipOval(
-                                    child: CachedNetworkImage(imageUrl: "${
-                                        AppConstants.imageBaseUrl
-                                    }${AppConstants.imageBaseUrlTeam}${todayMatches[index].teamAData?.logo}",
-                                      errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
-                                      width: 22.w,
-                                      height: 10.h,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      ClipOval(
+                                        child: CachedNetworkImage(imageUrl: "${
+                                            AppConstants.imageBaseUrl
+                                        }${AppConstants.imageBaseUrlTeam}${todayMatches[index].teamAData?.logo}",
+                                          errorWidget: (context, url, error) => Image.asset(Images.groundImage, fit: BoxFit.cover, width: 22.w,
+                                            height: 10.h,),
+                                          width: 22.w,
+                                          height: 10.h,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      if(todayMatches[index].teamAData!.teamFreeze.toString() == "0")...[
+                                        SizedBox(height: 1.h),
+                                        Text(
+                                          "Team not yet frozen",
+                                          style: fontMedium
+                                              .copyWith(
+                                              fontSize:
+                                              9.sp,
+                                              color: AppColor
+                                                  .redColor),
+                                        ),
+                                      ] else ...[
+                                        const SizedBox()
+                                      ]
+
+                                    ],
                                   ),
                                   RichText(
                                     textAlign: TextAlign.center,
@@ -278,15 +343,35 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                           )
                                         ]),
                                   ),
-                                  ClipOval(
-                                    child: CachedNetworkImage(imageUrl: "${
-                                        AppConstants.imageBaseUrl
-                                    }${AppConstants.imageBaseUrlTeam}${todayMatches[index].teamBData?.logo}",
-                                      errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
-                                      width: 22.w,
-                                      height: 10.h,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      ClipOval(
+                                        child: CachedNetworkImage(imageUrl: "${
+                                            AppConstants.imageBaseUrl
+                                        }${AppConstants.imageBaseUrlTeam}${todayMatches[index].teamBData?.logo}",
+                                          errorWidget: (context, url, error) => Image.asset(Images.groundImage, fit: BoxFit.cover, width: 22.w,
+                                            height: 10.h,),
+                                          width: 22.w,
+                                          height: 10.h,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      if(todayMatches[index].teamBData!.teamFreeze.toString() == "0")...[
+                                        SizedBox(height: 1.h),
+                                        Text(
+                                          "Team not yet frozen",
+                                          style: fontMedium
+                                              .copyWith(
+                                              fontSize:
+                                              9.sp,
+                                              color: AppColor
+                                                  .redColor),
+                                        ),
+                                      ] else ...[
+                                        const SizedBox()
+                                      ]
+                                    ],
                                   ),
                                 ],
                               ),
@@ -299,10 +384,9 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                 horizontal: 3.w,
                               ) +
                                   EdgeInsets.only(
-                                      top: 1.2.h, bottom: 2.h),
+                                      top: 1.2.h, bottom: 1.5.h),
                               child: Row(
                                 children: [
-                                  SizedBox(width: 1.5.w),
                                   Expanded(
                                     child: Row(
                                       children: [
@@ -326,30 +410,51 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                         ),
                                         SizedBox(width: 1.w),
                                         Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Text(
-                                                todayMatches[index].teamBData!.bookingSlotStart.toString(),
-                                                style: fontMedium
-                                                    .copyWith(
-                                                    fontSize:
-                                                    9.sp,
-                                                    color: AppColor
-                                                        .textColor),
-                                              ),
-                                            ],
+                                          child: Text(
+                                            todayMatches[index].teamBData!.bookingSlotStart.toString(),
+                                            style: fontMedium
+                                                .copyWith(
+                                                fontSize:
+                                                9.sp,
+                                                color: AppColor
+                                                    .textColor),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                 //  const Spacer(),
-                                 // Text(
-                                 //     todayMatches[index].teamAData!.bookingSlotEnd.toString(),
-                                 // )
+                                 Row(
+                                   children: [
+                                     Container(
+                                       padding:
+                                       EdgeInsets.symmetric(
+                                         horizontal: 1.w,
+                                         vertical: 0.5.h,
+                                       ),
+                                       decoration: BoxDecoration(
+                                           color: AppColor
+                                               .secondaryColor
+                                               .withOpacity(0.2),
+                                           shape: BoxShape.circle),
+                                       child: Icon(
+                                         Icons.location_on_outlined,
+                                         color: AppColor
+                                             .secondaryColor,
+                                         size: 3.5.w,
+                                       ),
+                                     ),
+                                     SizedBox(width: 1.w),
+                                     Text(
+                                         todayMatches[index].teamAData!.cityName.toString(),
+                                       style: fontMedium
+                                           .copyWith(
+                                           fontSize:
+                                           9.sp,
+                                           color: AppColor
+                                               .textColor),
+                                     ),
+                                   ],
+                                 )
                                 ],
                               ),
                             ),

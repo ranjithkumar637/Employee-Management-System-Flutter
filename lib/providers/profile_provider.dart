@@ -67,7 +67,7 @@ class ProfileProvider extends ChangeNotifier{
 
     //save ground information locally
   saveGroundInfo(String value1, String value2, int value3){
-    print("pitch value $value1");
+    print("flood light value $value3");
     pitch = value1;
     boundaryLine = value2;
     floodLight = value3;

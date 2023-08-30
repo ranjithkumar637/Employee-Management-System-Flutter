@@ -1,10 +1,14 @@
 import 'dart:ui';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:elevens_organizer/providers/auth_provider.dart';
 import 'package:elevens_organizer/providers/booking_provider.dart';
+import 'package:elevens_organizer/providers/navigation_provider.dart';
 import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/providers/team_provider.dart';
 import 'package:elevens_organizer/utils/colours.dart';
+import 'package:elevens_organizer/utils/connectivity_service.dart';
+import 'package:elevens_organizer/utils/connectivity_status.dart';
 import 'package:elevens_organizer/utils/local_notification_service.dart';
 import 'package:elevens_organizer/utils/strings.dart';
 import 'package:elevens_organizer/view/address/add_address.dart';
@@ -58,6 +62,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => TeamProvider()),
         ChangeNotifierProvider(create: (context) => BookingProvider()),
+        ChangeNotifierProvider(create: (context) => NavigationProvider()),
       ],
       child: const MyApp(),
     ),
@@ -125,27 +130,31 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Sizer(
         builder: (context, orientation, deviceType) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: Strings.appName,
-            theme: ThemeData(
-                primaryColor: AppColor.primaryColor
-            ),
-            initialRoute: '/',
-            routes: {
-              '/': (context) => const SplashScreen(),
-              'login_screen': (context) => const LoginScreen(),
-              'register_screen': (context) => const RegisterScreen(),
-              'menu_screen': (context) => const MenuScreen(),
-              'my_matches': (context) => const MyMatchesScreen(),
-              'notification_screen': (context) => const Notifications(),
-              'edit_profile': (context) => const EditProfile(),
-              'add_address': (context) => const AddAddress(),
-              'payment_information': (context) => const PaymentInformation(),
-              'my_bookings': (context) => const MyBookings(),
-              'block_slot_date': (context) => const BlockSlotDate(),
-              'request_player': (context) => const RequestPlayer(),
-            },
+          return StreamProvider<ConnectivityStatus>(
+              initialData: ConnectivityStatus.offline,
+              create: (context) => ConnectivityService().connectionStatusController.stream,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: Strings.appName,
+                theme: ThemeData(
+                    primaryColor: AppColor.primaryColor
+                ),
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => const SplashScreen(),
+                  'login_screen': (context) => const LoginScreen(),
+                  'register_screen': (context) => const RegisterScreen(),
+                  'menu_screen': (context) => const MenuScreen(),
+                  'my_matches': (context) => const MyMatchesScreen(),
+                  'notification_screen': (context) => const Notifications(),
+                  'edit_profile': (context) => const EditProfile(),
+                  'add_address': (context) => const AddAddress(),
+                  'payment_information': (context) => const PaymentInformation(),
+                  'my_bookings': (context) => const MyBookings(),
+                  'block_slot_date': (context) => const BlockSlotDate(),
+                  'request_player': (context) => const RequestPlayer(),
+                },
+              ),
           );
         }
     );

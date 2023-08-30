@@ -50,7 +50,7 @@ class PlayerMatchCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  VersusText(teamA, teamB),
+                  VersusText(teamA, teamB == "" ? "TBA" : teamB),
                   SizedBox(height:1.h),
                   ground == ""
                   ? const SizedBox()

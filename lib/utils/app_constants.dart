@@ -11,6 +11,7 @@ class AppConstants {
   static const String imageBaseUrlCaptain = 'storage/app/public/captain/';
 
   static const String imageBaseUrlPlayer = 'storage/app/public/player/';
+  static const String tnCityList = '$baseUrl/tamilnadu-city-list';
 
   static const String imageBaseUrlTeam = 'storage/app/public/team/';
 

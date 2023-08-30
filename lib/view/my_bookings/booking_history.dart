@@ -49,7 +49,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
 
   DateTime convertDate(String dateString){
     // Convert the date string to a DateTime object
-    DateTime date = DateFormat("MMMM dd, yyyy").parse(dateString);
+    DateTime date = DateFormat("MMM dd, yyyy").parse(dateString);
     return date;
   }
 
@@ -108,7 +108,8 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
       body: loading
           ? const Loader()
           : Column(
-            children: [
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
               bookingHistory.isEmpty
                   ? const SizedBox()
                   : Column(

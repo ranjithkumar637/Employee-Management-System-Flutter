@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/navigation_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
@@ -106,6 +107,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 SizedBox(height: 0.5.h),
                                 Bounceable(
                                   onTap:(){
+                                    Provider.of<ProfileProvider>(context, listen: false).clearGroundAddress();
                                     Navigator.pushNamed(context, 'edit_profile')
                                         .then((value) {
                                       getProfile();
@@ -228,27 +230,28 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ],
                           )
-                              : Container(
+                              : const SizedBox();
+                        }
+                    ),
+                    Consumer<ProfileProvider>(
+                        builder: (context, profile, child) {
+                          return profile.organizerDetails.groundApprove == 0
+                              ? Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 3.w,
-                              vertical: 1.4.h,
+                              vertical: 1.2.h,
                             ),
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                color: AppColor.redColor
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.pending_actions, color: AppColor.lightColor, size: 5.w,),
-                                SizedBox(width: 3.w),
-                                Text("Admin has to approve you. Please wait...",
-                                  style: fontRegular.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                              ],
-                            ),
-                          );
+                              color: AppColor.redColor,
+                              borderRadius: BorderRadius.circular(5.0),
+                              ),
+                                child: Text("Update the ground details to get approved",
+                            style: fontMedium.copyWith(
+                                  fontSize: 10.sp,
+                                  color: AppColor.lightColor
+                            ),),
+                              )
+                              : const SizedBox();
                         }
                     ),
 
@@ -261,15 +264,13 @@ class _MoreScreenState extends State<MoreScreen> {
                     SizedBox(height: 1.h),
                     InkWell(
                         onTap: (){
-                          Provider.of<ProfileProvider>(context, listen: false)
-                              .moveToBookings();
+                          Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(1);
                         },
                         child: const ProfileOption("Bookings")),
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
-                          Provider.of<ProfileProvider>(context, listen: false)
-                              .moveToMatches();
+                          Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(2);
                         },
                         child: const ProfileOption("Matches")),
                     const Divider(thickness: 0.7,),

@@ -77,15 +77,25 @@ class _InformationState extends State<Information> {
     List<String> gallery = [];
     List<String> mainImg = [];
     String stateId = "", cityId = "";
+    String address = "", houseNo = "", pinCode = "", street = "", latitude = "", longitude = "";
     String description = Provider.of<ProfileProvider>(context, listen: false).description;
     String pitch = Provider.of<ProfileProvider>(context, listen: false).pitch;
     String boundaryLine = Provider.of<ProfileProvider>(context, listen: false).boundaryLine;
-    String address = Provider.of<ProfileProvider>(context, listen: false).address;
-    String houseNo = Provider.of<ProfileProvider>(context, listen: false).houseNo;
-    String pinCode = Provider.of<ProfileProvider>(context, listen: false).pinCode;
-    String street = Provider.of<ProfileProvider>(context, listen: false).street;
-    String latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
-    String longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
+    if(profile.groundAddress != ""){
+      address = Provider.of<ProfileProvider>(context, listen: false).groundAddress;
+      houseNo = Provider.of<ProfileProvider>(context, listen: false).groundHouseNo;
+      pinCode = Provider.of<ProfileProvider>(context, listen: false).groundPinCode;
+      street = Provider.of<ProfileProvider>(context, listen: false).groundStreet;
+      latitude = Provider.of<ProfileProvider>(context, listen: false).groundLatitude;
+      longitude = Provider.of<ProfileProvider>(context, listen: false).groundLongitude;
+    } else {
+      address = Provider.of<ProfileProvider>(context, listen: false).address;
+      houseNo = Provider.of<ProfileProvider>(context, listen: false).houseNo;
+      pinCode = Provider.of<ProfileProvider>(context, listen: false).pinCode;
+      street = Provider.of<ProfileProvider>(context, listen: false).street;
+      latitude = Provider.of<ProfileProvider>(context, listen: false).latitude;
+      longitude = Provider.of<ProfileProvider>(context, listen: false).longitude;
+    }
     if(profile.stateId == "" && profile.cityId == ""){
       stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
       cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
@@ -93,6 +103,7 @@ class _InformationState extends State<Information> {
       stateId = profile.stateId;
       cityId = profile.cityId;
     }
+    print("house no $houseNo street name $street");
     int floodLight = Provider.of<ProfileProvider>(context, listen: false).floodLight;
     // if(profile.newGroundImages.isEmpty){
     //   gallery = Provider.of<ProfileProvider>(context, listen: false).groundImages;

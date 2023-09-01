@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/booking_provider.dart';
+import '../../providers/profile_provider.dart';
 import '../../providers/team_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
@@ -34,7 +35,7 @@ class _YourMatchInfoState extends State<YourMatchInfo> {
             child: Column(
               children: [
                 SizedBox(height: 2.h),
-                Consumer<BookingProvider>(
+                Consumer<ProfileProvider>(
                     builder: (context, match, child) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
@@ -50,11 +51,13 @@ class _YourMatchInfoState extends State<YourMatchInfo> {
                               ),),
                             SizedBox(height: 2.h),
                             MatchInformation(
-                              match.ground.mainImage.toString(),
-                              match.ground.city.toString(),
-                              match.ground.groundName.toString(),
-                              match.teamAData.teamName.toString(),
-                              match.teamBData.teamName.toString(),
+                              match.matchDetails.mainImage.toString(),
+                              match.matchDetails.cityName.toString(),
+                              match.matchDetails.groundName.toString(),
+                              match.matchDetails.teamAName.toString(),
+                              match.matchDetails.teamBName.toString(),
+                              match.matchDetails.bookingDate.toString(),
+                              match.matchDetails.bookingSlotStart.toString(),
                             ),
                           ],
                         ),

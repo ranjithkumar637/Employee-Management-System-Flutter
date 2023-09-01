@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +31,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
+
+  bool isValid = true;
+  bool hasValue = false;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
@@ -256,9 +260,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     fontSize: 10.sp,
                                     color: AppColor.textColor
                                 ),
+                                onChanged: (value) {
+                                  if (value.isEmpty) {
+                                    setState(() {
+                                      hasValue = false;
+                                      isValid = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      hasValue = true;
+                                      isValid =
+                                          EmailValidator.validate(value);
+                                    });
+                                  }
+                                },
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
+                                  suffixIcon: !hasValue ? const SizedBox() : Icon(isValid ? Icons.done_all : Icons.error_outline, color: isValid ? Colors.green : Colors.red, size: 5.w,),
                                   isDense: true,
                                   border: InputBorder.none,
                                   hintText: "johndoe@gmail.com",
@@ -269,6 +288,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                           ),
+                          !hasValue || isValid
+                              ? const SizedBox()
+                              : SizedBox(height:1.h),
+                          !hasValue || isValid
+                              ? const SizedBox()
+                              : Text("* Enter a valid email address",
+                            style: fontRegular.copyWith(
+                                fontSize: 8.sp,
+                                color: AppColor.redColor
+                            ),),
                         ],
                       ),
                     ),
@@ -381,39 +410,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         loading = true;
       });
-      AuthProvider().register(nameController.text, emailController.text, mobileController.text, companyNameController.text)
-      .then((value) async {
-        if(value.status == true){
-          print("registered successfully");
-          Dialogs.snackbar(value.message.toString(), context, isError: false);
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          preferences.setString("user_temp_id", value.userTempId.toString());
-          preferences.setString("mobile", mobileController.text);
-          preferences.setBool("isLoginScreen", false);
-          setState(() {
-            loading = false;
-          });
-          if(mounted){
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) {
-                return EnterOtpScreen(false, true, value.otp.toString(), value.userTempId.toString(), mobileController.text);
-              }),
-            );
+      if(hasValue && !isValid){
+        setState(() {
+          loading = false;
+        });
+        Dialogs.snackbar("Enter a valid email address", context, isError: true);
+      } else {
+        AuthProvider().register(nameController.text, emailController.text, mobileController.text, companyNameController.text)
+            .then((value) async {
+          if(value.status == true){
+            print("registered successfully");
+            Dialogs.snackbar(value.message.toString(), context, isError: false);
+            SharedPreferences preferences = await SharedPreferences.getInstance();
+            preferences.setString("user_temp_id", value.userTempId.toString());
+            preferences.setString("mobile", mobileController.text);
+            preferences.setBool("isLoginScreen", false);
+            setState(() {
+              loading = false;
+            });
+            if(mounted){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return EnterOtpScreen(false, true, value.otp.toString(), value.userTempId.toString(), mobileController.text);
+                }),
+              );
+            }
+          } else if(value.status == false){
+            print(value.message.toString());
+            Dialogs.snackbar(value.message.toString(), context, isError: true);
+            setState(() {
+              loading = false;
+            });
+          } else {
+            Dialogs.snackbar("Something went wrong", context, isError: true);
+            setState(() {
+              loading = false;
+            });
           }
-        } else if(value.status == false){
-          print(value.message.toString());
-          Dialogs.snackbar(value.message.toString(), context, isError: true);
-          setState(() {
-            loading = false;
-          });
-        } else {
-          Dialogs.snackbar("Something went wrong", context, isError: true);
-          setState(() {
-            loading = false;
-          });
-        }
-      });
+        });
+      }
+
     }
     }
 }

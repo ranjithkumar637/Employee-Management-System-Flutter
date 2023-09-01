@@ -40,7 +40,11 @@ class OrganizerBattleListCard extends StatelessWidget {
             ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: CachedNetworkImage(
-                  imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}$image", fit: BoxFit.cover, width: 28.w, height: 14.h,)),
+                  imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}$image", fit: BoxFit.cover, width: 28.w, height: 14.h,
+                  errorWidget: (context, url, widget){
+                    return Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 28.w, height: 14.h,);
+                  },
+                )),
             SizedBox(width: 4.w),
             Expanded(
               child: Column(

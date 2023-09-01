@@ -76,11 +76,19 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     );
   }
 
+  int newTabIndex = 0;
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(() {
+      setState(() {
+        newTabIndex = tabController.index;
+      });
+    });
     getProfile();
   }
 
@@ -221,7 +229,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                             ),
                           ),
                         ),
-                        Positioned(
+                        newTabIndex == 0 ? const SizedBox() : Positioned(
                           child: Bounceable(
                             onTap: (){
                               chooseGroundImage();
@@ -266,6 +274,11 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
               ),
               SizedBox(height: 2.h),
               TabBar(
+                  onTap: (index) {
+                    setState(() {
+                      newTabIndex = index; // Update the active tab index
+                    });
+                  },
                   indicatorColor: AppColor.secondaryColor,
                   isScrollable: true,
                   indicatorSize: TabBarIndicatorSize.label,

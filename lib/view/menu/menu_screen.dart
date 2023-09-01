@@ -59,6 +59,12 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
+  moveToMore(){
+    setState(() {
+      _currentIndex = 4;
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -202,6 +208,12 @@ class _MenuScreenState extends State<MenuScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if(nav.currentIndex == 0){
                 moveToHome();
+              } else if(nav.currentIndex == 1){
+                moveToBookings();
+              } else if(nav.currentIndex == 2){
+                moveToMatches();
+              } else if(nav.currentIndex == 4){
+                moveToMore();
               }
              });
             return Consumer<ProfileProvider>(

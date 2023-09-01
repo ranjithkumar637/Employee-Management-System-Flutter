@@ -118,20 +118,31 @@ class _SplashScreenState extends State<SplashScreen> {
       top: true,
       child: Scaffold(
         backgroundColor: AppColor.lightColor,
-        body: Column(
+        body: Stack(
+          clipBehavior: Clip.none,
           children: [
-            FadeInRight(
-              child: Align(
-                  alignment: Alignment.topRight,
-                  child: SvgPicture.asset(Images.splashTop, fit: BoxFit.cover, width: 100.w,)),
-            ),
-            const Spacer(),
-            ZoomIn(child: Image.asset(Images.logo, width: 50.w,)),
-            const Spacer(),
-            FadeInLeft(
-              child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: SvgPicture.asset(Images.splashBottom, fit: BoxFit.cover, width: 100.w,)),
+            Align(
+                alignment: Alignment.topRight,
+                child: SvgPicture.asset(Images.splashTopImage, fit: BoxFit.cover)),
+            Align(
+                alignment: Alignment.bottomLeft,
+                child: SvgPicture.asset(Images.splashBottomImage, fit: BoxFit.cover)),
+            Column(
+              children: [
+                FadeInRight(
+                  child: Align(
+                      alignment: Alignment.topRight,
+                      child: SvgPicture.asset(Images.splashTop, fit: BoxFit.cover, width: 100.w,)),
+                ),
+                const Spacer(),
+                ZoomIn(child: Image.asset(Images.logo, width: 50.w,)),
+                const Spacer(),
+                FadeInLeft(
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: SvgPicture.asset(Images.splashBottom, fit: BoxFit.cover, width: 100.w,)),
+                ),
+              ],
             ),
           ],
         ),

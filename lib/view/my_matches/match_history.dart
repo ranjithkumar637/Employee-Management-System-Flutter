@@ -63,7 +63,7 @@ class _MatchHistoryState extends State<MatchHistory> {
 
   DateTime convertDate(String dateString){
     // Convert the date string to a DateTime object
-    DateTime date = DateFormat("MMMM dd, yyyy").parse(dateString);
+    DateTime date = DateFormat("MMM dd, yyyy").parse(dateString);
     return date;
   }
 
@@ -349,7 +349,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                                               child: CachedNetworkImage(
                                                 imageUrl: "${
                                                     AppConstants.imageBaseUrl
-                                                }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamBLogo}",
+                                                }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamALogo}",
                                                 errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
                                                 width: 20.w,
                                                 height: 10.h,
@@ -384,8 +384,8 @@ class _MatchHistoryState extends State<MatchHistory> {
                                             ClipOval(
                                               child: CachedNetworkImage(imageUrl: "${
                                                   AppConstants.imageBaseUrl
-                                              }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamALogo}",
-                                                errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
+                                              }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamBLogo}",
+                                                errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
                                                 width: 20.w,
                                                 height: 10.h,
                                                 fit: BoxFit.cover,
@@ -542,10 +542,10 @@ class _MatchHistoryState extends State<MatchHistory> {
                                       child: CachedNetworkImage(
                                         imageUrl: "${
                                             AppConstants.imageBaseUrl
-                                        }${AppConstants.imageBaseUrlTeam}${filteredItems[index].teamBLogo}",
+                                        }${AppConstants.imageBaseUrlTeam}${filteredItems[index].teamALogo}",
                                         errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
                                         width: 20.w,
-                                        height: 10.h,
+                                        height: 9.h,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -577,10 +577,10 @@ class _MatchHistoryState extends State<MatchHistory> {
                                     ClipOval(
                                       child: CachedNetworkImage(imageUrl: "${
                                           AppConstants.imageBaseUrl
-                                      }${AppConstants.imageBaseUrlTeam}${filteredItems[index].teamALogo}",
-                                        errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
+                                      }${AppConstants.imageBaseUrlTeam}${filteredItems[index].teamBLogo}",
+                                        errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
                                         width: 20.w,
-                                        height: 10.h,
+                                        height: 9.h,
                                         fit: BoxFit.cover,
                                       ),
                                     ),

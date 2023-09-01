@@ -102,31 +102,7 @@ class InviteScreen extends StatelessWidget {
                 ],
               ),
             )
-            : Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: 5.w,
-                  vertical: 5.h
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 3.w,
-                vertical: 1.5.h,
-              ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  color: AppColor.redColor
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.pending_actions, color: AppColor.lightColor, size: 4.w,),
-                  SizedBox(width: 2.w),
-                  Text("Pending approval",
-                    style: fontRegular.copyWith(
-                        fontSize: 10.sp,
-                        color: AppColor.lightColor
-                    ),),
-                ],
-              ),
-            );
+            : const SizedBox();
           }
         ),
         Padding(

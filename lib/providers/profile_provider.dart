@@ -10,6 +10,7 @@ import 'package:elevens_organizer/models/referral_list_model.dart';
 import 'package:elevens_organizer/models/response_model.dart';
 import 'package:elevens_organizer/models/upcoming_match_list_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,6 +21,7 @@ import '../models/player_info_model.dart';
 import '../models/player_match_history_list_model.dart';
 import '../models/player_upcoming_match_list_model.dart';
 import '../utils/app_constants.dart';
+import '../view/widgets/snackbar.dart';
 
 
 class ProfileProvider extends ChangeNotifier{
@@ -86,6 +88,24 @@ class ProfileProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+    void saveMultiGroundImages(List<XFile> images) {
+    print(images.length);
+      for (int i = 0; i < images.length; i++) {
+        newGroundImages.add(images[i].path.toString());
+      }
+      notifyListeners();
+    }
+
+    removeMultiGroundImage(){
+    newGroundImages.clear();
+    notifyListeners();
+    }
+
+    removeOneMultiGroundImage(int index){
+      newGroundImages.removeAt(index);
+      notifyListeners();
+    }
+
   //save ground images locally
   void saveGroundMainImage(String image) {
     mainImage.add(image);
@@ -103,6 +123,18 @@ class ProfileProvider extends ChangeNotifier{
     groundLongitude = long;
     stateIdGround = sId;
     cityIdGround = cId;
+    notifyListeners();
+  }
+
+  clearGroundAddress(){
+    groundAddress = "";
+    groundLatitude = "";
+    groundStreet = "";
+    groundHouseNo = "";
+    groundPinCode = "";
+    groundLongitude = "";
+    stateIdGround = "";
+    cityIdGround = "";
     notifyListeners();
   }
 

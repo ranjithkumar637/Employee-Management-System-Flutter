@@ -11,9 +11,9 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class OffingsListView extends StatelessWidget {
-  final String image, date, time, location, teamAName, teamBName;
+  final String  date, time, location, teamAName, teamBName, groundName, groundImg, organizerName;
   final OffingsList offing;
-  const OffingsListView(this.image, this.date, this.time, this.location, this.teamAName, this.teamBName, this.offing,  {Key? key}) : super(key: key);
+  const OffingsListView(this.date, this.time, this.location, this.teamAName, this.teamBName, this.offing, this.groundName, this.groundImg, this.organizerName,  {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,15 @@ class OffingsListView extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: CachedNetworkImage(
-                imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$image',
+                imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$groundImg',
                 fit: BoxFit.cover,
-                width: 20.w,
-                height: 9.h,
+                width: 26.w,
+                height: 13.h,
                 errorWidget:(context, url, error) =>
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
@@ -76,6 +76,55 @@ class OffingsListView extends StatelessWidget {
                 SizedBox(height: 1.h),
                 Row(
                   children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 1.w,
+                            vertical: 0.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                              color: AppColor.iconBgColor,
+                              shape: BoxShape.circle
+                          ),
+                          child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.w,),
+                        ),
+                        SizedBox(width: 3.w),
+                        Text(date,
+                          style: fontMedium.copyWith(
+                              fontSize: 9.5.sp,
+                              color: AppColor.textColor
+                          ),),
+                      ],
+                    ),
+                    SizedBox(width: 3.w),
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 1.w,
+                            vertical: 0.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                              color: AppColor.iconBgColor,
+                              shape: BoxShape.circle
+                          ),
+                          child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.w,),
+                        ),
+                        SizedBox(width: 3.w),
+                        Text(time,
+                          style: fontMedium.copyWith(
+                              fontSize: 9.5.sp,
+                              color: AppColor.textColor
+                          ),),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 0.6.h),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 1.w,
@@ -85,14 +134,25 @@ class OffingsListView extends StatelessWidget {
                           color: AppColor.iconBgColor,
                           shape: BoxShape.circle
                       ),
-                      child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.w,),
+                      child: SvgPicture.asset(Images.groundIcon, color: AppColor.iconColour, width: 3.w,),
                     ),
                     SizedBox(width: 3.w),
-                    Text(date,
-                      style: fontMedium.copyWith(
-                          fontSize: 9.5.sp,
-                          color: AppColor.textColor
-                      ),),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(groundName,
+                          style: fontMedium.copyWith(
+                              fontSize: 9.5.sp,
+                              color: AppColor.textColor
+                          ),),
+                        SizedBox(height: 0.5.h),
+                        Text(organizerName,
+                          style: fontRegular.copyWith(
+                              fontSize: 9.sp,
+                              color: AppColor.textMildColor
+                          ),),
+                      ],
+                    ),
                   ],
                 ),
                 SizedBox(height: 0.6.h),
@@ -107,50 +167,16 @@ class OffingsListView extends StatelessWidget {
                           color: AppColor.iconBgColor,
                           shape: BoxShape.circle
                       ),
-                      child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.w,),
+                      child: Icon(Icons.location_on_outlined, color: AppColor.iconColour, size: 3.w,),
                     ),
                     SizedBox(width: 3.w),
-                    Text(time,
+                    Text(location,
                       style: fontMedium.copyWith(
                           fontSize: 9.5.sp,
                           color: AppColor.textColor
                       ),),
                   ],
                 ),
-                // SizedBox(height: 0.6.h),
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     Container(
-                //       padding: EdgeInsets.symmetric(
-                //         horizontal: 1.w,
-                //         vertical: 0.5.h,
-                //       ),
-                //       decoration: BoxDecoration(
-                //           color: AppColor.iconBgColor,
-                //           shape: BoxShape.circle
-                //       ),
-                //       child: SvgPicture.asset(Images.groundIcon, color: AppColor.iconColour, width: 3.w,),
-                //     ),
-                //     SizedBox(width: 3.w),
-                //     Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         Text(groundName,
-                //           style: fontMedium.copyWith(
-                //               fontSize: 9.5.sp,
-                //               color: AppColor.textColor
-                //           ),),
-                //         SizedBox(height: 0.5.h),
-                //         Text(location,
-                //           style: fontRegular.copyWith(
-                //               fontSize: 9.sp,
-                //               color: AppColor.textMildColor
-                //           ),),
-                //       ],
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),

@@ -74,13 +74,18 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  String groundName = "", groundMobile = "", companyName = "";
+
   getData(){
     final profile = Provider.of<ProfileProvider>(context, listen: false);
     groundNameController.text = profile.organizerDetails.groundName.toString();
+    groundName = profile.organizerDetails.groundName.toString();
     groundMobileController.text = profile.organizerDetails.groundContactNumber.toString();
+    groundMobile = profile.organizerDetails.groundContactNumber.toString();
     nameController.text = profile.organizerDetails.name.toString();
     mobileNumberController.text = profile.organizerDetails.mobile.toString();
     companyNameController.text = profile.organizerDetails.companyName.toString();
+    companyName = profile.organizerDetails.companyName.toString();
     orgPinCodeController.text = profile.organizerDetails.orgPincode.toString();
     date = profile.getDob();
   }
@@ -152,13 +157,13 @@ class _ProfileState extends State<Profile> {
                                     vertical: 1.5.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: groundNameController.text.isEmpty ? AppColor.lightColor : AppColor.textFieldBg,
+                                    color: groundName == "" ? AppColor.lightColor : AppColor.textFieldBg,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: Center(
                                     child: TextFormField(
                                       controller: groundNameController,
-                                      readOnly: groundNameController.text.isEmpty ? false : true,
+                                      readOnly: groundName == "" ? false : true,
                                       cursorColor: AppColor.secondaryColor,
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -207,7 +212,7 @@ class _ProfileState extends State<Profile> {
                                     vertical: 1.5.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: groundMobileController.text.isEmpty ? AppColor.lightColor : AppColor.textFieldBg,
+                                    color: groundMobile == "" ? AppColor.lightColor : AppColor.textFieldBg,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: Center(
@@ -217,7 +222,7 @@ class _ProfileState extends State<Profile> {
                                         FilteringTextInputFormatter.digitsOnly
                                       ],
                                       controller: groundMobileController,
-                                      readOnly: groundMobileController.text.isEmpty ? false : true,
+                                      readOnly: groundMobile == "" ? false : true,
                                       cursorColor: AppColor.secondaryColor,
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -742,7 +747,7 @@ class _ProfileState extends State<Profile> {
     String cityIdG = "", stateIdG = "";
 
     if(profile.address == "" && profile.groundAddress == "") {
-      Dialogs.snackbar("Set ground address", context, isError: true);
+      Dialogs.snackbar("Set ground location", context, isError: true);
     }
     else if(profile.groundAddress == ""){
       address = Provider.of<ProfileProvider>(context, listen: false).address;

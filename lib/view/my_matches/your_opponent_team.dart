@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../models/match_team_player_list_model.dart';
 import '../../providers/booking_provider.dart';
+import '../../providers/profile_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 import '../widgets/loader.dart';
@@ -73,7 +74,7 @@ class _YourOpponentTeamState extends State<YourOpponentTeam> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BookingProvider>(
+    return Consumer<ProfileProvider>(
         builder: (context, match, child) {
           return Container(
             margin: EdgeInsets.only(
@@ -88,7 +89,7 @@ class _YourOpponentTeamState extends State<YourOpponentTeam> {
             ),
             child: loading
                 ? const Loader()
-                : match.teamBData.teamName.toString() == "null"
+                : match.matchDetails.teamBName.toString() == "null"
               ? Center(
                 child: Text("To be Announced",
             style: fontMedium.copyWith(

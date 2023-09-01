@@ -100,17 +100,17 @@ class _MatchInformationState extends State<MatchInformation> {
       ),
       child: Column(
         children: [
-          InfoRow(Icons.date_range_outlined, "Date", widget.date),
-          InfoRow(Icons.access_time, "Slot", widget.slot),
+          InfoRow(Images.calendarIcon, "Date", widget.date),
+          InfoRow(Images.timeIcon, "Slot", widget.slot),
           InfoRow(
-              Icons.people_alt_outlined,
+              Images.myTeams,
               widget.opponent == '' ? "Team" : "Teams",
               widget.opponent == ''
                   ? widget.team
                   : "${widget.team} vs ${widget.opponent}"),
           // widget.opponent == "" ? const SizedBox() : InfoRow(Icons.people_alt_outlined, "Opponent Team", widget.opponent),
-          InfoRow(Icons.gps_not_fixed_rounded, "Organizer &\nGround", '${widget.organizer}\n${widget.ground}'),
-          InfoRow(Icons.location_on_outlined, "Location", widget.location),
+          InfoRow(Images.groundIcon, "Organizer &\nGround", '${widget.organizer}\n${widget.ground}'),
+          InfoRow(Images.location, "Location", widget.location),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 4.w,
@@ -223,7 +223,7 @@ class _MatchInformationState extends State<MatchInformation> {
 }
 
 class InfoRow extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label, data;
   const InfoRow( this.icon, this.label, this.data, {
     Key? key,
@@ -251,7 +251,7 @@ class InfoRow extends StatelessWidget {
                             color: AppColor.iconBgColor,
                             shape: BoxShape.circle
                         ),
-                        child: Icon(icon, color: AppColor.iconColour, size: 4.w,),
+                        child: SvgPicture.asset(icon, color: AppColor.iconColour, width: 4.w,),
                       ),
                       SizedBox(width: 3.w),
                       Text(label,

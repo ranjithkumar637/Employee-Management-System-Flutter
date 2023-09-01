@@ -74,6 +74,7 @@ class OrganizerDetails {
   dynamic streetName;
   dynamic groundId;
   dynamic adminApprove;
+  dynamic groundApprove;
   dynamic groundContactNumber;
   dynamic groundSecondaryNumber;
   dynamic groundCityId;
@@ -107,6 +108,7 @@ class OrganizerDetails {
         streetName,
         groundId,
         adminApprove,
+        groundApprove,
         groundContactNumber,
         groundSecondaryNumber,
         groundCityId,
@@ -140,6 +142,7 @@ class OrganizerDetails {
     streetName = json['street_name'];
     groundId = json['ground_id'];
     adminApprove = json['admin_approve'];
+    groundApprove = json['ground_approve'];
     groundContactNumber = json['ground_contact_number'];
     groundSecondaryNumber = json['ground_secondary_number'];
     groundCityId = json['ground_city_id'];
@@ -175,6 +178,7 @@ class OrganizerDetails {
     data['street_name'] = streetName;
     data['ground_id'] = groundId;
     data['admin_approve'] = adminApprove;
+    data['ground_approve'] = groundApprove;
     data['ground_contact_number'] = groundContactNumber;
     data['ground_secondary_number'] = groundSecondaryNumber;
     data['ground_city_id'] = groundCityId;

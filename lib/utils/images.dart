@@ -21,6 +21,9 @@ class Images {
   static const String authCurveImg = 'assets/images/auth_curve_img.svg';
   static const String loginTopImg = 'assets/images/login_top_img.svg';
 
+  static const String splashTopImage = 'assets/images/splash_top.svg';
+  static const String splashBottomImage = 'assets/images/splash_bottom.svg';
+
 
   //homescreen
   static const String notification = 'assets/images/notification_icon.svg';
@@ -54,6 +57,7 @@ class Images {
   static const String groundListImage4 = 'assets/images/ground_img_1.png';
 
   static const String calendarIcon = 'assets/images/calendar_icon.svg';
+  static const String timeIcon = 'assets/images/time_icon.svg';
 
   static const String editIcon = 'assets/images/edit_icon.svg';
 

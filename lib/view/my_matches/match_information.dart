@@ -11,8 +11,8 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class MatchInformation extends StatefulWidget {
-  final String image, city, groundName, teamAName, teamBName;
-  const MatchInformation(this.image, this.city, this.groundName, this.teamAName, this.teamBName, {Key? key}) : super(key: key);
+  final String image, city, groundName, teamAName, teamBName, date, time;
+  const MatchInformation(this.image, this.city, this.groundName, this.teamAName, this.teamBName, this.date, this.time, {Key? key}) : super(key: key);
 
   @override
   State<MatchInformation> createState() => _MatchInformationState();
@@ -29,13 +29,13 @@ class _MatchInformationState extends State<MatchInformation> {
       ),
       child: Column(
         children: [
-          // InfoRow(Icons.date_range_outlined, "Date", widget.date),
-          // InfoRow(Icons.access_time, "Slot", widget.slot),
+          InfoRow(Images.calendarIcon, "Date", widget.date),
+          InfoRow(Images.timeIcon, "Slot", widget.time),
           InfoRow(
-              Icons.people_alt_outlined,
+              Images.myTeams,
               "Teams",
               "${widget.teamAName} vs ${widget.teamBName.toString() == "null" ? "TBA" : widget.teamBName.toString()}"),
-          InfoRow(Icons.gps_not_fixed_rounded, "Ground", widget.groundName),
+          InfoRow(Images.groundIcon, "Ground", widget.groundName),
           // InfoRow(Icons.location_on_outlined, "Location", widget.location),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -62,46 +62,20 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                 ),
-                Positioned(
-                  child: Center(
-                    child: Bounceable(
-                      onTap: (){
-                        // openMaps(widget.latitude.toString(), widget.longitude.toString());
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 3.w,
-                          vertical: 1.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColor.lightColor,
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SvgPicture.asset(Images.mapIcon, color: AppColor.primaryColor, width: 5.w,),
-                            SizedBox(width: 2.w),
-                            Text("Get Directions",
-                              style: fontMedium.copyWith(
-                                  fontSize: 11.sp,
-                                  color: AppColor.textColor
-                              ),),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 3.w,
-                  bottom: 1.5.h,
-                  child: Text("5+ Photos",
-                    style: fontRegular.copyWith(
-                        fontSize: 10.sp,
-                        color: AppColor.lightColor
-                    ),),
-                ),
+                // InkWell(
+                //   onTap: (){
+                //     showGroundGalleryImages(ground.galleryImage);
+                //   },
+                //   child: Positioned(
+                //     right: 3.w,
+                //     bottom: 1.5.h,
+                //     child: Text("5+ Photos",
+                //       style: fontRegular.copyWith(
+                //           fontSize: 10.sp,
+                //           color: AppColor.lightColor
+                //       ),),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -110,14 +84,20 @@ class _MatchInformationState extends State<MatchInformation> {
     );
   }
 
-  openMaps(String latitude, String longitude) async {
-    MapsLauncher.launchCoordinates(double.parse(latitude), double.parse(longitude));
-  }
+  // void showGroundGalleryImages(List<String> galleryImage) {
+  //   showModalBottomSheet<void>(
+  //       context: context,
+  //       backgroundColor: Colors.transparent,
+  //       isScrollControlled: true,
+  //       builder: (BuildContext context) {
+  //         return GalleryImageView(galleryImage);
+  //       });
+  // }
 
 }
 
 class InfoRow extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label, data;
   const InfoRow( this.icon, this.label, this.data, {
     Key? key,
@@ -146,7 +126,7 @@ class InfoRow extends StatelessWidget {
                             color: AppColor.iconBgColor,
                             shape: BoxShape.circle
                         ),
-                        child: Icon(icon, color: AppColor.iconColour, size: 4.w,),
+                        child: SvgPicture.asset(icon, color: AppColor.iconColour, width: 4.w,),
                       ),
                       SizedBox(width: 3.w),
                       Text(label,

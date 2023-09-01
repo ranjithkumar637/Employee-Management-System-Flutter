@@ -59,7 +59,11 @@ class _InTheOffingState extends State<InTheOffing> {
       searching = true;
       searchedText = search;
       searchedList = widget.offings.where((match) => match.teamAName.toLowerCase().toString().contains(search.toLowerCase())
-          || match.cityName.toLowerCase().toString().contains(search.toLowerCase())).toList();
+          || match.cityName.toLowerCase().toString().contains(search.toLowerCase())
+          || match.teamBName.toLowerCase().toString().contains(search.toLowerCase())
+          || match.groundName.toLowerCase().toString().contains(search.toLowerCase())
+          || match.organizerName.toLowerCase().toString().contains(search.toLowerCase())
+      ).toList();
       if (searchedList.isEmpty) {
         setState(() {
           isResultEmpty = true;
@@ -182,7 +186,7 @@ class _InTheOffingState extends State<InTheOffing> {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   border: InputBorder.none,
-                                  hintText: "Search for grounds",
+                                  hintText: "Search for grounds, organizer, teams",
                                   hintStyle: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textMildColor
@@ -319,15 +323,15 @@ class _InTheOffingState extends State<InTheOffing> {
                               Navigator.push(context, ScaleRoute(page: OffingDetailScreen(searchedList[index].matchId.toString(), offing)));
                             },
                             child: OffingsListView(
-                                searchedList[index].teamALogo.toString(),
                                 searchedList[index].bookingDate.toString(),
                                 searchedList[index].bookingSlotStart.toString(),
                                 searchedList[index].cityName.toString(),
                                 searchedList[index].teamAName.toString(),
                                 searchedList[index].teamBName.toString(),
                                 offing,
-                              // searchedList[index].groundName.toString(),
-                              // searchedList[index].groundImage.toString(),
+                              searchedList[index].groundName.toString(),
+                              searchedList[index].groundImage.toString(),
+                              searchedList[index].organizerName.toString(),
                             ),
                           );
                         },
@@ -354,15 +358,15 @@ class _InTheOffingState extends State<InTheOffing> {
                               Navigator.push(context, ScaleRoute(page: OffingDetailScreen(widget.offings[index].matchId.toString(), offing)));
                             },
                             child: OffingsListView(
-                                widget.offings[index].teamALogo.toString(),
                                 widget.offings[index].bookingDate.toString(),
                                 widget.offings[index].bookingSlotStart.toString(),
                                 widget.offings[index].cityName.toString(),
                                 widget.offings[index].teamAName.toString(),
                                 widget.offings[index].teamBName.toString(),
                                 offing,
-                              // widget.offings[index].groundName.toString(),
-                              // widget.offings[index].groundImage.toString(),
+                              widget.offings[index].groundName.toString(),
+                              widget.offings[index].groundImage.toString(),
+                              widget.offings[index].organizerName.toString(),
                             ),
                           );
                         },

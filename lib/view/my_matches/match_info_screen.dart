@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/booking_provider.dart';
+import '../../providers/profile_provider.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
@@ -58,7 +59,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
 
   getMatchDetails(){
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookingProvider>(context, listen: false).getMatchInfo(widget.matchId)
+      Provider.of<ProfileProvider>(context, listen: false).getMatchDetails(widget.matchId)
           .then((value) async {
         if(value.status == true){
           await Future.delayed(const Duration(seconds: 1));
@@ -98,7 +99,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<BookingProvider>(
+      body: Consumer<ProfileProvider>(
           builder: (context, match, child) {
             return loading
                 ? const Loader()
@@ -145,7 +146,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                         children: [
                           ClipOval(
                               child: CachedNetworkImage(
-                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.teamAData.logo}",
+                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.matchDetails.teamALogo}",
                                 height: 11.h,
                                 width: 24.w,
                                 fit: BoxFit.cover,
@@ -158,7 +159,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('${match.teamAData.teamName}',
+                                Text('${match.matchDetails.teamAName}',
                                   overflow: TextOverflow.ellipsis,
                                   style: fontMedium.copyWith(
                                       fontSize: 13.sp,
@@ -171,7 +172,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                                       color: AppColor.lightColor
                                   ),),
                                 SizedBox(height: 0.5.h),
-                                Text(match.teamBData.teamName.toString() == "null" ? "TBA" : match.teamBData.teamName.toString(),
+                                Text(match.matchDetails.teamBName.toString() == "null" ? "TBA" : match.matchDetails.teamBName.toString(),
                                   overflow: TextOverflow.ellipsis,
                                   style: fontMedium.copyWith(
                                       fontSize: 13.sp,
@@ -183,7 +184,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                           SizedBox(width: 3.w),
                           ClipOval(
                               child: CachedNetworkImage(
-                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.teamBData.logo}",
+                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.matchDetails.teamBLogo}",
                                 height: 11.h,
                                 width: 24.w,
                                 fit: BoxFit.cover,
@@ -212,10 +213,10 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                       controller: tabController,
                       tabs: [
                         Tab(
-                          text: '${match.teamAData.teamName}',
+                          text: '${match.matchDetails.teamAName}',
                         ),
                         Tab(
-                          text: match.teamBData.teamName.toString() == "null" ? "TBA" : match.teamBData.teamName.toString(),
+                          text: match.matchDetails.teamBName.toString() == "null" ? "TBA" : match.matchDetails.teamBName.toString(),
                         ),
                         const Tab(
                           text: "Match Info",
@@ -236,8 +237,8 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                   child: TabBarView(
                       controller: tabController,
                       children: [
-                        YourTeam(widget.matchId, match.teamAData.id.toString()),
-                        YourOpponentTeam(widget.matchId, match.teamBData.id.toString()),
+                        YourTeam(widget.matchId, match.matchDetails.teamAId.toString()),
+                        YourOpponentTeam(widget.matchId, match.matchDetails.teamBId.toString()),
                         const YourMatchInfo(),
                       ]),
                 ),

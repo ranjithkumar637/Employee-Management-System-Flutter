@@ -100,8 +100,8 @@ class _LocationDataState extends State<LocationData> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                       child: GoogleMap(
-                          myLocationButtonEnabled: true,
-                          myLocationEnabled: true,
+                          myLocationButtonEnabled: false,
+                          myLocationEnabled: false,
                           zoomControlsEnabled: true,
                           onMapCreated: _onMapCreated,
                           initialCameraPosition: CameraPosition(

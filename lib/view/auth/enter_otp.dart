@@ -68,120 +68,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     super.dispose();
   }
 
-  openExitSheet() {
-    var platform = Theme.of(context).platform;
-    return showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: false,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: platform == TargetPlatform.iOS
-                ? EdgeInsets.symmetric(
-                vertical: 5.h,
-                horizontal: 2.w)
-                : EdgeInsets.symmetric(
-                vertical: 1.h,
-                horizontal: 2.w),
-            child: Container(
-                height: 22.h,
-                padding: EdgeInsets.symmetric(
-                    vertical: 2.h,
-                    horizontal: 5.w),
-                decoration: BoxDecoration(
-                  color: AppColor.lightColor,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Verify OTP and register yourself",
-                      style: fontSemiBold.copyWith(
-                          color: AppColor.textColor,
-                          fontSize: 14.sp),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      "Would you still want to close the app?",
-                      style: fontRegular.copyWith(
-                          color: AppColor.textMildColor,
-                          fontSize: 12.sp),
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        //don't close the app
-                        Expanded(
-                          child: InkWell(
-                            splashColor: Colors.grey,
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: AppColor.secondaryColor, width: 0.5),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical:
-                                      1.5.h),
-                                  child: Text(
-                                    "No",
-                                    style: fontMedium.copyWith(
-                                      color: AppColor.secondaryColor,
-                                      fontSize: 12.sp,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 3.w,
-                        ),
-                        //close the app
-                        Expanded(
-                          child: InkWell(
-                            splashColor: Colors.grey,
-                            onTap: () async {
-                              exit(0);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.secondaryColor,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical:
-                                      1.5.h),
-                                  child: Text(
-                                    "Yes",
-                                    style: fontMedium.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
-          );
-        });
-  }
-
-
   @override
   Widget build(BuildContext context) {
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
@@ -206,17 +92,13 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                      onTap:(){
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
+                  const SizedBox(),
                   Text(widget.login ? "Enter your OTP" : "Verify your mobile number",
                   style: fontSemiBold.copyWith(
                     color: AppColor.textColor,
                     fontSize: widget.login ? 16.sp : 14.sp
                   ),),
-                  Icon(Icons.arrow_back, color: Colors.transparent, size: 7.w,),
+                  const SizedBox(),
                 ],
               ),
             ),
@@ -414,4 +296,118 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
       });
     }
   }
+
+  openExitSheet() {
+    var platform = Theme.of(context).platform;
+    return showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: false,
+        builder: (BuildContext context) {
+          return Padding(
+            padding: platform == TargetPlatform.iOS
+                ? EdgeInsets.symmetric(
+                vertical: 5.h,
+                horizontal: 2.w)
+                : EdgeInsets.symmetric(
+                vertical: 1.h,
+                horizontal: 2.w),
+            child: Container(
+                height: 22.h,
+                padding: EdgeInsets.symmetric(
+                    vertical: 2.h,
+                    horizontal: 5.w),
+                decoration: BoxDecoration(
+                  color: AppColor.lightColor,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Verify OTP and register yourself",
+                      style: fontSemiBold.copyWith(
+                          color: AppColor.textColor,
+                          fontSize: 14.sp),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      "Would you still want to close the app?",
+                      style: fontRegular.copyWith(
+                          color: AppColor.textMildColor,
+                          fontSize: 12.sp),
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        //don't close the app
+                        Expanded(
+                          child: InkWell(
+                            splashColor: Colors.grey,
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: AppColor.secondaryColor, width: 0.5),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                      1.5.h),
+                                  child: Text(
+                                    "No",
+                                    style: fontMedium.copyWith(
+                                      color: AppColor.secondaryColor,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3.w,
+                        ),
+                        //close the app
+                        Expanded(
+                          child: InkWell(
+                            splashColor: Colors.grey,
+                            onTap: () async {
+                              exit(0);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColor.secondaryColor,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                      1.5.h),
+                                  child: Text(
+                                    "Yes",
+                                    style: fontMedium.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          );
+        });
+  }
+
 }

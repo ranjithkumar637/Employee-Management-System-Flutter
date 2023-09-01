@@ -17,6 +17,7 @@ import '../../models/offing_list_model.dart';
 import '../../models/slot_list_model.dart';
 import '../../models/upcoming_match_list_model.dart';
 import '../../providers/booking_provider.dart';
+import '../../providers/navigation_provider.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../providers/team_provider.dart';
@@ -28,6 +29,7 @@ import '../../utils/styles.dart';
 import '../my_matches/match_info_screen.dart';
 import '../my_matches/upcoming_battle.dart';
 import '../my_matches/upcoming_match_card.dart';
+import '../refer_and_earn/refer_and_earn_screen.dart';
 import '../widgets/loader.dart';
 import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
@@ -183,31 +185,88 @@ class _HomeScreenState extends State<HomeScreen> {
                     if(profile.profileModel.refPoints.toString() != "null")...[
                       Positioned(
                         top: 18.h,
-                        right: 5.w,
                         left: 5.w,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: PointsAndRevenueBox(
-                                  Images.refPointsImage,
-                                  "Total Referral\nPoints",
-                                  profile.profileModel.refPoints.toString() == "null"
-                                      ? "0"
-                                      : "${profile.profileModel.refPoints.toString()} pts",
-                                  1),
+                        child: Container(
+                          height: 20.h,
+                          width: 42.w,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 3.w,
+                            vertical: 1.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            gradient: const LinearGradient(
+                              begin: Alignment.centerLeft ,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppColor.primaryColor,
+                                AppColor.secondaryColor,
+                              ],
                             ),
-                            SizedBox(width: 4.w),
-                            Expanded(
-                              child: PointsAndRevenueBox(
-                                  Images.revenueAmountImage,
-                                  "Total Revenue\nAmount",
-                                  profile.profileModel.totalRevenue.toString() == "null"
-                                      ? "0"
-                                      : "₹ ${profile.profileModel.totalRevenue.toString()}",
-                                  2),
-                            ),
-                          ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Referral\nPoints",
+                                style: fontMedium.copyWith(
+                                    fontSize: 12.sp,
+                                    color: AppColor.textColor
+                                ),),
+                              SizedBox(height: 1.5.h),
+                              InkWell(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return ReferAndEarnScreen(profile.profileModel.refPoints.toString() == "null"
+                                          ? "0"
+                                          : "${profile.profileModel.refPoints.toString()} pts");
+                                    }),
+                                  );
+                                },
+                                child: Text(profile.profileModel.refPoints.toString() == "null"
+                                    ? "0"
+                                    : "${profile.profileModel.refPoints.toString()} pts",
+                                  style: fontMedium.copyWith(
+                                      fontSize: 18.sp,
+                                      color: AppColor.textColor
+                                  ),),
+                              ),
+                              SizedBox(height: 1.5.h),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColor.lightColor,
+                                  elevation: 0,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return ReferAndEarnScreen(profile.profileModel.refPoints.toString() == "null"
+                                          ? "0"
+                                          : "${profile.profileModel.refPoints.toString()} pts");
+                                    }),
+                                  );
+                                },
+                                child: Text("View Details",
+                                  style: fontMedium.copyWith(
+                                      color: AppColor.textColor
+                                  ),),
+                              ),
+                            ],
+                          ),
                         ),
+                      ),
+                      Positioned(
+                        top: 18.h,
+                        right: 5.w,
+                        child: PointsAndRevenueBox(
+                            Images.revenueAmountImage,
+                            "Total Revenue\nAmount",
+                            profile.profileModel.totalRevenue.toString() == "null"
+                                ? "0"
+                                : "₹ ${profile.profileModel.totalRevenue.toString()}",
+                            2),
                       ),
                     ] else ...[
                       Positioned(
@@ -222,6 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Bounceable(
                             onTap:(){
+                              Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(4);
                             },
                             child: Container(
                               height: 10.h,
@@ -264,7 +324,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               SizedBox(height: 2.h),
-                              profile.organizerDetails.adminApprove == 1 ? Bounceable(
+                              profile.organizerDetails.adminApprove == 1
+                                  ? Bounceable(
                                 onTap: (){
                                   showReferralCode(profile.organizerDetails.organizerRefCode.toString());
                                 },
@@ -288,27 +349,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ),
-                              ) : Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w,
-                                  vertical: 0.6.h,
-                                ),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    color: AppColor.redColor
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.pending_actions, color: AppColor.lightColor, size: 4.w,),
-                                    SizedBox(width: 2.w),
-                                    Text("Pending approval",
-                                      style: fontRegular.copyWith(
-                                          fontSize: 10.sp,
-                                          color: AppColor.lightColor
-                                      ),),
-                                  ],
-                                ),
-                              ),
+                              )
+                                  : const SizedBox(),
                             ],
                           ),
                         ],
@@ -325,6 +367,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
                       children: [
+                        Consumer<ProfileProvider>(
+                            builder: (context, profile, child) {
+                              return profile.organizerDetails.groundApprove == 0
+                                  ? Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 5.w,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 3.w,
+                                  vertical: 1.2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColor.redColor,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Text("Update the ground details to get approved",
+                                  style: fontMedium.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.lightColor
+                                  ),),
+                              )
+                                  : const SizedBox();
+                            }
+                        ),
                         Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: 3.w,
@@ -572,7 +638,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         separatorBuilder: (context ,_){
                                           return SizedBox(width: 2.w,);
                                         },
-                                        itemCount: offingsList.length,
+                                        itemCount: offingsList.length > 3 ? 3 : offingsList.length,
                                         itemBuilder: (context, index){
                                           final offing = offingsList[index];
                                           return Bounceable(
@@ -654,7 +720,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           separatorBuilder: (context ,_){
                                             return SizedBox(width: 2.w,);
                                           },
-                                          itemCount: 3,
+                                          itemCount: upcomingMatchList.length > 3 ? 3 : upcomingMatchList.length,
                                           itemBuilder: (context, index){
                                             final match = upcomingMatchList[index];
                                             return UpcomingCard(match, upcomingMatchList.length);

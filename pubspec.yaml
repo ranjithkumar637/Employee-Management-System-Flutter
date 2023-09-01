@@ -76,6 +76,7 @@ dependencies:
   search_map_place_updated: ^0.0.4
   maps_launcher: ^2.2.0
   firebase_crashlytics: ^3.3.5
+  email_validator: ^2.1.17
 
 flutter_icons:
   android: true

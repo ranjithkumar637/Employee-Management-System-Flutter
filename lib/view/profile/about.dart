@@ -66,12 +66,29 @@ class _AboutState extends State<About> {
     }
   }
 
+  openGalleryStartMulti() async {
+    List<XFile>? pickedFile = await ImagePicker().pickMultiImage();
+    if (pickedFile.isNotEmpty) {
+      if(pickedFile.length > 5){
+        Dialogs.snackbar("Upload up to 5 images", context, isError: true);
+      } else {
+        for(int i = 0; i < pickedFile.length; i++){
+          setState(() {
+            imageFile = File(pickedFile[i].path);
+            imageFiles.add(File(pickedFile[i].path));
+          });
+          Provider.of<ProfileProvider>(context, listen: false).saveMultiGroundImages(pickedFile);
+        }
+      }
+    }
+  }
+
   void chooseGroundImage() {
     showDialog(context: context,
         builder: (BuildContext context){
           return FilePickDialog(
             camera : openCameraStart,
-            gallery: openGalleryStart,
+            gallery: openGalleryStartMulti,
           );
         }
     );
@@ -141,8 +158,8 @@ class _AboutState extends State<About> {
               InkWell(
                   onTap: (){
                     imageFiles.length == 5
-                    ? Dialogs.snackbar("Only 5 images are allowed", context, isError: false)
-                    : chooseGroundImage();
+                        ? Dialogs.snackbar("Only 5 images are allowed", context, isError: false)
+                        : chooseGroundImage();
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -171,8 +188,8 @@ class _AboutState extends State<About> {
               ? const SizedBox()
               : SizedBox(height: 2.h),
           widget.ground.groundImages.isEmpty
-          ? const SizedBox()
-          : SizedBox(
+              ? const SizedBox()
+              : SizedBox(
             height: 11.h,
             child: ListView.separated(
               physics: const BouncingScrollPhysics(),
@@ -199,18 +216,49 @@ class _AboutState extends State<About> {
               : SizedBox(height: 2.h),
           imageFiles.isEmpty
               ? const SizedBox()
-              : Text("Now added Photos",
-            style: fontMedium.copyWith(
-                color: AppColor.textMildColor,
-                fontSize: 10.sp
-            ),),
+              : Row(
+            children: [
+              Text("Now added Photos",
+                style: fontMedium.copyWith(
+                    color: AppColor.textMildColor,
+                    fontSize: 10.sp
+                ),),
+              const Spacer(),
+              InkWell(
+                onTap: (){
+                  setState(() {
+                    imageFiles = [];
+                  });
+                  Provider.of<ProfileProvider>(context, listen: false).removeMultiGroundImage();
+                },
+                child: Container(
+                  width: 24.w,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 2.w,
+                    vertical: 0.3.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColor.redColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Center(
+                    child: Text("Remove all",
+                      style: fontRegular.copyWith(
+                          color: AppColor.redColor,
+                          fontSize: 9.sp
+                      ),),
+                  ),
+                ),
+              ),
+            ],
+          ),
           imageFiles.isEmpty
               ? const SizedBox()
               : SizedBox(height: 2.h),
           imageFiles.isEmpty
-          ? const SizedBox()
-          : SizedBox(
-            height: 11.h,
+              ? const SizedBox()
+              : SizedBox(
+            height: 15.h,
             child: ListView.separated(
               physics: const BouncingScrollPhysics(),
               separatorBuilder: (context, _){
@@ -219,14 +267,45 @@ class _AboutState extends State<About> {
               scrollDirection: Axis.horizontal,
               itemCount: imageFiles.length,
               itemBuilder: (context, index){
-                return ClipRRect(
-                    borderRadius: BorderRadius.circular(5.0),
-                    child: Image.file(
-                      imageFiles[index],
-                      width: 24.w,
-                      height: 10.h,
-                      fit: BoxFit.cover,
-                    ));
+                return Column(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(5.0),
+                        child: Image.file(
+                          imageFiles[index],
+                          width: 24.w,
+                          height: 10.h,
+                          fit: BoxFit.cover,
+                        )),
+                    SizedBox(height: 1.h),
+                    InkWell(
+                      onTap:(){
+                        setState(() {
+                          imageFiles.removeAt(index);
+                        });
+                        Provider.of<ProfileProvider>(context, listen: false).removeOneMultiGroundImage(index);
+                      },
+                      child: Container(
+                        width: 24.w,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 2.w,
+                          vertical: 0.3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.redColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Center(
+                          child: Text("Remove",
+                            style: fontRegular.copyWith(
+                                color: AppColor.redColor,
+                                fontSize: 9.sp
+                            ),),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
           ),

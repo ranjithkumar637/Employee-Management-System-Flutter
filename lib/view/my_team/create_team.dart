@@ -1227,7 +1227,7 @@ class _CreateTeamState extends State<CreateTeam> {
             setState(() {
               loading = false;
             });
-            Dialogs.snackbar("Something went wrong", context, isError: true);
+            Dialogs.snackbar("Something Went Wrong. Please try again.", context, isError: true);
           }
         });
       }

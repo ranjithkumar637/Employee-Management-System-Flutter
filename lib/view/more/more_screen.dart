@@ -30,7 +30,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   getProfile(){
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ProfileProvider>(context, listen: false).getProfile();
+      Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
     });
   }
 

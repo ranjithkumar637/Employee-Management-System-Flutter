@@ -437,7 +437,7 @@ class TeamProvider extends ChangeNotifier{
       notifyListeners();
     }
     else{
-      print("something went wrong : create team api ${res.statusCode}");
+      print("Something Went Wrong. Please try again. : create team api ${res.statusCode}");
     }
     notifyListeners();
     return createTeamModel;

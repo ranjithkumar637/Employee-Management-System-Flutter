@@ -287,7 +287,7 @@ class _TossResultDialogState extends State<TossResultDialog> {
                       setState(() {
                         loading = false;
                       });
-                      Dialogs.snackbar("Something Went Wrong",context, isError: true);
+                      Dialogs.snackbar("Something Went Wrong. Please try again.",context, isError: true);
                     }
                   });
                 },

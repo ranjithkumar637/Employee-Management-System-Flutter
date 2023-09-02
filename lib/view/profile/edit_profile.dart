@@ -31,7 +31,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   getProfile(){
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Provider.of<ProfileProvider>(context, listen: false).getProfile();
+      Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
       Provider.of<ProfileProvider>(context, listen: false).getGroundDetails();
     });
   }

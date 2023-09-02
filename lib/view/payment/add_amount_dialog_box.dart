@@ -282,7 +282,7 @@ class _AddAmountDialogBoxState extends State<AddAmountDialogBox> {
                         Dialogs.snackbar(value.message.toString(), context, isError: true);
                       } else {
                         Navigator.pop(context);
-                        Dialogs.snackbar("Something went wrong", context, isError: true);
+                        Dialogs.snackbar("Something Went Wrong. Please try again.", context, isError: true);
                       }
                     });
                   },

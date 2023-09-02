@@ -253,7 +253,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             loading = false;
           });
         } else{
-          Dialogs.snackbar("Something went wrong", context, isError: true);
+          Dialogs.snackbar("Something Went Wrong. Please try again.", context, isError: true);
           setState(() {
             loading = false;
           });
@@ -288,7 +288,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
             loading = false;
           });
         } else{
-          Dialogs.snackbar("Something went wrong", context, isError: true);
+          Dialogs.snackbar("Something Went Wrong. Please try again.", context, isError: true);
           setState(() {
             loading = false;
           });

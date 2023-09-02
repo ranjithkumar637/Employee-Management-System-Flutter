@@ -54,7 +54,7 @@ class UpcomingMatchCard extends StatelessWidget {
                     height: 9.h,
                     errorWidget: (context, url, widget){
                       return ClipOval(
-                        child: Image.asset(Images.groundListImage2, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.groundImage, fit: BoxFit.cover, width: 20.w,
                           height: 9.h,),
                       );
                     },
@@ -93,7 +93,7 @@ class UpcomingMatchCard extends StatelessWidget {
                     height: 9.h,
                     errorWidget: (context, url, widget){
                       return ClipOval(
-                        child: Image.asset(Images.groundListImage2, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.groundImage, fit: BoxFit.cover, width: 20.w,
                           height: 9.h,),
                       );
                     },

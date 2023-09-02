@@ -502,7 +502,7 @@ class ProfileProvider extends ChangeNotifier{
   }
 
   //get profile
-  getProfile() async {
+  getProfile(BuildContext context) async {
     slotList.clear();
      notifyListeners();
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -538,6 +538,15 @@ class ProfileProvider extends ChangeNotifier{
     } on HttpException {
       print('Failed to load data');
     } on FormatException {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Dialogs.snackbar("No data found. Sign in again to continue", context, isError: true, isLong: true);
+        Navigator.pushNamed(
+            context, 'login_screen'
+        );
+      });
+      SharedPreferences preferences =
+      await SharedPreferences.getInstance();
+      preferences.clear();
       print('organizer get profile - Invalid data format');
     } catch (e) {
       print(e);
@@ -729,7 +738,7 @@ class ProfileProvider extends ChangeNotifier{
       notifyListeners();
     } else {
       print(
-          "something went wrong : update ground details api ${res.statusCode}");
+          "Something Went Wrong. Please try again. : update ground details api ${res.statusCode}");
     }
     // }
     // on FileSystemException {

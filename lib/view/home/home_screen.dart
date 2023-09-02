@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getProfile() async {
-    Provider.of<ProfileProvider>(context, listen: false).getProfile();
+    Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
     Provider.of<ProfileProvider>(context, listen: false).getReferralsList();
   }
 

@@ -443,7 +443,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               loading = false;
             });
           } else {
-            Dialogs.snackbar("Something went wrong", context, isError: true);
+            Dialogs.snackbar("Something Went Wrong. Please try again.", context, isError: true);
             setState(() {
               loading = false;
             });

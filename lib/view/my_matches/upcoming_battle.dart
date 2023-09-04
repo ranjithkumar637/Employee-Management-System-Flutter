@@ -109,10 +109,9 @@ class _UpcomingBattleState extends State<UpcomingBattle> {
                 removeTop: true,
                 context: context,
                 child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
                     separatorBuilder: (context, _) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(),
-                      );
+                      return SizedBox(height: 2.h);
                     },
                     itemCount: upcomingMatchList.length,
                     itemBuilder: (context, index) {

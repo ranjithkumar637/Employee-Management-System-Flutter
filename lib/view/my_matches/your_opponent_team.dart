@@ -74,212 +74,229 @@ class _YourOpponentTeamState extends State<YourOpponentTeam> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProfileProvider>(
-        builder: (context, match, child) {
-          return Container(
-            margin: EdgeInsets.only(
-                top: 2.h
-            ),
-            decoration: const BoxDecoration(
-              color: AppColor.lightColor,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20.0),
-                topLeft: Radius.circular(20.0),
-              ),
-            ),
-            child: loading
-                ? const Loader()
-                : match.matchDetails.teamBName.toString() == "null"
-              ? Center(
-                child: Text("To be Announced",
-            style: fontMedium.copyWith(
-                color: AppColor.redColor,
-                fontSize: 12.sp
-            ),),
-              )
-            : FadeIn(
-              preferences: const AnimationPreferences(
-                  duration: Duration(milliseconds: 600)
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    captainList.isEmpty
-                        ? const SizedBox()
-                        : Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 2.h,
-                      ),
-                      child: Text("Captain",
-                        style: fontMedium.copyWith(
-                            fontSize: 12.sp,
-                            color: AppColor.secondaryColor
-                        ),),
-                    ),
-                    captainList.isEmpty
-                        ? const SizedBox()
-                        : MediaQuery.removePadding(
-                      removeTop: true,
-                      context: context,
-                      child: ListView.separated(
-
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, _){
-                            return const Divider();
-                          },
-                          itemCount: captainList.length,
-                          itemBuilder: (context, index){
-                            final player = captainList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.h,
-                              ),
-                              child: PlayerListCard(captainList[index].name.toString(),
-                                  captainList[index].role.toString(),
-                                  captainList[index].profilePhoto.toString(), false,
-                                  "", '', "", player, captainList[index].playerId.toString()
-                              ),
-                            );
-                          }
-                      ),
-                    ),
-                    vcList.isEmpty
-                        ? const SizedBox()
-                        : Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 2.h,
-                      ),
-                      child: Text("Vice Captain",
-                        style: fontMedium.copyWith(
-                            fontSize: 12.sp,
-                            color: AppColor.secondaryColor
-                        ),),
-                    ),
-                    vcList.isEmpty
-                        ? const SizedBox()
-                        : MediaQuery.removePadding(
-                      removeTop: true,
-                      context: context,
-                      child: ListView.separated(
-
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, _){
-                            return const Divider();
-                          },
-                          itemCount: vcList.length,
-                          itemBuilder: (context, index){
-                            final player = vcList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.h,
-                              ),
-                              child: PlayerListCard(vcList[index].name.toString(),
-                                  vcList[index].role.toString(),
-                                  vcList[index].profilePhoto.toString(), false,
-                                  "", '', "", player, vcList[index].playerId.toString()
-                              ),
-                            );
-                          }
-                      ),
-                    ),
-                    adminList.isEmpty
-                        ? const SizedBox()
-                        : Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 2.h,
-                      ),
-                      child: Text("Admin",
-                        style: fontMedium.copyWith(
-                            fontSize: 12.sp,
-                            color: AppColor.secondaryColor
-                        ),),
-                    ),
-                    adminList.isEmpty
-                        ? const SizedBox()
-                        : MediaQuery.removePadding(
-                      removeTop: true,
-                      context: context,
-                      child: ListView.separated(
-
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, _){
-                            return const Divider();
-                          },
-                          itemCount: adminList.length,
-                          itemBuilder: (context, index){
-                            final player = adminList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.h,
-                              ),
-                              child: PlayerListCard(adminList[index].name.toString(),
-                                  adminList[index].role.toString(),
-                                  adminList[index].profilePhoto.toString(), false,
-                                  "", '', "", player, adminList[index].playerId.toString()
-                              ),
-                            );
-                          }
-                      ),
-                    ),
-                    playerList.isEmpty
-                        ? const SizedBox()
-                        : Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 2.h,
-                      ),
-                      child: Text("Players",
-                        style: fontMedium.copyWith(
-                            fontSize: 12.sp,
-                            color: AppColor.secondaryColor
-                        ),),
-                    ),
-                    MediaQuery.removePadding(
-                      removeTop: true,
-                      context: context,
-                      child: Scrollbar(
-                        radius: const Radius.circular(3.0),
-                        child: ListView.separated(
-
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            separatorBuilder: (context, _){
-                              return const Divider();
-                            },
-                            itemCount: playerList.length,
-                            itemBuilder: (context, index){
-                              final player = playerList[index];
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
-                                  vertical: 1.h,
-                                ),
-                                child: PlayerListCard(playerList[index].name.toString(),
-                                    playerList[index].role.toString(),
-                                    playerList[index].profilePhoto.toString(), false,
-                                    "", '', "", player, playerList[index].playerId.toString()
-                                ),
-                              );
-                            }
-                        ),
-                      ),
-                    ),
-                  ],
+    return Consumer<BookingProvider>(
+      builder: (context, team, child) {
+        return Consumer<ProfileProvider>(
+            builder: (context, match, child) {
+              return Container(
+                margin: EdgeInsets.only(
+                    top: 2.h
                 ),
-              ),
-            ),
-          );
-        }
+                decoration: const BoxDecoration(
+                  color: AppColor.lightColor,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20.0),
+                    topLeft: Radius.circular(20.0),
+                  ),
+                ),
+                child: loading
+                    ? const Loader()
+                    : match.matchDetails.teamBName.toString() == "null"
+                  ? Center(
+                    child: Text("To be Announced",
+                style: fontMedium.copyWith(
+                    color: AppColor.redColor,
+                    fontSize: 12.sp
+                ),),
+                  )
+                : team.matchData.teamBFreeze.toString() == "0"
+                    ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    child: Text("Team not yet frozen",
+                      style: fontMedium.copyWith(
+                          fontSize: 12.sp,
+                          color: AppColor.redColor
+                      ),),
+                  ),
+                ) : FadeIn(
+                  preferences: const AnimationPreferences(
+                      duration: Duration(milliseconds: 600)
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        captainList.isEmpty
+                            ? const SizedBox()
+                            : Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 2.h,
+                          ),
+                          child: Text("Captain",
+                            style: fontMedium.copyWith(
+                                fontSize: 12.sp,
+                                color: AppColor.secondaryColor
+                            ),),
+                        ),
+                        captainList.isEmpty
+                            ? const SizedBox()
+                            : MediaQuery.removePadding(
+                          removeTop: true,
+                          context: context,
+                          child: ListView.separated(
+
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              separatorBuilder: (context, _){
+                                return const Divider();
+                              },
+                              itemCount: captainList.length,
+                              itemBuilder: (context, index){
+                                final player = captainList[index];
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.h,
+                                  ),
+                                  child: PlayerListCard(captainList[index].name.toString(),
+                                      captainList[index].role.toString(),
+                                      captainList[index].profilePhoto.toString(), false,
+                                      "", '', "", player, captainList[index].playerId.toString()
+                                  ),
+                                );
+                              }
+                          ),
+                        ),
+                        vcList.isEmpty
+                            ? const SizedBox()
+                            : Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 2.h,
+                          ),
+                          child: Text("Vice Captain",
+                            style: fontMedium.copyWith(
+                                fontSize: 12.sp,
+                                color: AppColor.secondaryColor
+                            ),),
+                        ),
+                        vcList.isEmpty
+                            ? const SizedBox()
+                            : MediaQuery.removePadding(
+                          removeTop: true,
+                          context: context,
+                          child: ListView.separated(
+
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              separatorBuilder: (context, _){
+                                return const Divider();
+                              },
+                              itemCount: vcList.length,
+                              itemBuilder: (context, index){
+                                final player = vcList[index];
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.h,
+                                  ),
+                                  child: PlayerListCard(vcList[index].name.toString(),
+                                      vcList[index].role.toString(),
+                                      vcList[index].profilePhoto.toString(), false,
+                                      "", '', "", player, vcList[index].playerId.toString()
+                                  ),
+                                );
+                              }
+                          ),
+                        ),
+                        adminList.isEmpty
+                            ? const SizedBox()
+                            : Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 2.h,
+                          ),
+                          child: Text("Admin",
+                            style: fontMedium.copyWith(
+                                fontSize: 12.sp,
+                                color: AppColor.secondaryColor
+                            ),),
+                        ),
+                        adminList.isEmpty
+                            ? const SizedBox()
+                            : MediaQuery.removePadding(
+                          removeTop: true,
+                          context: context,
+                          child: ListView.separated(
+
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              separatorBuilder: (context, _){
+                                return const Divider();
+                              },
+                              itemCount: adminList.length,
+                              itemBuilder: (context, index){
+                                final player = adminList[index];
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                    vertical: 1.h,
+                                  ),
+                                  child: PlayerListCard(adminList[index].name.toString(),
+                                      adminList[index].role.toString(),
+                                      adminList[index].profilePhoto.toString(), false,
+                                      "", '', "", player, adminList[index].playerId.toString()
+                                  ),
+                                );
+                              }
+                          ),
+                        ),
+                        playerList.isEmpty
+                            ? const SizedBox()
+                            : Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 2.h,
+                          ),
+                          child: Text("Players (${playerList.length})",
+                            style: fontMedium.copyWith(
+                                fontSize: 12.sp,
+                                color: AppColor.secondaryColor
+                            ),),
+                        ),
+                        MediaQuery.removePadding(
+                          removeTop: true,
+                          context: context,
+                          child: Scrollbar(
+                            radius: const Radius.circular(3.0),
+                            child: ListView.separated(
+
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                separatorBuilder: (context, _){
+                                  return const Divider();
+                                },
+                                itemCount: playerList.length,
+                                itemBuilder: (context, index){
+                                  final player = playerList[index];
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 1.h,
+                                    ),
+                                    child: PlayerListCard(playerList[index].name.toString(),
+                                        playerList[index].role.toString(),
+                                        playerList[index].profilePhoto.toString(), false,
+                                        "", '', "", player, playerList[index].playerId.toString()
+                                    ),
+                                  );
+                                }
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+        );
+      }
     );
   }
 }

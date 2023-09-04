@@ -103,7 +103,9 @@ class _TossResultDialogState extends State<TossResultDialog> {
                             imageUrl: "${
                                 AppConstants.imageBaseUrl
                             }${AppConstants.imageBaseUrlTeam}${widget.teamALogo}",
-                            errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
+                            errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, fit: BoxFit.cover,
+                              width: 20.w,
+                              height: 9.h,),
                             fit: BoxFit.cover,
                             width: 20.w,
                             height: 9.h,
@@ -137,7 +139,9 @@ class _TossResultDialogState extends State<TossResultDialog> {
                             imageUrl: "${
                                 AppConstants.imageBaseUrl
                             }${AppConstants.imageBaseUrlTeam}${widget.teamBLogo}",
-                            errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 4.w,),
+                            errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, fit: BoxFit.cover,
+                              width: 20.w,
+                              height: 9.h,),
                             fit: BoxFit.cover,
                             width: 20.w,
                             height: 9.h,
@@ -259,37 +263,45 @@ class _TossResultDialogState extends State<TossResultDialog> {
                   setState(() {
                     loading = true;
                   });
-                  BookingProvider().tossWonBy(
-                    widget.matchId,
-                    selectedTeamA ? "team_a" : "team_b",
-                    batting ? "Batting" : "Bowling", widget.coinSide
-                  ).then((value) {
-                    if(value.status==true){
-                      setState(() {
-                        loading = false;
-                      });
-                      Navigator.pop(context);
-                      showDialog(context: context,
-                          builder: (BuildContext context){
-                            return TossSummaryDialog(
-                              value.message.toString(),
-                                widget.whoWon == true ? widget.teamALogo : widget.teamBLogo
-                            );
-                          });
-                    }
-                    else if (value.status==false){
-                      setState(() {
-                        loading = false;
-                      });
-                      Dialogs.snackbar(value.message.toString(),context);
-                    }
-                    else{
-                      setState(() {
-                        loading = false;
-                      });
-                      Dialogs.snackbar("Something Went Wrong. Please try again.",context, isError: true);
-                    }
-                  });
+                  if(batting == false && bowling == false){
+                    setState(() {
+                      loading = false;
+                    });
+                    Dialogs.snackbar("Choose batting or bowling to proceed", context, isError: true);
+                  } else {
+                    BookingProvider().tossWonBy(
+                        widget.matchId,
+                        selectedTeamA ? "team_a" : "team_b",
+                        batting ? "Batting" : "Bowling", widget.coinSide
+                    ).then((value) {
+                      if(value.status==true){
+                        setState(() {
+                          loading = false;
+                        });
+                        Navigator.pop(context);
+                        showDialog(context: context,
+                            builder: (BuildContext context){
+                              return TossSummaryDialog(
+                                  value.message.toString(),
+                                  widget.whoWon == true ? widget.teamALogo : widget.teamBLogo
+                              );
+                            });
+                      }
+                      else if (value.status==false){
+                        setState(() {
+                          loading = false;
+                        });
+                        Dialogs.snackbar(value.message.toString(),context);
+                      }
+                      else{
+                        setState(() {
+                          loading = false;
+                        });
+                        Dialogs.snackbar("Something Went Wrong. Please try again.",context, isError: true);
+                      }
+                    });
+                  }
+
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

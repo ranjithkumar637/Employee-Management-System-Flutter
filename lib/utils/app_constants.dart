@@ -77,7 +77,7 @@ class AppConstants {
   static const String paymentUpdate  = '$baseUrl/organizer/payment-update';
 
   //toss won by
-  static const String tosswon = '$baseUrl/organizer/toss-won-by';
+  static const String updateTossResult = '$baseUrl/organizer/toss-won-by';
 
   static const String homeDetails  = '$baseUrl/organizer/get-home-details';
 

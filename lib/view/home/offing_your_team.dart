@@ -97,6 +97,20 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
                 children: [
                   if(loading)...[
                     const Loader()
+                  ] else if(squad.matchData.teamAFreeze.toString() == "0")...[
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 5.w,
+                          vertical: 2.h,
+                        ),
+                        child: Text("Team not yet frozen",
+                          style: fontMedium.copyWith(
+                              fontSize: 12.sp,
+                              color: AppColor.redColor
+                          ),),
+                      ),
+                    )
                   ] else...[
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -138,7 +152,7 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
                           SizedBox(height: 1.h),
                           const Divider(),
                           SizedBox(height: 1.h),
-                          Text("Players",
+                          Text("Players (${playerList.length})",
                             style: fontMedium.copyWith(
                                 fontSize: 13.sp,
                                 color: AppColor.secondaryColor

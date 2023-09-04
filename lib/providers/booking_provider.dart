@@ -27,6 +27,7 @@ class BookingProvider extends ChangeNotifier{
 
   MatchTeamPlayerListModel matchTeamPlayerListModel = MatchTeamPlayerListModel();
   List<MatchTeamPlayerList> matchTeamPlayerList = [];
+  MatchData matchData = MatchData();
 
   removeMatchTeamData(){
     matchTeamPlayerListModel = MatchTeamPlayerListModel();
@@ -58,6 +59,7 @@ class BookingProvider extends ChangeNotifier{
       print(decodedJson);
       if (response.statusCode == 200) {
         matchTeamPlayerListModel = MatchTeamPlayerListModel.fromJson(decodedJson);
+        matchData = MatchData.fromJson(decodedJson['match_data']);
         for (var data in decodedJson['player_list']) {
           matchTeamPlayerList.add(MatchTeamPlayerList.fromJson(data));
           notifyListeners();
@@ -189,17 +191,18 @@ class BookingProvider extends ChangeNotifier{
   TossWonModel tossWonModel=TossWonModel();
 
   Future<TossWonModel> tossWonBy(String matchId, String tossWonBy,String tossResult, String headsOrTails) async {
+    print("heads or tails $headsOrTails toss won by $tossWonBy toss result $tossResult match id $matchId");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     var body = jsonEncode({
       "match_id": matchId,
       "toss_won_by": tossWonBy,
       "toss_result": tossResult,
-      "toss_won_result": headsOrTails == "head" ? "Heads" : "Tails"
+      "toss_won_result": headsOrTails == "head" ? "Head" : "Tails"
     });
     try {
       final response = await http.post(
-        Uri.parse(AppConstants.tosswon),
+        Uri.parse(AppConstants.updateTossResult),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accToken',

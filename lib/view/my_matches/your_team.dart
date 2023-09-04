@@ -88,7 +88,20 @@ class _YourTeamState extends State<YourTeam> {
             ),
             child: loading
                 ? const Loader()
-                : FadeIn(
+                : match.matchData.teamAFreeze.toString() == "0"
+              ? Center(
+                child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 5.w,
+                  vertical: 2.h,
+                ),
+                child: Text("Team not yet frozen",
+                  style: fontMedium.copyWith(
+                      fontSize: 12.sp,
+                      color: AppColor.redColor
+                  ),),
+            ),
+              ) : FadeIn(
               preferences: const AnimationPreferences(
                   duration: Duration(milliseconds: 400)
               ),
@@ -229,7 +242,7 @@ class _YourTeamState extends State<YourTeam> {
                         horizontal: 5.w,
                         vertical: 2.h,
                       ),
-                      child: Text("Players",
+                      child: Text("Players (${playerList.length})",
                         style: fontMedium.copyWith(
                             fontSize: 12.sp,
                             color: AppColor.secondaryColor

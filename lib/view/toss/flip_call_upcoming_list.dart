@@ -200,7 +200,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                   ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: "${checkTimeDifference(todayMatches.first.teamAData!.bookingSlotStart.toString())}",
+                        text: checkTimeDifference(todayMatches.first.teamAData!.bookingSlotStart.toString()),
                           style: fontMedium.copyWith(
                         fontSize: 11.sp,
                         color: AppColor.redColor
@@ -244,7 +244,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                   itemBuilder: (context, int index) {
                     return Bounceable(
                       onTap: (){
-                        if(todayMatches[index].freezeCount.toString() == "2"){
+                        if(todayMatches[index].freezeCount.toString() == "2" && todayMatches[index].teamACaptain.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "1"){
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) =>
                                   Toss(
@@ -263,6 +263,15 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                     todayMatches[index].teamBData!.logo
                                         .toString(),
                                   )));
+                        } else if(todayMatches[index].teamBData!.teamFreeze.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "0"
+                            && todayMatches[index].teamAData!.teamFreeze.toString() == "1" && todayMatches[index].teamACaptain.toString() == "0"){
+                          Dialogs.snackbar("No captain assigned in both teams", context, isError: true);
+                        } else if(todayMatches[index].teamAData!.teamFreeze.toString() == "1" && todayMatches[index].teamACaptain.toString() == "0"){
+                          Dialogs.snackbar("No captain assigned in ${todayMatches[index].teamAData!.teamName
+                              .toString()}", context, isError: true);
+                        } else if(todayMatches[index].teamBData!.teamFreeze.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "0"){
+                          Dialogs.snackbar("No captain assigned in ${todayMatches[index].teamBData!.teamName
+                              .toString()}", context, isError: true);
                         } else {
                           Dialogs.snackbar("Both teams must be frozen to flip a toss", context, isError: true);
                         }
@@ -310,7 +319,21 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                         ),
                                       ] else ...[
                                         const SizedBox()
-                                      ]
+                                      ],
+                                      if(todayMatches[index].teamAData!.teamFreeze.toString() == "1" && todayMatches[index].teamACaptain.toString() == "0")...[
+                                        SizedBox(height: 1.h),
+                                        Text(
+                                          "Captain not assigned",
+                                          style: fontMedium
+                                              .copyWith(
+                                              fontSize:
+                                              9.sp,
+                                              color: AppColor
+                                                  .redColor),
+                                        ),
+                                      ] else ...[
+                                        const SizedBox()
+                                      ],
 
                                     ],
                                   ),
@@ -370,7 +393,21 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                         ),
                                       ] else ...[
                                         const SizedBox()
-                                      ]
+                                      ],
+                                      if(todayMatches[index].teamBData!.teamFreeze.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "0")...[
+                                        SizedBox(height: 1.h),
+                                        Text(
+                                          "Captain not assigned",
+                                          style: fontMedium
+                                              .copyWith(
+                                              fontSize:
+                                              9.sp,
+                                              color: AppColor
+                                                  .redColor),
+                                        ),
+                                      ] else ...[
+                                        const SizedBox()
+                                      ],
                                     ],
                                   ),
                                 ],

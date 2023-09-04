@@ -277,7 +277,9 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                   ),
                 ),
               ),
-              Positioned(
+              _tossResult == ""
+              ? const SizedBox()
+              : Positioned(
                 top: 45.h,
                 left: 5.w,
                 right: 5.w,
@@ -293,9 +295,7 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                     ),
                     child: DropdownButton<String>(
                       onTap: (){
-                        if(_tossResult == ""){
-                          Dialogs.snackbar("Flip the coin, then choose the team", context, isError: true);
-                        }
+
                       },
                       underline: const SizedBox(),
                       isExpanded: true,
@@ -317,21 +317,25 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                       }).toList(),
                       // Step 5.
                       onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        showDialog(context: context,
-                            builder: (BuildContext context){
-                              return TossResultDialog(
-                                  widget.teamALogo,
-                                  widget.teamAName,
-                                  widget.teamBLogo,
-                                  widget.teamBName,
-                                  widget.matchId,
-                                widget.teamAName == dropdownValue ? true : false,
-                                _tossResult
-                              );
-                            });
+                        if(_tossResult == ""){
+                          Dialogs.snackbar("Flip the coin, then choose the team", context, isError: true);
+                        } else{
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                          showDialog(context: context,
+                              builder: (BuildContext context){
+                                return TossResultDialog(
+                                    widget.teamALogo,
+                                    widget.teamAName,
+                                    widget.teamBLogo,
+                                    widget.teamBName,
+                                    widget.matchId,
+                                    widget.teamAName == dropdownValue ? true : false,
+                                    _tossResult
+                                );
+                              });
+                        }
                       },
                     )
                 ),

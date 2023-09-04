@@ -20,16 +20,23 @@ class _TossSummaryDialogState extends State<TossSummaryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+    return WillPopScope(
+      onWillPop: () async{
+        Navigator.pop(context);
+        Navigator.pop(context);
+        return false;
+      },
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: 5.w
+        ),
+        child: contentBox(context),
       ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: 5.w
-      ),
-      child: contentBox(context),
     );
   }
 

@@ -34,7 +34,7 @@ class UpcomingMatchCard extends StatelessWidget {
       child: Container(
         width: double.maxFinite,
         margin: EdgeInsets.symmetric(
-            horizontal: 4.w, vertical: 2.h),
+            horizontal: 5.w),
         padding: EdgeInsets.symmetric(
             horizontal: 4.w, vertical: 2.h),
         decoration: BoxDecoration(

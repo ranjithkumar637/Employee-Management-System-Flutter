@@ -635,6 +635,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     if(snapshot.connectionState == ConnectionState.done){
                                       return ListView.separated(
                                         scrollDirection: Axis.horizontal,
+                                        physics: const BouncingScrollPhysics(),
                                         separatorBuilder: (context ,_){
                                           return SizedBox(width: 2.w,);
                                         },
@@ -717,6 +718,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return ListView.separated(
                                           scrollDirection: Axis.horizontal,
+                                          physics: const BouncingScrollPhysics(),
                                           separatorBuilder: (context ,_){
                                             return SizedBox(width: 2.w,);
                                           },
@@ -872,7 +874,7 @@ class UpcomingCard extends StatelessWidget {
                     height: 9.h,
                     errorWidget: (context, url, widget){
                       return ClipOval(
-                        child: Image.asset(Images.groundListImage2, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 20.w,
                           height: 9.h,),
                       );
                     },
@@ -911,7 +913,7 @@ class UpcomingCard extends StatelessWidget {
                     height: 9.h,
                     errorWidget: (context, url, widget){
                       return ClipOval(
-                        child: Image.asset(Images.groundListImage2, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 20.w,
                           height: 9.h,),
                       );
                     },

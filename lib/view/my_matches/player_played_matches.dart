@@ -101,10 +101,11 @@ class _PlayerPlayedMatchesState extends State<PlayerPlayedMatches> {
                       child: PlayerMatchCard(
                         matchHistoryList[index].teamAName.toString(),
                           matchHistoryList[index].teamBName.toString() == "" ? "TBA" : matchHistoryList[index].teamBName.toString(),
-                        matchHistoryList[index].bookingDate.toString(),
+                        matchHistoryList[index].formattedBookingDate.toString(),
                         matchHistoryList[index].bookingSlotStart.toString(),
                         matchHistoryList[index].groundName.toString(),
                         matchHistoryList[index].mainImage.toString(),
+                        matchHistoryList[index].matchNumber.toString(),
                       ),
                     );
                   },

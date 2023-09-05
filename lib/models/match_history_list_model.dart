@@ -42,6 +42,8 @@ class MatchHistoryList {
   dynamic bookingSlotStart;
   dynamic bookingSlotEnd;
   dynamic filterDate;
+  dynamic matchNumber;
+  dynamic matchStatus;
 
   MatchHistoryList(
       {this.id,
@@ -56,7 +58,8 @@ class MatchHistoryList {
         this.bookingDate,
         this.bookingSlotStart,
         this.bookingSlotEnd,
-        this.filterDate});
+        this.filterDate,
+      this.matchNumber, this.matchStatus});
 
   MatchHistoryList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,6 +75,8 @@ class MatchHistoryList {
     bookingSlotStart = json['booking_slot_start'];
     bookingSlotEnd = json['booking_slot_end'];
     filterDate = json['filter_date'];
+    matchNumber = json['match_number'];
+    matchStatus = json['match_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +94,8 @@ class MatchHistoryList {
     data['booking_slot_start'] = this.bookingSlotStart;
     data['booking_slot_end'] = this.bookingSlotEnd;
     data['filter_date'] = this.filterDate;
+    data['match_number'] = this.matchNumber;
+    data['match_status'] = this.matchStatus;
     return data;
   }
 }

@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
+import '../../utils/strings.dart';
 import '../../utils/styles.dart';
 
 class RevenueReferDataBox extends StatelessWidget {
@@ -58,7 +59,7 @@ class RevenueReferDataBox extends StatelessWidget {
                         color: AppColor.textColor
                     ),),
                   SizedBox(height: 1.h),
-                  Text(value,
+                  Text("${Strings.rupee} $value",
                     style: fontMedium.copyWith(
                         fontSize: 20.sp,
                         color: AppColor.textColor

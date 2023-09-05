@@ -29,6 +29,7 @@ class _MyMatchesScreenState extends State<MyMatchesScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -41,7 +42,7 @@ class _MyMatchesScreenState extends State<MyMatchesScreen> with SingleTickerProv
             padding: EdgeInsets.symmetric(
               horizontal: 3.w,
             ) + EdgeInsets.only(
-              top: 5.h, bottom: 2.h
+              top: 2.h + statusBarHeight, bottom: 2.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

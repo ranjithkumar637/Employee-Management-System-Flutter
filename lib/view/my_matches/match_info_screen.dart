@@ -143,6 +143,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                       top: 12.h,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipOval(
                               child: CachedNetworkImage(
@@ -156,29 +157,34 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                               )),
                           SizedBox(width: 3.w),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text('${match.matchDetails.teamAName}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: fontMedium.copyWith(
-                                      fontSize: 13.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                                SizedBox(height: 0.5.h),
-                                Text('vs',
-                                  style: fontMedium.copyWith(
-                                      fontSize: 13.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                                SizedBox(height: 0.5.h),
-                                Text(match.matchDetails.teamBName.toString() == "null" ? "TBA" : match.matchDetails.teamBName.toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: fontMedium.copyWith(
-                                      fontSize: 13.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                              ],
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 1.w,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('${match.matchDetails.teamAName}',
+                                    textAlign: TextAlign.center,
+                                    style: fontMedium.copyWith(
+                                        fontSize: 13.sp,
+                                        color: AppColor.lightColor
+                                    ),),
+                                  SizedBox(height: 0.5.h),
+                                  Text('vs',
+                                    style: fontMedium.copyWith(
+                                        fontSize: 13.sp,
+                                        color: AppColor.lightColor
+                                    ),),
+                                  SizedBox(height: 0.5.h),
+                                  Text(match.matchDetails.teamBName.toString() == "null" || match.matchDetails.teamBName.toString() == "" ? "TBA" : match.matchDetails.teamBName.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: fontMedium.copyWith(
+                                        fontSize: 13.sp,
+                                        color: AppColor.lightColor
+                                    ),),
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(width: 3.w),
@@ -216,7 +222,9 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                           text: '${match.matchDetails.teamAName}',
                         ),
                         Tab(
-                          text: match.matchDetails.teamBName.toString() == "null" ? "TBA" : match.matchDetails.teamBName.toString(),
+                          text: match.matchDetails.teamBName.toString() == "null" || match.matchDetails.teamBName.toString() == ""
+                              ? "TBA"
+                              : match.matchDetails.teamBName.toString(),
                         ),
                         const Tab(
                           text: "Match Info",

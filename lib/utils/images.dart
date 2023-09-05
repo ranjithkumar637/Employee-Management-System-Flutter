@@ -42,6 +42,7 @@ class Images {
 
 
   static const String pitchImage = 'assets/images/pitch_bg.png';
+  static const String homeTop = 'assets/images/home_top.png';
   static const String teamTopImage = 'assets/images/booked_team_top_image.png';
   static const String groundImage = 'assets/images/ground_image.png';
   static const String bookingConfirmedImage = 'assets/images/booking_confirmed_top_image.png';

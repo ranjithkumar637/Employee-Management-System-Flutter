@@ -521,7 +521,7 @@ class _ProfileState extends State<Profile> {
                               children: [
                                 Row(
                                   children: [
-                                    const FieldHeading("State"),
+                                    const FieldHeading("State *"),
                                     const Spacer(),
                                     editState ? InkWell(
                                         onTap: (){
@@ -588,7 +588,7 @@ class _ProfileState extends State<Profile> {
                                 SizedBox(height: 2.h),
                                 Row(
                                   children: [
-                                    const FieldHeading("City"),
+                                    const FieldHeading("City *"),
                                     const Spacer(),
                                     editCity ? InkWell(
                                         onTap: (){

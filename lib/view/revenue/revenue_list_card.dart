@@ -41,6 +41,11 @@ class RevenueListCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   height: 12.h,
                   width: 24.w,
+                  errorWidget: (context, url, widget){
+                    return Image.asset(Images.groundImage, fit: BoxFit.cover,
+                        height: 12.h,
+                        width: 24.w);
+                  },
                 )
             ),
             SizedBox(width: 4.w),

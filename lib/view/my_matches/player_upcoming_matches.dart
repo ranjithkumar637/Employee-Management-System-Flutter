@@ -101,10 +101,11 @@ class _PlayerUpcomingMatchesState extends State<PlayerUpcomingMatches> {
                         child: PlayerMatchCard(
                           upcomingMatchList[index].teamAName.toString(),
                           upcomingMatchList[index].teamBName.toString(),
-                          upcomingMatchList[index].bookingDate.toString(),
+                          upcomingMatchList[index].formattedBookingDate.toString(),
                           upcomingMatchList[index].bookingSlotStart.toString(),
                           upcomingMatchList[index].groundName.toString(),
                           upcomingMatchList[index].mainImage.toString(),
+                          upcomingMatchList[index].matchNumber.toString(),
                         ),
                       );
                     },

@@ -43,6 +43,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: Column(
@@ -57,7 +58,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
               ),
               Positioned(
-                top: 5.h,
+                top: 2.h + statusBarHeight,
                 left: 5.w,
                 right: 5.w,
                 child: Center(
@@ -77,8 +78,8 @@ class _MoreScreenState extends State<MoreScreen> {
                       return Row(
                         children: [
                           Container(
-                            height: 14.h,
-                            width: 28.w,
+                            height: 12.h,
+                            width: 24.w,
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(color: AppColor.imageBorderColor, width: 3.0),

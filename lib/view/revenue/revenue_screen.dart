@@ -1,7 +1,9 @@
+import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/view/revenue/revenue_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/revenue_team_list_model.dart';
 import '../../providers/payment_info_provider.dart';
@@ -85,7 +87,11 @@ class _RevenueScreenState extends State<RevenueScreen> {
           ),
           revenueTeamList.isEmpty
               ? const SizedBox()
-          : const RevenueReferDataBox("250000", 2),
+          : Consumer<ProfileProvider>(
+            builder: (context, profile, child) {
+              return RevenueReferDataBox(profile.profileModel.totalRevenue.toString(), 2);
+            }
+          ),
           revenueTeamList.isEmpty
               ? const SizedBox()
               : Padding(

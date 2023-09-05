@@ -78,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getOffingsList(String cityId){
+    print("get offing city id $cityId");
     futureData = PaymentInfoProvider().getOffingsList(cityId)
         .then((value) {
       if(mounted){
@@ -126,8 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getProfile();
-      final profile = Provider.of<ProfileProvider>(context, listen: false);
-      getOffingsList(profile.organizerDetails.cityId.toString());
       getUpcomingMatchList();
     });
     await Future.delayed(const Duration(seconds: 1));
@@ -140,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if(mounted){
       final profile = Provider.of<ProfileProvider>(context, listen: false);
       getSlotsList(profile.organizerDetails.groundId.toString());
+      getOffingsList(profile.organizerDetails.cityId.toString());
     }
   }
 
@@ -164,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: loading
@@ -178,103 +179,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      height: 28.h,
-                      child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
+                      child: Image.asset(Images.homeTop, fit: BoxFit.cover,),
                     ),
-                    //referral points & revenue amount
-                    if(profile.profileModel.refPoints.toString() != "null")...[
-                      Positioned(
-                        top: 18.h,
-                        left: 5.w,
-                        child: Container(
-                          height: 20.h,
-                          width: 42.w,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 3.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            gradient: const LinearGradient(
-                              begin: Alignment.centerLeft ,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppColor.primaryColor,
-                                AppColor.secondaryColor,
-                              ],
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Total Referral\nPoints",
-                                style: fontMedium.copyWith(
-                                    fontSize: 12.sp,
-                                    color: AppColor.textColor
-                                ),),
-                              SizedBox(height: 1.5.h),
-                              InkWell(
-                                onTap: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return ReferAndEarnScreen(profile.profileModel.refPoints.toString() == "null"
-                                          ? "0"
-                                          : "${profile.profileModel.refPoints.toString()} pts");
-                                    }),
-                                  );
-                                },
-                                child: Text(profile.profileModel.refPoints.toString() == "null"
-                                    ? "0"
-                                    : "${profile.profileModel.refPoints.toString()} pts",
-                                  style: fontMedium.copyWith(
-                                      fontSize: 18.sp,
-                                      color: AppColor.textColor
-                                  ),),
-                              ),
-                              SizedBox(height: 1.5.h),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColor.lightColor,
-                                  elevation: 0,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return ReferAndEarnScreen(profile.profileModel.refPoints.toString() == "null"
-                                          ? "0"
-                                          : "${profile.profileModel.refPoints.toString()} pts");
-                                    }),
-                                  );
-                                },
-                                child: Text("View Details",
-                                  style: fontMedium.copyWith(
-                                      color: AppColor.textColor
-                                  ),),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 18.h,
-                        right: 5.w,
-                        child: PointsAndRevenueBox(
-                            Images.revenueAmountImage,
-                            "Total Revenue\nAmount",
-                            profile.profileModel.totalRevenue.toString() == "null"
-                                ? "0"
-                                : "₹ ${profile.profileModel.totalRevenue.toString()}",
-                            2),
-                      ),
-                    ] else ...[
-                      Positioned(
-                        bottom: -4.h,
-                          child: RevenueOnly(profile.profileModel.totalRevenue.toString())),
-                    ],
                     Positioned(
-                      top: 5.h,
+                      top: 2.h + statusBarHeight,
                       left: 5.w,
                       right: 5.w,
                       child: Row(
@@ -358,8 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                profile.profileModel.refPoints.toString() != "null"
-                ? SizedBox(height: 12.h) : SizedBox(height: 6.h),
+
                 Expanded(
                   child: MediaQuery.removePadding(
                     removeTop: true,
@@ -367,6 +274,36 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
                       children: [
+                        SizedBox(height: 2.h),
+                        if(profile.profileModel.refPoints.toString() != "null")...[
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                PointsAndRevenueBox(
+                                    Images.revenueAmountImage,
+                                    "Total Referral\nPoints",
+                                    profile.profileModel.refPoints.toString() == "null"
+                                        ? "0 pts"
+                                        : "${profile.profileModel.refPoints.toString()} pts",
+                                    1),
+                                PointsAndRevenueBox(
+                                    Images.revenueAmountImage,
+                                    "Total Revenue\nAmount",
+                                    profile.profileModel.totalRevenue.toString() == "null"
+                                        ? "0"
+                                        : "₹ ${profile.profileModel.totalRevenue.toString()}",
+                                    2),
+                              ],
+                            ),
+                          ),
+
+                        ] else ...[
+                          RevenueOnly(profile.profileModel.totalRevenue.toString()),
+                        ],
                         Consumer<ProfileProvider>(
                             builder: (context, profile, child) {
                               return profile.organizerDetails.groundApprove == 0
@@ -522,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
+                                                  horizontal: 3.w,
                                                   vertical: 0.8.h,
                                                 ),
                                                 decoration: BoxDecoration(
@@ -540,10 +477,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ? AppColor.availableSlot : AppColor.textColor
                                                 ),
                                                 child: Center(
-                                                  child: Text(convertTo12HourFormat(slotsList[index].start.toString()),
+                                                  child: Text("${convertTo12HourFormat(slotsList[index].start.toString())} - ${convertTo12HourFormat(slotsList[index].end.toString())}",
                                                     style: fontRegular.copyWith(
                                                         color: AppColor.lightColor,
-                                                        fontSize: 9.sp
+                                                        fontSize: 8.5.sp
                                                     ),),
                                                 ),
                                               ),
@@ -764,6 +701,9 @@ class RevenueOnly extends StatelessWidget {
       child: Container(
         height: 14.h,
         width: 90.w,
+        margin: EdgeInsets.symmetric(
+          horizontal: 5.w
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           gradient: const LinearGradient(
@@ -880,30 +820,41 @@ class UpcomingCard extends StatelessWidget {
                     },
                   ),
                 ),
-                Column(
-                  children: [
-                    Text(
-                      match.teamAName.toString(),
-                      style: fontMedium.copyWith(
-                        fontSize: 11.5.sp,
-                        color: AppColor.textColor,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      FittedBox(
+                        child: Text(
+                          match.teamAName.toString(),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: fontMedium.copyWith(
+                            fontSize: 11.5.sp,
+                            color: AppColor.textColor,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      "vs",
-                      style: fontMedium.copyWith(
-                        fontSize: 11.sp,
-                        color: AppColor.redColor,
+                      Text(
+                        "vs",
+                        style: fontMedium.copyWith(
+                          fontSize: 11.sp,
+                          color: AppColor.redColor,
+                        ),
                       ),
-                    ),
-                    Text(
-                      match.teamBName.toString() == "" ? "TBA" : match.teamBName.toString(),
-                      style: fontMedium.copyWith(
-                        fontSize: 11.5.sp,
-                        color: AppColor.textColor,
+                      Text(
+                        match.teamBName.toString() != "" ? "TB\nA" : match.teamBName.toString(),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: fontMedium.copyWith(
+                          fontSize: 11.5.sp,
+                          color: AppColor.textColor,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 ClipOval(
                   child: CachedNetworkImage(

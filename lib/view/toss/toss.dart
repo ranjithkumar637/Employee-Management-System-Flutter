@@ -100,49 +100,49 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
 
   tossHandle() async {
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 190.0;
       width = 190.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 220.0;
       width = 220.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 245.0;
       width = 245.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 270.0;
       width = 270.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 245.0;
       width = 245.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 220.0;
       width = 220.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 120));
     setState(() {
       height = 190.0;
       width = 190.0;
     });
     _handleToss();
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 30));
     setState(() {
       height = 150.0;
       width = 150.0;
@@ -340,6 +340,7 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                     )
                 ),
               ),
+
               Positioned(
                 top: 55.h,
                 child: Transform(
@@ -357,6 +358,37 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                         image: DecorationImage(
                             image: AssetImage(
                               'assets/images/${_tossResult.isEmpty ? 'head' : _tossResult}.png',
+                            )),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(-1, 1),
+                              blurRadius: 7.0,
+                              spreadRadius: 5.0),
+                        ]),
+                    duration: const Duration(milliseconds: 250),
+                  ),
+                ),
+              ),
+              _tossResult != ""
+                  ? const SizedBox()
+              : Positioned(
+                top: 55.h,
+                child: Transform(
+                  transform: Matrix4.rotationX(
+                    _controller.value < 0.5
+                        ? pi * _controller.value
+                        : pi - pi * _controller.value,
+                  )..rotateZ(_spinAnimation.value * pi / 360),
+                  alignment: Alignment.center,
+                  child: AnimatedContainer(
+                    height: height,
+                    width: width,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        image: const DecorationImage(
+                            image: AssetImage(
+                              'assets/images/ht.png',
                             )),
                         boxShadow: const [
                           BoxShadow(

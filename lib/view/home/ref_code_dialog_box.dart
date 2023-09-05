@@ -26,6 +26,9 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: 5.w
+      ),
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: contentBox(context),

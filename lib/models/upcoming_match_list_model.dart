@@ -44,6 +44,8 @@ class UpcomingMatch {
   dynamic teamBLogo;
   dynamic bookingSlotStart;
   dynamic bookingSlotEnd;
+  dynamic matchNumber;
+  dynamic matchStatus;
 
   UpcomingMatch(
       {matchId,
@@ -60,7 +62,7 @@ class UpcomingMatch {
         teamALogo,
         teamBLogo,
         bookingSlotStart,
-        bookingSlotEnd});
+        bookingSlotEnd, matchNumber, matchStatus});
 
   UpcomingMatch.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
@@ -78,6 +80,8 @@ class UpcomingMatch {
     teamBLogo = json['team_b_logo'];
     bookingSlotStart = json['booking_slot_start'];
     bookingSlotEnd = json['booking_slot_end'];
+    matchNumber = json['match_number'];
+    matchStatus = json['match_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -97,6 +101,8 @@ class UpcomingMatch {
     data['team_b_logo'] = teamBLogo;
     data['booking_slot_start'] = bookingSlotStart;
     data['booking_slot_end'] = bookingSlotEnd;
+    data['match_number'] = matchNumber;
+    data['match_status'] = matchStatus;
     return data;
   }
 }

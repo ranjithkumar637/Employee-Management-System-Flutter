@@ -29,6 +29,7 @@ class _MyBookingsState extends State<MyBookings> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -41,7 +42,7 @@ class _MyBookingsState extends State<MyBookings> with SingleTickerProviderStateM
             padding: EdgeInsets.symmetric(
               horizontal: 3.w,
             ) + EdgeInsets.only(
-                top: 5.h, bottom: 2.h
+                top: 2.h + statusBarHeight, bottom: 2.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

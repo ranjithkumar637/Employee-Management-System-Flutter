@@ -10,6 +10,7 @@ class AppColor {
   static const Color lightColor = Color(0xffFFFFFF);
   static const Color semiLightColor = Color(0xffD7DBDD);
   static const Color textFieldBg1 = Color(0xffF8F9FA);
+  static const Color matchNumberColor = Color(0xff6495ED);
 
   static const Color bgColor = Color(0xffF8F8F9);
   static const Color imageBorderColor = Color(0xffFFFBE0);

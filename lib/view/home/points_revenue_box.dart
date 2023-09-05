@@ -18,7 +18,7 @@ class PointsAndRevenueBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 20.h,
+      height: 18.h,
       width: 42.w,
       padding: EdgeInsets.symmetric(
         horizontal: 3.w,
@@ -40,7 +40,7 @@ class PointsAndRevenueBox extends StatelessWidget {
         children: [
           Text(title,
             style: fontMedium.copyWith(
-                fontSize: 12.sp,
+                fontSize: 11.sp,
                 color: AppColor.textColor
             ),),
           SizedBox(height: 1.5.h),
@@ -64,17 +64,14 @@ class PointsAndRevenueBox extends StatelessWidget {
             },
             child: Text(value,
               style: fontMedium.copyWith(
-                  fontSize: 18.sp,
+                  fontSize: 15.sp,
                   color: AppColor.textColor
               ),),
           ),
-          SizedBox(height: 1.5.h),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.lightColor,
-              elevation: 0,
-            ),
-            onPressed: () {
+          SizedBox(height: 1.h),
+          const Spacer(),
+          InkWell(
+            onTap: (){
               print(id);
               if(id == 2){
                 Navigator.push(
@@ -92,10 +89,21 @@ class PointsAndRevenueBox extends StatelessWidget {
                 );
               }
             },
-            child: Text("View Details",
-            style: fontMedium.copyWith(
-              color: AppColor.textColor
-            ),),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 2.4.w,
+                vertical: 1.h,
+              ),
+              decoration: BoxDecoration(
+                color: AppColor.lightColor,
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: Text("View Details",
+              style: fontMedium.copyWith(
+                color: AppColor.textColor,
+                fontSize: 9.sp
+              ),),
+            ),
           ),
         ],
       ),

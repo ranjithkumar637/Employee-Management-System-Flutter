@@ -20,6 +20,7 @@ import '../widgets/reset_button.dart';
 import '../widgets/snackbar.dart';
 import '../widgets/submit_button.dart';
 import 'battles_list.dart';
+import 'match_history_card.dart';
 
 class MatchHistory extends StatefulWidget {
   const MatchHistory({Key? key}) : super(key: key);
@@ -315,6 +316,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                         },
                         itemCount: matchHistoryList.length,
                         itemBuilder: (context, index){
+                          final match = matchHistoryList[index];
                           return Bounceable(
                               onTap: (){
                                 Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
@@ -327,170 +329,8 @@ class _MatchHistoryState extends State<MatchHistory> {
                                       }),
                                 );
                               },
-                              child:  Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColor.lightColor,
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 3.w,
-                                          vertical: 1.4.h,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            ClipOval(
-                                              child: CachedNetworkImage(
-                                                imageUrl: "${
-                                                    AppConstants.imageBaseUrl
-                                                }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamALogo}",
-                                                errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
-                                                width: 20.w,
-                                                height: 10.h,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Text("${matchHistoryList[index].teamAName}",
-                                                    style: fontBold.copyWith(
-                                                      color: AppColor.textColor,
-                                                      fontSize: 11.sp,
-                                                    ),),
-                                                  SizedBox(height: 0.5.h),
-                                                  Text('vs',
-                                                      style:
-                                                      fontMedium.copyWith(
-                                                        color: AppColor
-                                                            .redColor,
-                                                        fontSize: 11.sp,
-                                                      )),
-                                                  SizedBox(height: 0.5.h),
-                                                  Text(matchHistoryList[index].teamBName == "" ? "TBA" : "${matchHistoryList[index].teamBName}",
-                                                    style: fontBold.copyWith(
-                                                      color: AppColor.textColor,
-                                                      fontSize: 11.sp,
-                                                    ),),
-                                                ],
-                                              ),
-                                            ),
-                                            ClipOval(
-                                              child: CachedNetworkImage(imageUrl: "${
-                                                  AppConstants.imageBaseUrl
-                                              }${AppConstants.imageBaseUrlTeam}${matchHistoryList[index].teamBLogo}",
-                                                errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
-                                                width: 20.w,
-                                                height: 10.h,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      DottedLine(
-                                        dashColor: AppColor.hintColour.withOpacity(0.4),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 3.w,
-                                            vertical: 1.5.h
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                  EdgeInsets.symmetric(
-                                                    horizontal: 1.w,
-                                                    vertical: 0.5.h,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                      color: AppColor
-                                                          .secondaryColor
-                                                          .withOpacity(0.2),
-                                                      shape: BoxShape.circle),
-                                                  child: Icon(
-                                                    Icons.access_time,
-                                                    color: AppColor
-                                                        .secondaryColor,
-                                                    size: 3.5.w,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 1.w),
-                                                Text(
-                                                  matchHistoryList[index].bookingSlotStart.toString(),
-                                                  style: fontMedium
-                                                      .copyWith(
-                                                      fontSize:
-                                                      10.sp,
-                                                      color: AppColor
-                                                          .textColor),
-                                                ),
-                                              ],
-                                            ),
-                                            const Spacer(),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                  EdgeInsets.symmetric(
-                                                    horizontal: 1.w,
-                                                    vertical: 0.5.h,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                      color: AppColor
-                                                          .secondaryColor
-                                                          .withOpacity(0.2),
-                                                      shape: BoxShape.circle),
-                                                  child: SvgPicture.asset(
-                                                    Images.calendarIcon,
-                                                    color: AppColor
-                                                        .secondaryColor,
-                                                    width: 3.5.w,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 1.w),
-                                                Text(
-                                                  matchHistoryList[index].bookingDate.toString(),
-                                                  style: fontMedium.copyWith(
-                                                      fontSize: 10.sp,
-                                                      color: AppColor
-                                                          .textColor),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
+                              child:  MatchHistoryCard(match)
                           );
-                          // return Bounceable(
-                          //   onTap: (){
-                          //
-                          //   },
-                          //   child: BattlesList(
-                          //       matchHistoryList[index].mainImage.toString(),
-                          //       matchHistoryList[index].teamBName.toString() == ""
-                          //           ?'${matchHistoryList[index].teamAName.toString()} vs TBA'
-                          //       : '${matchHistoryList[index].teamAName.toString()} vs ${matchHistoryList[index].teamBName.toString()}',
-                          //       matchHistoryList[index].bookingDate.toString(),
-                          //       matchHistoryList[index].bookingSlotStart.toString(),
-                          //       matchHistoryList[index].groundName.toString(),
-                          //     matchHistoryList[index].organizerName.toString(),
-                          //   ),
-                          // );
                         },
                       ));
                 } else{
@@ -508,6 +348,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                 },
                 itemCount: filteredItems.length,
                 itemBuilder: (context, index){
+                  final match = filteredItems[index];
                   return Bounceable(
                       onTap: (){
                         Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
@@ -520,154 +361,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                               }),
                         );
                       },
-                      child:  Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.lightColor,
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w,
-                                  vertical: 1.4.h,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ClipOval(
-                                      child: CachedNetworkImage(
-                                        imageUrl: "${
-                                            AppConstants.imageBaseUrl
-                                        }${AppConstants.imageBaseUrlTeam}${filteredItems[index].teamALogo}",
-                                        errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
-                                        width: 20.w,
-                                        height: 9.h,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Text("${filteredItems[index].teamAName}",
-                                            style: fontBold.copyWith(
-                                              color: AppColor.textColor,
-                                              fontSize: 11.sp,
-                                            ),),
-                                          SizedBox(height: 0.5.h),
-                                          Text('vs',
-                                              style:
-                                              fontMedium.copyWith(
-                                                color: AppColor
-                                                    .redColor,
-                                                fontSize: 11.sp,
-                                              )),
-                                          SizedBox(height: 0.5.h),
-                                          Text(filteredItems[index].teamBName == "" ? "TBA" : "${filteredItems[index].teamBName}",
-                                            style: fontBold.copyWith(
-                                              color: AppColor.textColor,
-                                              fontSize: 11.sp,
-                                            ),),
-                                        ],
-                                      ),
-                                    ),
-                                    ClipOval(
-                                      child: CachedNetworkImage(imageUrl: "${
-                                          AppConstants.imageBaseUrl
-                                      }${AppConstants.imageBaseUrlTeam}${filteredItems[index].teamBLogo}",
-                                        errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
-                                        width: 20.w,
-                                        height: 9.h,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              DottedLine(
-                                dashColor: AppColor.hintColour.withOpacity(0.4),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 3.w,
-                                    vertical: 1.5.h
-                                ),
-                                child: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding:
-                                          EdgeInsets.symmetric(
-                                            horizontal: 1.w,
-                                            vertical: 0.5.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: AppColor
-                                                  .secondaryColor
-                                                  .withOpacity(0.2),
-                                              shape: BoxShape.circle),
-                                          child: Icon(
-                                            Icons.access_time,
-                                            color: AppColor
-                                                .secondaryColor,
-                                            size: 3.5.w,
-                                          ),
-                                        ),
-                                        SizedBox(width: 1.w),
-                                        Text(
-                                          filteredItems[index].bookingSlotStart.toString(),
-                                          style: fontMedium
-                                              .copyWith(
-                                              fontSize:
-                                              10.sp,
-                                              color: AppColor
-                                                  .textColor),
-                                        ),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          padding:
-                                          EdgeInsets.symmetric(
-                                            horizontal: 1.w,
-                                            vertical: 0.5.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: AppColor
-                                                  .secondaryColor
-                                                  .withOpacity(0.2),
-                                              shape: BoxShape.circle),
-                                          child: SvgPicture.asset(
-                                            Images.calendarIcon,
-                                            color: AppColor
-                                                .secondaryColor,
-                                            width: 3.5.w,
-                                          ),
-                                        ),
-                                        SizedBox(width: 1.w),
-                                        Text(
-                                          filteredItems[index].bookingDate.toString(),
-                                          style: fontMedium.copyWith(
-                                              fontSize: 10.sp,
-                                              color: AppColor
-                                                  .textColor),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                      child: MatchHistoryCard(match)
                   );
                 },
               )),

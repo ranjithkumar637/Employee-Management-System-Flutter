@@ -10,8 +10,8 @@ import '../../utils/app_constants.dart';
 import '../widgets/versus_text.dart';
 
 class PlayerMatchCard extends StatelessWidget {
-  final String teamA, teamB, date, time, ground, groundImage;
-  const PlayerMatchCard(this.teamA, this.teamB, this.date, this.time, this.ground, this.groundImage, {Key? key}) : super(key: key);
+  final String teamA, teamB, date, time, ground, groundImage, matchNumber;
+  const PlayerMatchCard(this.teamA, this.teamB, this.date, this.time, this.ground, this.groundImage, this.matchNumber, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +50,15 @@ class PlayerMatchCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text("#$matchNumber",
+                    style: fontBold.copyWith(
+                        fontSize: 9.sp,
+                        color: AppColor.textColor
+                    ),),
+                  SizedBox(height:0.5.h),
                   VersusText(teamA, teamB == "" ? "TBA" : teamB),
                   SizedBox(height:1.h),
-                  ground == ""
-                  ? const SizedBox()
-                  : Row(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
@@ -78,52 +82,55 @@ class PlayerMatchCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ground == ""
-                      ? const SizedBox()
-                      : SizedBox(height:1.h),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 0.8.w,
-                          vertical: 0.4.h,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.w,),
-                      ),
-                      SizedBox(width: 2.w),
-                      Text(time,
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
-                    ],
-                  ),
                   SizedBox(height:1.h),
                   Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 0.8.w,
-                          vertical: 0.4.h,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.w,),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.8.w,
+                              vertical: 0.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppColor.iconBgColor,
+                                shape: BoxShape.circle
+                            ),
+                            child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.w,),
+                          ),
+                          SizedBox(width: 2.w),
+                          Text(time,
+                            style: fontMedium.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ],
                       ),
-                      SizedBox(width: 2.w),
-                      Text(date,
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
+                      SizedBox(width : 3.w),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.8.w,
+                              vertical: 0.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppColor.iconBgColor,
+                                shape: BoxShape.circle
+                            ),
+                            child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.w,),
+                          ),
+                          SizedBox(width: 2.w),
+                          Text(date,
+                            style: fontMedium.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ],
+                      ),
                     ],
                   ),
+
                 ],
               ),
             ),

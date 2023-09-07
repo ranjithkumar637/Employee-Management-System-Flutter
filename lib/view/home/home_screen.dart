@@ -35,6 +35,7 @@ import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
 import 'custom_date_picker.dart';
 import 'home_grid_options.dart';
+import 'home_upcoming_card.dart';
 import 'notification_dot.dart';
 import 'offing_card.dart';
 import 'offing_detail_screen.dart';
@@ -191,16 +192,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap:(){
                               Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(4);
                             },
-                            child: Container(
-                              height: 10.h,
-                              width: 20.w,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: AppColor.imageBorderColor, width: 3.0),
-                                  color: Colors.white,
-                                  image: const DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage("https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1680345590~exp=1680346190~hmac=eb31a40018f2115d71ee38e25576a27bf9933b85d832af6bb6ece771dc2c4d42"))
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                height: 10.h,
+                                width: 20.w,
+                                fit: BoxFit.cover,
+                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${profile.organizerDetails.profilePhoto.toString()}",
+                                errorWidget: (context, url, widget){
+                                  return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
+                                    width: 28.w,
+                                    fit: BoxFit.cover,);
+                                },
                               ),
                             ),
                           ),
@@ -310,6 +312,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? Container(
                                 margin: EdgeInsets.symmetric(
                                   horizontal: 5.w,
+                                ) + EdgeInsets.only(
+                                  top: 2.h
                                 ),
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 3.w,
@@ -645,7 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: 2.h),
                               //horizontal listview
                               SizedBox(
-                                height: 21.h,
+                                height: 23.h,
                                 child: FutureBuilder(
                                     future: futureData,
                                     builder: (context, snapshot) {
@@ -774,160 +778,6 @@ class RevenueOnly extends StatelessWidget {
   }
 }
 
-class UpcomingCard extends StatelessWidget {
-  final UpcomingMatch match;
-  final int length;
-  const UpcomingCard(this.match, this.length, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Bounceable(
-      onTap: (){
-        Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
-        Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) {
-                return MatchInfoScreen(matchId: match.matchId.toString());
-              }),
-        );
-      },
-      child: Container(
-        width: length == 1 ? 90.w : 80.w,
-        padding: EdgeInsets.symmetric(
-            horizontal: 4.w, vertical: 2.h),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
-              children: [
-                ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.teamALogo}",
-                    fit: BoxFit.cover,
-                    width: 20.w,
-                    height: 9.h,
-                    errorWidget: (context, url, widget){
-                      return ClipOval(
-                        child: Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 20.w,
-                          height: 9.h,),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      FittedBox(
-                        child: Text(
-                          match.teamAName.toString(),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: fontMedium.copyWith(
-                            fontSize: 11.5.sp,
-                            color: AppColor.textColor,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "vs",
-                        style: fontMedium.copyWith(
-                          fontSize: 11.sp,
-                          color: AppColor.redColor,
-                        ),
-                      ),
-                      Text(
-                        match.teamBName.toString() != "" ? "TB\nA" : match.teamBName.toString(),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: fontMedium.copyWith(
-                          fontSize: 11.5.sp,
-                          color: AppColor.textColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.teamBLogo}",
-                    fit: BoxFit.cover,
-                    width: 20.w,
-                    height: 9.h,
-                    errorWidget: (context, url, widget){
-                      return ClipOval(
-                        child: Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 20.w,
-                          height: 9.h,),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 3.h,
-            ),
-            DottedLine(
-              dashColor: AppColor.hintColour.withOpacity(0.4),
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 0.6.w,
-                            vertical: 0.3.h),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            borderRadius:
-                            BorderRadius.circular(20)),
-                        child: Icon(
-                          Icons.access_time,
-                          color: AppColor.iconColour,
-                          size: 2.h,
-                        )),
-                    SizedBox(
-                      width: 2.w,
-                    ),
-                    Text(
-                      match
-                          .bookingSlotStart
-                          .toString(),
-                      style: fontMedium.copyWith(
-                        fontSize: 10.sp,
-                        color: AppColor.textColor,
-                      ),
-                    )
-                  ],
-                ),
-                const Spacer(),
-                Text(
-                  match
-                      .bookingDate
-                      .toString(),
-                  style: fontMedium.copyWith(
-                    fontSize: 10.sp,
-                    color: AppColor.textColor,
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 
 

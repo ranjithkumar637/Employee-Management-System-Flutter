@@ -20,7 +20,8 @@ import 'location_data.dart';
 
 class Profile extends StatefulWidget {
   final ProfileProvider ground;
-  const Profile(this.ground, {Key? key}) : super(key: key);
+  final List<String> profilePath;
+  const Profile(this.ground, this.profilePath, {Key? key}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -788,7 +789,7 @@ class _ProfileState extends State<Profile> {
           nameController.text.toString(),
           date == "" ? "" : date,
           location.toString() == "null" ? "" : location.toString(),
-          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street, cityId, stateId, cityIdG, stateIdG, orgPinCodeController.text)
+          companyNameController.text, latitude, longitude, address, houseNo, pinCode, street, cityId, stateId, cityIdG, stateIdG, orgPinCodeController.text, widget.profilePath)
       .then((value) {
         if(value.status == true){
           Dialogs.snackbar("Profile updated successfully", context, isError: false);

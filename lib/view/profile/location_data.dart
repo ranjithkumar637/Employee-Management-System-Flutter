@@ -106,7 +106,7 @@ class _LocationDataState extends State<LocationData> {
                           onMapCreated: _onMapCreated,
                           initialCameraPosition: CameraPosition(
                             target: latLng!,
-                            zoom: 17.0,
+                            zoom: 13.0,
                           ),
                         ),
                       ),

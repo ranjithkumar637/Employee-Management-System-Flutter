@@ -186,7 +186,7 @@ class _InTheOffingState extends State<InTheOffing> {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   border: InputBorder.none,
-                                  hintText: "Search for grounds, organizer, teams",
+                                  hintText: "Search for grounds ...",
                                   hintStyle: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textMildColor
@@ -332,6 +332,7 @@ class _InTheOffingState extends State<InTheOffing> {
                               searchedList[index].groundName.toString(),
                               searchedList[index].groundImage.toString(),
                               searchedList[index].organizerName.toString(),
+                              searchedList[index].matchNumber.toString(),
                             ),
                           );
                         },
@@ -367,6 +368,7 @@ class _InTheOffingState extends State<InTheOffing> {
                               widget.offings[index].groundName.toString(),
                               widget.offings[index].groundImage.toString(),
                               widget.offings[index].organizerName.toString(),
+                              widget.offings[index].matchNumber.toString(),
                             ),
                           );
                         },

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/login_model.dart';
 import '../models/registration_model.dart';
 import '../models/registration_submit_model.dart';
+import '../models/resend_otp_model.dart';
 import '../models/response_model.dart';
 import '../utils/app_constants.dart';
 
@@ -22,6 +23,98 @@ class AuthProvider extends ChangeNotifier{
 
   String token = "";
   ResponseModel responseModel = ResponseModel();
+
+  ResendOtpModel resendOtpModel = ResendOtpModel();
+
+  //resend otp login
+  Future<ResendOtpModel> resendOtpLogin(String id) async {
+    var body = jsonEncode({
+      'user_id': id,
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.resendOtpLogin),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      ).timeout(const Duration(seconds: 15));
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 200) {
+        resendOtpModel = ResendOtpModel.fromJson(decodedJson);
+        notifyListeners();
+      }else if(response.statusCode == 500){
+        print("Internal server error");
+      } else if(response.statusCode == 401){
+        print("Unauthorized");
+      }else if(response.statusCode == 404){
+        print("Data not found");
+      }else if(response.statusCode == 429){
+        print("Too many requests");
+      }  else {
+        throw const HttpException('Failed to load data');
+      }
+    } on TimeoutException{
+      print("Request timed out");
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('resend otp login - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return resendOtpModel;
+  }
+
+  //resend otp register
+  Future<ResendOtpModel> resendOtpRegister(String id) async {
+    var body = jsonEncode({
+      'user_temp_id': id,
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.resendOtpRegister),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      ).timeout(const Duration(seconds: 15));
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 200) {
+        resendOtpModel = ResendOtpModel.fromJson(decodedJson);
+        notifyListeners();
+      }else if(response.statusCode == 500){
+        print("Internal server error");
+      } else if(response.statusCode == 401){
+        print("Unauthorized");
+      }else if(response.statusCode == 404){
+        print("Data not found");
+      }else if(response.statusCode == 429){
+        print("Too many requests");
+      }  else {
+        throw const HttpException('Failed to load data');
+      }
+    } on TimeoutException{
+      print("Request timed out");
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('resend otp register - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return resendOtpModel;
+  }
 
   saveUserData(bool value, String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elevens_organizer/view/widgets/versus_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
@@ -11,9 +12,9 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class OffingsListView extends StatelessWidget {
-  final String  date, time, location, teamAName, teamBName, groundName, groundImg, organizerName;
+  final String  date, time, location, teamAName, teamBName, groundName, groundImg, organizerName, matchNumber;
   final OffingsList offing;
-  const OffingsListView(this.date, this.time, this.location, this.teamAName, this.teamBName, this.offing, this.groundName, this.groundImg, this.organizerName,  {Key? key}) : super(key: key);
+  const OffingsListView(this.date, this.time, this.location, this.teamAName, this.teamBName, this.offing, this.groundName, this.groundImg, this.organizerName, this.matchNumber,  {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,29 +51,15 @@ class OffingsListView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                      text: teamAName,
-                      style: fontMedium.copyWith(
-                          fontSize: 12.5.sp,
-                          color: AppColor.textColor
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(text: ' vs ',
-                          style: fontMedium.copyWith(
-                              fontSize: 12.5.sp,
-                              color: AppColor.redColor
-                          ),
-                        ),
-                        TextSpan(text: teamBName == "" ? "TBA" : teamBName,
-                          style: fontMedium.copyWith(
-                              fontSize: 12.5.sp,
-                              color: AppColor.textColor
-                          ),
-                        ),
-                      ]
-                  ),
-                ),
+                matchNumber == ""
+                    ? const SizedBox()
+                    : Text("#$matchNumber",
+                  style: fontBold.copyWith(
+                      fontSize: 10.sp,
+                      color: AppColor.matchNumberColor
+                  ),),
+                SizedBox(height: 0.5.h),
+                VersusText(teamAName, teamBName == "" ? "TBA" : teamBName),
                 SizedBox(height: 1.h),
                 Row(
                   children: [
@@ -153,28 +140,6 @@ class OffingsListView extends StatelessWidget {
                           ),),
                       ],
                     ),
-                  ],
-                ),
-                SizedBox(height: 0.6.h),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 1.w,
-                        vertical: 0.5.h,
-                      ),
-                      decoration: BoxDecoration(
-                          color: AppColor.iconBgColor,
-                          shape: BoxShape.circle
-                      ),
-                      child: Icon(Icons.location_on_outlined, color: AppColor.iconColour, size: 3.w,),
-                    ),
-                    SizedBox(width: 3.w),
-                    Text(location,
-                      style: fontMedium.copyWith(
-                          fontSize: 9.5.sp,
-                          color: AppColor.textColor
-                      ),),
                   ],
                 ),
               ],

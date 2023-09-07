@@ -34,8 +34,9 @@ class TodayMatches {
   dynamic freezeCount;
   dynamic teamACaptain;
   dynamic teamBCaptain;
+  dynamic matchNumber;
 
-  TodayMatches({teamAData, teamBData, freezeCount, teamACaptain, teamBCaptain});
+  TodayMatches({teamAData, teamBData, freezeCount, teamACaptain, teamBCaptain, matchNumber});
 
   TodayMatches.fromJson(Map<String, dynamic> json) {
     teamAData = json['team_a_data'] != null
@@ -47,6 +48,7 @@ class TodayMatches {
     freezeCount = json['freeze_count'];
     teamACaptain = json['team_a_captain'];
     teamBCaptain = json['team_b_captain'];
+    matchNumber = json['match_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +62,7 @@ class TodayMatches {
     data['freeze_count'] = freezeCount;
     data['team_a_captain'] = teamACaptain;
     data['team_b_captain'] = teamBCaptain;
+    data['match_number'] = matchNumber;
     return data;
   }
 }

@@ -28,6 +28,46 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   late TabController tabController;
 
+  File? imageFileProfile;
+  List<String> profilePic = [];
+
+  openCameraStartPic() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      imageQuality: 50,
+      source: ImageSource.camera,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFileProfile = File(pickedFile.path);
+        profilePic.add(pickedFile.path);
+      });
+    }
+  }
+
+  openGalleryStartPic() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFileProfile = File(pickedFile.path);
+        profilePic.add(pickedFile.path);
+      });
+    }
+  }
+
+  void chooseProfilePic() {
+    showDialog(context: context,
+        builder: (BuildContext context){
+          return FilePickDialog(
+            camera : openCameraStartPic,
+            gallery: openGalleryStartPic,
+          );
+        }
+    );
+  }
+
 
   getProfile(){
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -41,6 +81,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   openCameraStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
+      imageQuality: 50,
       source: ImageSource.camera,
     );
     if (pickedFile != null) {
@@ -54,6 +95,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   openGalleryStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
+      imageQuality: 50,
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {
@@ -141,53 +183,100 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   top: 5.h,
-                  //   right: 5.w,
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     children: [
-                  //       // Icon(Icons.favorite_border_rounded, color: AppColor.lightColor, size: 6.w,),
-                  //       // SizedBox(width: 5.w),
-                  //       SvgPicture.asset(Images.share, color: AppColor.lightColor, width: 6.w,)
-                  //     ],
-                  //   ),
-                  // ),
-                  Positioned(
-                    bottom: 1.h,
-                    child: ground.groundDetails.groundName == null || ground.groundDetails.groundName.toString() == ""
-                        ? const SizedBox()
-                    : Text(ground.groundDetails.groundName.toString(),
-                      style: fontMedium.copyWith(
-                          color: AppColor.lightColor,
-                          fontSize: 16.sp
-                      ),),
-                  ),
-                  Positioned(
-                    top: 10.h,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        if(ground.groundDetails.mainImage.toString() == ""
-                            && imageFiles.isEmpty)...[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Image.asset(Images.groundImage, width: 90.w,
-                              fit: BoxFit.cover,
-                              height: 18.h,),
-                          ),
-                        ] else if(ground.groundDetails.mainImage.toString() == ""
-                            && imageFiles.isNotEmpty)...[
-                          ClipRRect(
+                  if(newTabIndex == 0)...[
+                    Positioned(
+                      top: 10.h,
+                      child: Consumer<ProfileProvider>(
+                          builder: (context, profile, child) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Stack(
+                                  children: [
+                                    imageFileProfile != null
+                                        ? Container(
+                                        height: 14.h,
+                                        width: 28.w,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(color: AppColor.imageBorderColor, width: 2),
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(imageFileProfile!)) )
+                                    ) :
+                                    ClipOval(
+                                      child: CachedNetworkImage(
+                                        height: 14.h,
+                                        width: 28.w,
+                                        fit: BoxFit.cover,
+                                        imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${ground.organizerDetails.profilePhoto.toString()}",
+                                        errorWidget: (context, url, widget){
+                                          return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
+                                            width: 28.w,
+                                            fit: BoxFit.cover,);
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0.0,
+                                      right: 0.0,
+                                      child: InkWell(
+                                        onTap: (){
+                                          chooseProfilePic();
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 2.w,
+                                            vertical: 1.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColor.secondaryColor,
+                                            border: Border.all(color: AppColor.imageBorderColor, width: 1),
+                                          ),
+                                          child: Icon(Icons.camera_alt_outlined, color: AppColor.lightColor, size: 5.w,),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(profile.getName(),
+                                  style: fontMedium.copyWith(
+                                      fontSize: 16.sp,
+                                      color: AppColor.lightColor
+                                  ),),
+                              ],
+                            );
+                          }
+                      ),
+                    ),
+                  ] else...[
+                    Positioned(
+                      bottom: 1.h,
+                      child: ground.groundDetails.groundName == null || ground.groundDetails.groundName.toString() == ""
+                          ? const SizedBox()
+                          : Text(ground.groundDetails.groundName.toString(),
+                        style: fontMedium.copyWith(
+                            color: AppColor.lightColor,
+                            fontSize: 16.sp
+                        ),),
+                    ),
+                    Positioned(
+                      top: 10.h,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          if(ground.groundDetails.mainImage.toString() == ""
+                              && imageFiles.isEmpty)...[
+                            ClipRRect(
                               borderRadius: BorderRadius.circular(15.0),
-                              child: Image.file(
-                                imageFile!,
-                                width: 90.w,
+                              child: Image.asset(Images.groundImage, width: 90.w,
                                 fit: BoxFit.cover,
-                                height: 18.h,
-                              ))
-                        ]
-                        else if(ground.groundDetails.mainImage.toString() != ""
+                                height: 18.h,),
+                            ),
+                          ] else if(ground.groundDetails.mainImage.toString() == ""
                               && imageFiles.isNotEmpty)...[
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(15.0),
@@ -198,78 +287,77 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                   height: 18.h,
                                 ))
                           ]
-                          else if(ground.groundDetails.mainImage.toString() != "")...[
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15.0),
-                              child: CachedNetworkImage(
-                                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${ground.mainImg.toString()}",
-                                width: 90.w,
-                                fit: BoxFit.cover,
-                                height: 18.h,
-                                errorWidget: (context, error, url) =>
-                                    Image.asset(Images.groundImage, width: 90.w,
+                          else if(ground.groundDetails.mainImage.toString() != ""
+                                && imageFiles.isNotEmpty)...[
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  child: Image.file(
+                                    imageFile!,
+                                    width: 90.w,
+                                    fit: BoxFit.cover,
+                                    height: 18.h,
+                                  ))
+                            ]
+                            else if(ground.groundDetails.mainImage.toString() != "")...[
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${ground.mainImg.toString()}",
+                                      width: 90.w,
                                       fit: BoxFit.cover,
-                                      height: 18.h,),
-                              ))
-                        ],
-                        Positioned(
-                          child: Container(
-                            width: 90.w,
-                            height: 18.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  const Color(0xff333334).withOpacity(0.1),
-                                  const Color(0xff333334).withOpacity(0.01),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        newTabIndex == 0 ? const SizedBox() : Positioned(
-                          child: Bounceable(
-                            onTap: (){
-                              chooseGroundImage();
-                            },
+                                      height: 18.h,
+                                      errorWidget: (context, error, url) =>
+                                          Image.asset(Images.groundImage, width: 90.w,
+                                            fit: BoxFit.cover,
+                                            height: 18.h,),
+                                    ))
+                              ],
+                          //gradient
+                          Positioned(
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 6.w,
-                                vertical: 0.6.h,
-                              ),
+                              width: 90.w,
+                              height: 18.h,
                               decoration: BoxDecoration(
-                                color: AppColor.primaryColor,
-                                borderRadius: BorderRadius.circular(30.0),
+                                borderRadius: BorderRadius.circular(15.0),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    const Color(0xff333334).withOpacity(0.1),
+                                    const Color(0xff333334).withOpacity(0.01),
+                                  ],
+                                ),
                               ),
-                              child: Text(ground.groundDetails.mainImage.toString() == "" || ground.groundDetails.mainImage == null ? "Add" : "Edit",
-                                style: fontMedium.copyWith(
-                                    fontSize: 10.sp,
-                                    color: AppColor.textColor
-                                ),),
                             ),
                           ),
-                        ),
-                        // Positioned(
-                        //   bottom: 1.h,
-                        //   right: 2.w,
-                        //   child: ground.groundImages.isEmpty
-                        //   ? const SizedBox()
-                        //   : InkWell(
-                        //     onTap: (){
-                        //
-                        //     },
-                        //     child: Text("${ground.groundImages.length - 1}+ photos",
-                        //       style: fontMedium.copyWith(
-                        //           fontSize: 10.sp,
-                        //           color: AppColor.lightColor
-                        //       ),),
-                        //   ),
-                        // ),
-                      ],
+                          //add / edit button
+                          Positioned(
+                            child: Bounceable(
+                              onTap: (){
+                                chooseGroundImage();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 0.6.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColor.primaryColor,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: Text(ground.groundDetails.mainImage.toString() == "" || ground.groundDetails.mainImage == null ? "Add" : "Edit",
+                                  style: fontMedium.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.textColor
+                                  ),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ]
+
                 ],
               ),
               SizedBox(height: 2.h),
@@ -310,7 +398,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                 child: TabBarView(
                     controller: tabController,
                     children: [
-                      Profile(ground),
+                      Profile(ground, profilePic),
                       Information(ground),
                     ]),
               ),

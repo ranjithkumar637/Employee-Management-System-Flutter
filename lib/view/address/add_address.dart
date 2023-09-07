@@ -127,13 +127,8 @@ class _AddAddressState extends State<AddAddress> {
       });
     }
     if (controller != null) {
+      print("animating");
       _goToCurrentPosition(_latLong);
-    }
-    getUserAddress();
-    if(mounted){
-      setState(() {
-
-      });
     }
   }
 
@@ -144,6 +139,7 @@ class _AddAddressState extends State<AddAddress> {
             target: LatLng(latlng.latitude, latlng.longitude),
             zoom: 17)
     ));
+    getUserAddress();
   }
 
   @override
@@ -374,270 +370,274 @@ class _AddAddressState extends State<AddAddress> {
                               ),
                             ],
                           )
-                          : Padding(
+                          : Consumer<TeamProvider>(
+                            builder: (context, team, child) {
+                              return Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 5.w
+                                horizontal: 5.w
                         ),
                         child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 4.h),
-                              Text("Add Address details",
-                                style: fontMedium.copyWith(
-                                    color: AppColor.textColor,
-                                    fontSize: 15.sp
-                                ),),
-                              SizedBox(height: 4.h),
-                              Column(
+                              key: _formKey,
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Plot No",
-                                    style: fontRegular.copyWith(
-                                        fontSize: 9.sp,
-                                        color: AppColor.textColor
+                                  SizedBox(height: 4.h),
+                                  Text("Add Address details",
+                                    style: fontMedium.copyWith(
+                                        color: AppColor.textColor,
+                                        fontSize: 15.sp
                                     ),),
-                                  SizedBox(height: 1.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 1.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.lightColor,
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    child: Center(
-                                      child: TextFormField(
-                                        controller: houseController,
-                                        cursorColor: AppColor.secondaryColor,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Enter house/flat no';
-                                          }
-                                          return null;
-                                        },
+                                  SizedBox(height: 4.h),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Plot No *",
                                         style: fontRegular.copyWith(
-                                            fontSize: 10.sp,
+                                            fontSize: 9.sp,
                                             color: AppColor.textColor
+                                        ),),
+                                      SizedBox(height: 1.h),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
                                         ),
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.next,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                          hintText: "Ex: 14/s1",
-                                          hintStyle: fontRegular.copyWith(
-                                              fontSize: 10.sp,
-                                              color: AppColor.textMildColor
-                                          ),),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 2.h),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Street name",
-                                    style: fontRegular.copyWith(
-                                        fontSize: 9.sp,
-                                        color: AppColor.textColor
-                                    ),),
-                                  SizedBox(height: 1.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 1.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.lightColor,
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    child: Center(
-                                      child: TextFormField(
-                                        controller: streetController,
-                                        cursorColor: AppColor.secondaryColor,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Enter street name';
-                                          }
-                                          return null;
-                                        },
-                                        style: fontRegular.copyWith(
-                                            fontSize: 10.sp,
-                                            color: AppColor.textColor
+                                        decoration: BoxDecoration(
+                                          color: AppColor.lightColor,
+                                          borderRadius: BorderRadius.circular(30.0),
                                         ),
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.next,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                          hintText: "Ex: Sakthi nagar",
-                                          hintStyle: fontRegular.copyWith(
-                                              fontSize: 10.sp,
-                                              color: AppColor.textMildColor
-                                          ),),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 2.h),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Pincode",
-                                    style: fontRegular.copyWith(
-                                        fontSize: 9.sp,
-                                        color: AppColor.textColor
-                                    ),),
-                                  SizedBox(height: 1.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 1.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.lightColor,
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    child: Center(
-                                      child: TextFormField(
-                                        controller: pinCodeController,
-                                        cursorColor: AppColor.secondaryColor,
-                                        inputFormatters: [
-                                          LengthLimitingTextInputFormatter(6),
-                                          FilteringTextInputFormatter.digitsOnly
-                                          // Restrict input to only numbers
-                                        ],
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Enter pincode';
-                                          }
-                                          return null;
-                                        },
-                                        style: fontRegular.copyWith(
-                                            fontSize: 10.sp,
-                                            color: AppColor.textColor
-                                        ),
-                                        keyboardType: TextInputType.number,
-                                        textInputAction: TextInputAction.done,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                          hintText: "Ex: 630606",
-                                          hintStyle: fontRegular.copyWith(
-                                              fontSize: 10.sp,
-                                              color: AppColor.textMildColor
-                                          ),),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 2.h),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const FieldHeading("State *"),
-                                  SizedBox(height:1.h),
-                                  Consumer<TeamProvider>(
-                                      builder: (context, team, child) {
-                                        return InkWell(
-                                          onTap: (){
-                                            FocusScopeNode currentFocus = FocusScope.of(context);
-                                            if (!currentFocus.hasPrimaryFocus) {
-                                              currentFocus.unfocus();
-                                            }
-                                            getStateList();
-                                            openStateSheet();
-                                          },
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.2.h
+                                        child: Center(
+                                          child: TextFormField(
+                                            controller: houseController,
+                                            cursorColor: AppColor.secondaryColor,
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Enter house/flat no';
+                                              }
+                                              return null;
+                                            },
+                                            style: fontRegular.copyWith(
+                                                fontSize: 10.sp,
+                                                color: AppColor.textColor
                                             ),
-                                            decoration: BoxDecoration(
-                                              color: AppColor.lightColor,
-                                              borderRadius: BorderRadius.circular(30.0),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(team.state == "" ? "Choose state" : team.state,
-                                                  style: fontRegular.copyWith(
-                                                      color: AppColor.textColor
-                                                  ),),
-                                                const Spacer(),
-                                                const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
-                                              ],
-                                            ),
+                                            keyboardType: TextInputType.text,
+                                            textInputAction: TextInputAction.next,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              border: InputBorder.none,
+                                              hintText: "Ex: 14/s1",
+                                              hintStyle: fontRegular.copyWith(
+                                                  fontSize: 10.sp,
+                                                  color: AppColor.textMildColor
+                                              ),),
                                           ),
-                                        );
-                                      }
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(height: 2.h),
-                                  const FieldHeading("City *"),
-                                  SizedBox(height:1.h),
-                                  Consumer<TeamProvider>(
-                                      builder: (context, team, child) {
-                                        return InkWell(
-                                          onTap: (){
-                                            FocusScopeNode currentFocus = FocusScope.of(context);
-                                            if (!currentFocus.hasPrimaryFocus) {
-                                              currentFocus.unfocus();
-                                            }
-                                            if(team.stateId == ""){
-                                              Dialogs.snackbar("Choose your state", context, isError: true);
-                                            } else {
-                                              openCitySheet(team.stateId);
-                                            }
-                                          },
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w,
-                                                vertical: 1.2.h
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Street name *",
+                                        style: fontRegular.copyWith(
+                                            fontSize: 9.sp,
+                                            color: AppColor.textColor
+                                        ),),
+                                      SizedBox(height: 1.h),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.lightColor,
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
+                                        child: Center(
+                                          child: TextFormField(
+                                            controller: streetController,
+                                            cursorColor: AppColor.secondaryColor,
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Enter street name';
+                                              }
+                                              return null;
+                                            },
+                                            style: fontRegular.copyWith(
+                                                fontSize: 10.sp,
+                                                color: AppColor.textColor
                                             ),
-                                            decoration: BoxDecoration(
-                                              color: AppColor.lightColor,
-                                              borderRadius: BorderRadius.circular(30.0),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(team.stateBasedCity == "" ? "Choose city" : team.stateBasedCity,
-                                                  style: fontRegular.copyWith(
-                                                      color: AppColor.textColor
-                                                  ),),
-                                                const Spacer(),
-                                                const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
-                                              ],
-                                            ),
+                                            keyboardType: TextInputType.text,
+                                            textInputAction: TextInputAction.next,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              border: InputBorder.none,
+                                              hintText: "Ex: Sakthi nagar",
+                                              hintStyle: fontRegular.copyWith(
+                                                  fontSize: 10.sp,
+                                                  color: AppColor.textMildColor
+                                              ),),
                                           ),
-                                        );
-                                      }
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                  SizedBox(height: 2.h),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const FieldHeading("State *"),
+                                      SizedBox(height:1.h),
+                                      Consumer<TeamProvider>(
+                                          builder: (context, team, child) {
+                                            return InkWell(
+                                              onTap: (){
+                                                FocusScopeNode currentFocus = FocusScope.of(context);
+                                                if (!currentFocus.hasPrimaryFocus) {
+                                                  currentFocus.unfocus();
+                                                }
+                                                getStateList();
+                                                openStateSheet();
+                                              },
+                                              child: Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                    vertical: 1.2.h
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.lightColor,
+                                                  borderRadius: BorderRadius.circular(30.0),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(team.state == "" ? "Choose state" : team.state,
+                                                      style: fontRegular.copyWith(
+                                                          color: AppColor.textColor
+                                                      ),),
+                                                    const Spacer(),
+                                                    const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      const FieldHeading("City *"),
+                                      SizedBox(height:1.h),
+                                      Consumer<TeamProvider>(
+                                          builder: (context, team, child) {
+                                            return InkWell(
+                                              onTap: (){
+                                                FocusScopeNode currentFocus = FocusScope.of(context);
+                                                if (!currentFocus.hasPrimaryFocus) {
+                                                  currentFocus.unfocus();
+                                                }
+                                                if(team.stateId == ""){
+                                                  Dialogs.snackbar("Choose your state", context, isError: true);
+                                                } else {
+                                                  openCitySheet(team.stateId);
+                                                }
+                                              },
+                                              child: Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5.w,
+                                                    vertical: 1.2.h
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.lightColor,
+                                                  borderRadius: BorderRadius.circular(30.0),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(team.stateBasedCity == "" ? "Choose city" : team.stateBasedCity,
+                                                      style: fontRegular.copyWith(
+                                                          color: AppColor.textColor
+                                                      ),),
+                                                    const Spacer(),
+                                                    const Icon(Icons.arrow_drop_down_sharp, color: AppColor.textColor,)
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Pin Code *",
+                                        style: fontRegular.copyWith(
+                                            fontSize: 9.sp,
+                                            color: AppColor.textColor
+                                        ),),
+                                      SizedBox(height: 1.h),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.lightColor,
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
+                                        child: Center(
+                                          child: TextFormField(
+                                            controller: pinCodeController,
+                                            cursorColor: AppColor.secondaryColor,
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(6),
+                                              FilteringTextInputFormatter.digitsOnly
+                                              // Restrict input to only numbers
+                                            ],
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Enter pincode';
+                                              }
+                                              return null;
+                                            },
+                                            style: fontRegular.copyWith(
+                                                fontSize: 10.sp,
+                                                color: AppColor.textColor
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            textInputAction: TextInputAction.done,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              border: InputBorder.none,
+                                              hintText: "Ex: 630606",
+                                              hintStyle: fontRegular.copyWith(
+                                                  fontSize: 10.sp,
+                                                  color: AppColor.textMildColor
+                                              ),),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  loading
+                                      ? const Center(
+                                    child: CircularProgressIndicator(),)
+                                      : Bounceable(
+                                      onTap: () {
+                                        validate(team.stateId, team.stateBasedCityId);
+                                      },
+                                      child: const CustomButton(
+                                          AppColor.textColor, 'Save',
+                                          AppColor.lightColor)),
+                                  SizedBox(height: 2.h),
                                 ],
                               ),
-                              SizedBox(height: 4.h),
-                              loading
-                                  ? const Center(
-                                child: CircularProgressIndicator(),)
-                                  : Bounceable(
-                                  onTap: () {
-                                    validate();
-                                  },
-                                  child: const CustomButton(
-                                      AppColor.textColor, 'Save',
-                                      AppColor.lightColor)),
-                              SizedBox(height: 2.h),
-                            ],
-                          ),
                         ),
-                      )
+                      );
+                            }
+                          )
                   ),
                 ],
               ),
@@ -648,20 +648,24 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  validate() {
+  validate(String stateId, String stateBasedCityId) {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        loading = true;
-      });
-      String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
-      String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
-      Provider.of<ProfileProvider>(context, listen: false).saveGroundAddress(
-          streetController.text.toString(), subLocality.toString(), locality.toString(),
-          postalCode.toString(), lat.toString(), long.toString(), houseController.text.toString(), stateId, cityId);
-      setState(() {
-        loading = false;
-      });
-      Navigator.pop(context);
+      if(stateId == "" || stateBasedCityId == ""){
+        Dialogs.snackbar("Choose both State & City", context, isError: true);
+      } else {
+        setState(() {
+          loading = true;
+        });
+        String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
+        String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
+        Provider.of<ProfileProvider>(context, listen: false).saveGroundAddress(
+            streetController.text.toString(), subLocality.toString(), locality.toString(),
+            postalCode.toString(), lat.toString(), long.toString(), houseController.text.toString(), stateId, cityId);
+        setState(() {
+          loading = false;
+        });
+        Navigator.pop(context);
+      }
     }
   }
 }

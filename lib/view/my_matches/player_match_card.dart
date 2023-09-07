@@ -53,7 +53,7 @@ class PlayerMatchCard extends StatelessWidget {
                   Text("#$matchNumber",
                     style: fontBold.copyWith(
                         fontSize: 9.sp,
-                        color: AppColor.textColor
+                        color: AppColor.matchNumberColor
                     ),),
                   SizedBox(height:0.5.h),
                   VersusText(teamA, teamB == "" ? "TBA" : teamB),

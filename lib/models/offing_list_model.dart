@@ -42,6 +42,7 @@ class OffingsList {
   dynamic groundName;
   dynamic organizerName;
   dynamic groundImage;
+  dynamic matchNumber;
 
   OffingsList(
       {matchId,
@@ -55,7 +56,7 @@ class OffingsList {
         stateId,
         cityName,
         stateName,
-      groundName, organizerName, groundImage});
+      groundName, organizerName, groundImage, matchNumber});
 
   OffingsList.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
@@ -72,6 +73,7 @@ class OffingsList {
     groundName = json['ground_name'];
     organizerName = json['organizer_name'];
     groundImage = json['ground_image'];
+    matchNumber = json['match_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -91,6 +93,7 @@ class OffingsList {
     data['organizer_name'] = organizerName;
     data['ground_name'] = groundName;
     data['ground_image'] = groundImage;
+    data['match_number'] = matchNumber;
     return data;
   }
 }

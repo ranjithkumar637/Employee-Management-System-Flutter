@@ -57,6 +57,8 @@ class ProfileModel {
 class OrganizerDetails {
   dynamic id;
   dynamic name;
+  dynamic progressValue;
+  dynamic profilePhoto;
   dynamic email;
   dynamic cityId;
   dynamic city;
@@ -91,6 +93,8 @@ class OrganizerDetails {
   OrganizerDetails(
       {id,
         name,
+        progressValue,
+        profilePhoto,
         email,
         cityId,
         city,
@@ -125,6 +129,8 @@ class OrganizerDetails {
   OrganizerDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    progressValue = json['progress_bar'];
+    profilePhoto = json['profile_photo'];
     email = json['email'];
     cityId = json['city_id'];
     city = json['city'];
@@ -161,6 +167,8 @@ class OrganizerDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id;
     data['name'] = name;
+    data['progress_bar'] = progressValue;
+    data['profile_photo'] = profilePhoto;
     data['email'] = email;
     data['city_id'] = cityId;
     data['city'] = city;

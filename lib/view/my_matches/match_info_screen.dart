@@ -111,7 +111,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      height: moveToTop ? 10.h : 32.h,
+                      height: moveToTop ? 10.h : 28.h,
                       child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
                     ),
                     Positioned(
@@ -148,8 +148,8 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                           ClipOval(
                               child: CachedNetworkImage(
                                 imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.matchDetails.teamALogo}",
-                                height: 11.h,
-                                width: 24.w,
+                                height: 10.h,
+                                width: 22.w,
                                 fit: BoxFit.cover,
                                 errorWidget:(context, url, error) =>
                                     ClipOval(
@@ -191,8 +191,8 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                           ClipOval(
                               child: CachedNetworkImage(
                                 imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}${match.matchDetails.teamBLogo}",
-                                height: 11.h,
-                                width: 24.w,
+                                height: 10.h,
+                                width: 22.w,
                                 fit: BoxFit.cover,
                                 errorWidget:(context, url, error) =>
                                     ClipOval(

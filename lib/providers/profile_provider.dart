@@ -90,10 +90,12 @@ class ProfileProvider extends ChangeNotifier{
 
     void saveMultiGroundImages(List<XFile> images) {
     print(images.length);
+    newGroundImages = [];
       for (int i = 0; i < images.length; i++) {
         newGroundImages.add(images[i].path.toString());
       }
       notifyListeners();
+    print("gallery image length while adding ${images.length}");
     }
 
     removeMultiGroundImage(){
@@ -160,6 +162,15 @@ class ProfileProvider extends ChangeNotifier{
     matches = true;
     notifyListeners();
   }
+
+    resetEverything(){
+      name = "";
+      mobile = "";
+      email = "";
+      bookings = false;
+      matches = false;
+      notifyListeners();
+    }
 
   List<SlotList> slotList = [];
 
@@ -556,58 +567,76 @@ class ProfileProvider extends ChangeNotifier{
 
   Future<ProfileUpdateModel> updateProfile(String groundName, String groundContact, String name, String dob, String location, String companyName,
       String latitude, String longitude, String address, String houseNo, String pinCode,
-      String streetName, String cityId, String stateId, String groundCityId, String groundStateId, String organizerPinCode) async {
+      String streetName, String cityId, String stateId, String groundCityId, String groundStateId, String organizerPinCode, List<String> profilePath) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
     print("$groundName $groundContact $name $dob $location $companyName");
     print("$latitude $longitude $address $houseNo $pinCode $streetName");
     print("$cityId $stateId $groundCityId $groundStateId $organizerPinCode");
-    var body = jsonEncode({
-      'ground_name': groundName,
-      'ground_contact_number': groundContact,
-      'latitude': latitude,
-      'company_name': companyName,
-      'longitude': longitude,
-      'address': address,
-      'house_no': houseNo,
-      'pincode': pinCode,
-      'street_name': streetName,
-      'name': name,
-      'dob': dob,
-      'location': location == "" ? "" : int.parse(location),
-      'city_id': cityId,
-      'state_id': stateId,
-      'ground_city_id': groundCityId,
-      'ground_state_id': groundStateId,
-      'org_pincode': organizerPinCode,
+
+    var uri = Uri.parse(AppConstants.organizerProfileUpdate);
+    final request = http.MultipartRequest("POST", uri);
+    request.headers.addAll({
+      'Authorization': 'Bearer $accToken',
+      'Charset': 'utf-8',
+      'Accept': 'application/json',
     });
-    try {
-      final response = await http.post(
-        Uri.parse(AppConstants.organizerProfileUpdate),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $accToken',
-        },
-        body: body,
-      );
-      var decodedJson = json.decode(response.body);
-      print(decodedJson);
-      if (response.statusCode == 200) {
-        profileUpdateModel = ProfileUpdateModel.fromJson(decodedJson);
-        notifyListeners();
-      } else {
-        throw const HttpException('Failed to load data');
+
+    List<http.MultipartFile> newList = [];
+
+    for (var img in profilePath) {
+      print(img
+          .split('/')
+          .last);
+      if (img != "") {
+        var multipartFile = await http.MultipartFile.fromPath(
+          'profile_photo',
+          img,
+          filename: img
+              .split('/')
+              .last,
+        );
+        newList.add(multipartFile);
       }
-    } on SocketException {
-      print('No internet connection');
-    } on HttpException {
-      print('Failed to load data');
-    } on FormatException {
-      print('organizer update profile - Invalid data format');
-    } catch (e) {
-      print(e);
     }
+
+    request.files.addAll(newList);
+    request.fields['ground_name'] = groundName;
+    request.fields['ground_contact_number'] = groundContact;
+    request.fields['latitude'] = latitude;
+    request.fields['company_name'] = companyName;
+    request.fields['longitude'] = longitude;
+    request.fields['address'] = address;
+    request.fields['pincode'] = pinCode;
+    request.fields['house_no'] = houseNo;
+    request.fields['street_name'] = streetName;
+    request.fields['state_id'] = stateId;
+    request.fields['city_id'] = cityId;
+
+    request.fields['name'] = name;
+    request.fields['dob'] = dob;
+    request.fields['location'] = location.toString() == "" ? "" : int.parse(location).toString();
+    request.fields['ground_city_id'] = groundCityId;
+    request.fields['ground_state_id'] = groundStateId;
+    request.fields['org_pincode'] = organizerPinCode;
+
+    final res = await request.send();
+    final reStr = await res.stream.bytesToString();
+    var data = json.decode(reStr);
+
+    print(res.statusCode);
+
+    print(reStr);
+
+    if (res.statusCode == 200) {
+      profileUpdateModel = ProfileUpdateModel.fromJson(data);
+      notifyListeners();
+    } else {
+      print(
+          "Something Went Wrong. Please try again. : update organizer details api ${res.statusCode}");
+    }
+    notifyListeners();
     return profileUpdateModel;
   }
 
@@ -740,10 +769,6 @@ class ProfileProvider extends ChangeNotifier{
       print(
           "Something Went Wrong. Please try again. : update ground details api ${res.statusCode}");
     }
-    // }
-    // on FileSystemException {
-    //   // throw const FileSystemException('Failed to send request');
-    // }
     notifyListeners();
     return responseModel;
   }

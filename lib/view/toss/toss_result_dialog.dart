@@ -159,7 +159,7 @@ class _TossResultDialogState extends State<TossResultDialog> {
             ],
           ),
           SizedBox(height: 4.h),
-          Text("Choose to?",
+          Text("Elected to?",
             style: fontMedium.copyWith(
                 fontSize: 14.sp,
                 color: AppColor.textColor

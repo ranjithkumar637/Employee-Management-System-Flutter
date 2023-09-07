@@ -84,6 +84,7 @@ class _CreateTeamState extends State<CreateTeam> {
   openCameraStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
+      imageQuality: 50,
     );
     if (pickedFile != null) {
       setState(() {
@@ -95,6 +96,7 @@ class _CreateTeamState extends State<CreateTeam> {
 
   openGalleryStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
+      imageQuality: 50,
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {

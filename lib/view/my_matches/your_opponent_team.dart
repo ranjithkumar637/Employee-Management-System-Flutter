@@ -91,7 +91,7 @@ class _YourOpponentTeamState extends State<YourOpponentTeam> {
                 ),
                 child: loading
                     ? const Loader()
-                    : match.matchDetails.teamBName.toString() == "null"
+                    : match.matchDetails.teamBName.toString() == "null" || match.matchDetails.teamBName.toString() == ""
                   ? Center(
                     child: Text("To be Announced",
                 style: fontMedium.copyWith(

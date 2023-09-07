@@ -195,7 +195,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               child: Center(
                 child: RichText(
                   text: TextSpan(
-                    text: "Upcoming Matches in Next ",style: fontRegular.copyWith(
+                    text: "The next match scheduled at ground name is SET to begin in another ",style: fontRegular.copyWith(
                     fontSize: 11.sp,color: AppColor.hintColour,
                   ),
                     children: <TextSpan>[
@@ -337,34 +337,41 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
 
                                     ],
                                   ),
-                                  RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                        text: "${todayMatches[index].teamAData?.teamName.toString()}\n",
-                                        style: fontBold.copyWith(
-                                          color: AppColor.textColor,
-                                          fontSize: 11.sp,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'vs\n',
-                                              style:
-                                              fontMedium.copyWith(
-                                                color: AppColor
-                                                    .redColor,
-                                                fontSize: 10.sp,
-                                              )),
-                                          TextSpan(
-                                            text: todayMatches[index].teamBData?.teamName.toString() == ""
-                                                ? "TBA"
-                                                : todayMatches[index].teamBData?.teamName.toString(),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 1.w,
+                                      ),
+                                      child: RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                            text: "${todayMatches[index].teamAData?.teamName.toString()}\n",
                                             style: fontBold.copyWith(
-                                              color:
-                                              AppColor.textColor,
+                                              color: AppColor.textColor,
                                               fontSize: 11.sp,
                                             ),
-                                          )
-                                        ]),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text: 'vs\n',
+                                                  style:
+                                                  fontMedium.copyWith(
+                                                    color: AppColor
+                                                        .redColor,
+                                                    fontSize: 10.sp,
+                                                  )),
+                                              TextSpan(
+                                                text: todayMatches[index].teamBData?.teamName.toString() == ""
+                                                    ? "TBA"
+                                                    : todayMatches[index].teamBData?.teamName.toString(),
+                                                style: fontBold.copyWith(
+                                                  color:
+                                                  AppColor.textColor,
+                                                  fontSize: 11.sp,
+                                                ),
+                                              )
+                                            ]),
+                                      ),
+                                    ),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -424,6 +431,13 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                       top: 1.2.h, bottom: 1.5.h),
                               child: Row(
                                 children: [
+                                  Expanded(
+                                    child: Text("#${todayMatches[index].matchNumber.toString()}",
+                                      style: fontBold.copyWith(
+                                          fontSize: 9.5.sp,
+                                          color: const Color(0xff6495ED)
+                                      ),),
+                                  ),
                                   Expanded(
                                     child: Row(
                                       children: [

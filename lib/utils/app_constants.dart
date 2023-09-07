@@ -7,6 +7,7 @@ class AppConstants {
   // static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
 
   static const String imageBaseUrlGallery = 'storage/app/public/ground/';
+  static const String imageBaseUrlProfile = 'storage/app/public/profile/';
 
   static const String imageBaseUrlCaptain = 'storage/app/public/captain/';
 
@@ -87,6 +88,9 @@ class AppConstants {
 
   static const String matchInfo  = '$baseUrl/organizer/match-info';
   static const String getSquadOfMatch = '$baseUrl/match-players-list';
+
+  static const String resendOtpLogin = '$baseUrl/login-resend-otp';
+  static const String resendOtpRegister = '$baseUrl/register-resend-otp';
 
 
 

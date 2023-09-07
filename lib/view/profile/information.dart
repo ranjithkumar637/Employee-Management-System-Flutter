@@ -115,7 +115,7 @@ class _InformationState extends State<Information> {
     // } else {
       mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;
     // }
-    print(gallery);
+    print("gallery image length ${gallery.length}");
     if(profile.mainImg == "" && mainImg.isEmpty){
       Dialogs.snackbar("Upload main ground image", context, isError: true);
     }

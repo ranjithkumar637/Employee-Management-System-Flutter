@@ -167,7 +167,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2000),
-                              lastDate: DateTime.now(),
+                              lastDate: DateTime.now().add(const Duration(days: 7)),
                               builder: (context, child) {
                                 return Theme(
                                   data: Theme.of(context).copyWith(
@@ -319,15 +319,20 @@ class _MatchHistoryState extends State<MatchHistory> {
                           final match = matchHistoryList[index];
                           return Bounceable(
                               onTap: (){
-                                Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
-                                Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) {
-                                        return MatchInfoScreen(matchId: matchHistoryList[index].id.toString());
-                                      }),
-                                );
+                                if(match.matchStatus.toString() == "Abandoned" || match.matchStatus.toString() == "Cancelled"){
+
+                                } else {
+                                  Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
+                                  Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) {
+                                          return MatchInfoScreen(matchId: matchHistoryList[index].id.toString());
+                                        }),
+                                  );
+                                }
+
                               },
                               child:  MatchHistoryCard(match)
                           );

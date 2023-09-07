@@ -47,26 +47,33 @@ class OffingCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                      text: '${offing.teamAName}\n',
-                      style: fontBold.copyWith(
-                        color: AppColor.textColor,
-                        fontSize: 11.sp,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(text: 'vs\n',
-                            style: fontMedium.copyWith(
-                              color: AppColor.redColor,
-                              fontSize: 11.sp,
-                            )),
-                        TextSpan(text: offing.teamBName == "" ? "TBA" : offing.teamBName,
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 1.w,
+                    ),
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          text: '${offing.teamAName}\n',
                           style: fontBold.copyWith(
                             color: AppColor.textColor,
                             fontSize: 11.sp,
-                          ),)
-                      ]
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(text: 'vs\n',
+                                style: fontMedium.copyWith(
+                                  color: AppColor.redColor,
+                                  fontSize: 11.sp,
+                                )),
+                            TextSpan(text: offing.teamBName == "" ? "TBA" : offing.teamBName,
+                              style: fontBold.copyWith(
+                                color: AppColor.textColor,
+                                fontSize: 11.sp,
+                              ),)
+                          ]
+                      ),
+                    ),
                   ),
                 ),
                 ClipOval(

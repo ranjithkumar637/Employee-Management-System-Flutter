@@ -19,4 +19,9 @@ class NavigationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  resetEverything(){
+    currentIndex = 0;
+    notifyListeners();
+  }
+
 }

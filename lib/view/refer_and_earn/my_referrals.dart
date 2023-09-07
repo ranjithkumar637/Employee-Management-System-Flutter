@@ -139,8 +139,8 @@ class ReferralsCard extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 4.w,
-                    vertical: 2.h,
+                    horizontal: 3.w,
+                    vertical: 1.6.h,
                   ),
                   decoration: const BoxDecoration(
                     color: AppColor.textColor,
@@ -151,33 +151,27 @@ class ReferralsCard extends StatelessWidget {
                        text: 'You got',
                        style: fontRegular.copyWith(
                           color: AppColor.lightColor,
-                          fontSize: 7.sp,
+                          fontSize: 6.5.sp,
                          ),
                        children: <TextSpan>[
                            TextSpan(text: '\n$points Points',
                             style: fontRegular.copyWith(
                             color: AppColor.primaryColor,
-                            fontSize: 7.sp,
+                            fontSize: 6.5.sp,
                           ),
                       )
                       ]
                      ),
                     ),
                 ),
-                SizedBox(width: 3.w),
+                SizedBox(width: 1.5.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Invited",
-                      style: fontRegular.copyWith(
-                          fontSize: 10.sp,
-                          color: AppColor.textColor
-                      ),),
-                    Text(referral,
+                    Text("$referral \njoined using\nyour code",
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
                       style: fontMedium.copyWith(
-                          fontSize: 10.sp,
+                          fontSize: 8.5.sp,
                           color: AppColor.textColor
                       ),),
                   ],

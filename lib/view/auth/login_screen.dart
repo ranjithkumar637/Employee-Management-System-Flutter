@@ -53,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: AppColor.bgColor,
           body: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.always,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -127,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (value!.isEmpty) {
                                   return 'Enter mobile number';
                                 } else if (value.length < 10) {
-                                  return 'Mobile Number must be 10 digits';
+                                  return 'Mobile Number must be 10 digit';
                                 }
                                 return null;
                               },

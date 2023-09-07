@@ -82,6 +82,15 @@ class TeamProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  resetEverything(){
+    state = "";
+    stateId = "";
+    stateBasedCity = "";
+    stateBasedCityId = "";
+    locationFilterCity = "";
+    notifyListeners();
+  }
+
   TNCityListModel tnCityListModel = TNCityListModel();
   List<TnCity> tnCityList = [];
 

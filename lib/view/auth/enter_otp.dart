@@ -37,11 +37,19 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
   bool enableButton = false;
   String otp = "";
   bool incomplete = true;
+  String yourOtp = "";
+
+  setOtp(String otp){
+    setState(() {
+      yourOtp = otp;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     startTimer();
+    setOtp(widget.otp);
   }
 
   void startTimer() {
@@ -51,9 +59,14 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
           _seconds--;
         } else {
           _timer!.cancel();
+          onTimerEnd();
         }
       });
     });
+  }
+
+  onTimerEnd(){
+    print('Timer Ended!');
   }
 
   String formatTime(int seconds) {
@@ -110,7 +123,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: 15.w,
               ),
-              child: Text("Please enter your the 4 digit code (${widget.otp}) sent to ${widget.mobileNumber}",
+              child: Text("Please enter your the 4 digit code sent to ${widget.mobileNumber}",
                 textAlign: TextAlign.center,
                 style: fontRegular.copyWith(
                     color: AppColor.textColor,
@@ -179,12 +192,16 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                   children: <TextSpan>[
                     TextSpan(text: ' Resend',
                         style: fontSemiBold.copyWith(
-                          color: AppColor.textColor,
+                          color: _seconds > 0 ? AppColor.textMildColor : AppColor.textColor,
                           fontSize: 11.sp,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            // Navigator.pushNamed(context, 'register_screen');
+                            if(_seconds > 0){
+
+                            } else {
+                              resendOtp(widget.userTempId);
+                            }
                           }
                     )
                   ]
@@ -227,6 +244,44 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
       ),
     );
   }
+
+  resendOtp(String id){
+    if(widget.login){
+      AuthProvider().resendOtpLogin(id)
+          .then((value) {
+        if(value.status == true){
+          Dialogs.snackbar(value.message.toString(), context, isError: false);
+          setOtp(value.otp.toString());
+          setState(() {
+            _seconds = 120;
+          });
+          startTimer();
+        } else if(value.status == false){
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
+        } else {
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
+        }
+      });
+    }
+    else if(widget.register){
+      AuthProvider().resendOtpRegister(id)
+          .then((value) {
+        if(value.status == true){
+          Dialogs.snackbar(value.message.toString(), context, isError: false);
+          setOtp(value.otp.toString());
+          setState(() {
+            _seconds = 120;
+          });
+          startTimer();
+        } else if(value.status == false){
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
+        } else {
+          Dialogs.snackbar(value.message.toString(), context, isError: true);
+        }
+      });
+    }
+  }
+
 
   verifyLogin(String? userId) async {
     if(otp == ""){

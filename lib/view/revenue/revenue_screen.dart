@@ -92,91 +92,92 @@ class _RevenueScreenState extends State<RevenueScreen> {
               return RevenueReferDataBox(profile.profileModel.totalRevenue.toString(), 2);
             }
           ),
-          revenueTeamList.isEmpty
-              ? const SizedBox()
-              : Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 5.w,
-              vertical: 2.h,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                      onTap: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                useMaterial3: true,
-                                colorScheme: const ColorScheme.light(
-                                  primary: AppColor.primaryColor,
-                                  onPrimary: AppColor.textColor,
-                                  onSurface: AppColor.textColor,
-                                ),
-                                textButtonTheme: TextButtonThemeData(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: AppColor.secondaryColor, // button text color
-                                  ),
-                                ),
-                              ),
-                              child: child!,
-                            );
-                          },
-                        );
-
-                        if (picked != null) {
-                          setState(() {
-                            firstDate = DateFormat("dd-MM-yyyy").format(picked);
-                          });
-                        }
-                      },
-                      child: DateFilterContainer(firstDate.toString() == "null" || firstDate.toString() == "" ? "Start Date" : firstDate.toString())),
-                ),
-                SizedBox(width: 3.w),
-                Expanded(
-                  child: GestureDetector(
-                      onTap: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                useMaterial3: true,
-                                colorScheme: const ColorScheme.light(
-                                  primary: AppColor.primaryColor,
-                                  onPrimary: AppColor.textColor,
-                                  onSurface: AppColor.textColor,
-                                ),
-                                textButtonTheme: TextButtonThemeData(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: AppColor.secondaryColor, // button text color
-                                  ),
-                                ),
-                              ),
-                              child: child!,
-                            );
-                          },
-                        );
-
-                        if (picked != null) {
-                          setState(() {
-                            lastDate = DateFormat("dd-MM-yyyy").format(picked);
-                          });
-                        }
-                      },
-                      child: DateFilterContainer(lastDate.toString() == "null" || lastDate.toString() == "" ? "End Date" : lastDate.toString())),
-                ),
-              ],
-            ),
-          ),
+          SizedBox(height: 2.h),
+          // revenueTeamList.isEmpty
+          //     ? const SizedBox()
+          //     : Padding(
+          //   padding: EdgeInsets.symmetric(
+          //     horizontal: 5.w,
+          //     vertical: 2.h,
+          //   ),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //         child: GestureDetector(
+          //             onTap: () async {
+          //               final DateTime? picked = await showDatePicker(
+          //                 context: context,
+          //                 initialDate: DateTime.now(),
+          //                 firstDate: DateTime(2000),
+          //                 lastDate: DateTime.now(),
+          //                 builder: (context, child) {
+          //                   return Theme(
+          //                     data: Theme.of(context).copyWith(
+          //                       useMaterial3: true,
+          //                       colorScheme: const ColorScheme.light(
+          //                         primary: AppColor.primaryColor,
+          //                         onPrimary: AppColor.textColor,
+          //                         onSurface: AppColor.textColor,
+          //                       ),
+          //                       textButtonTheme: TextButtonThemeData(
+          //                         style: TextButton.styleFrom(
+          //                           foregroundColor: AppColor.secondaryColor, // button text color
+          //                         ),
+          //                       ),
+          //                     ),
+          //                     child: child!,
+          //                   );
+          //                 },
+          //               );
+          //
+          //               if (picked != null) {
+          //                 setState(() {
+          //                   firstDate = DateFormat("dd-MM-yyyy").format(picked);
+          //                 });
+          //               }
+          //             },
+          //             child: DateFilterContainer(firstDate.toString() == "null" || firstDate.toString() == "" ? "Start Date" : firstDate.toString())),
+          //       ),
+          //       SizedBox(width: 3.w),
+          //       Expanded(
+          //         child: GestureDetector(
+          //             onTap: () async {
+          //               final DateTime? picked = await showDatePicker(
+          //                 context: context,
+          //                 initialDate: DateTime.now(),
+          //                 firstDate: DateTime(2000),
+          //                 lastDate: DateTime.now(),
+          //                 builder: (context, child) {
+          //                   return Theme(
+          //                     data: Theme.of(context).copyWith(
+          //                       useMaterial3: true,
+          //                       colorScheme: const ColorScheme.light(
+          //                         primary: AppColor.primaryColor,
+          //                         onPrimary: AppColor.textColor,
+          //                         onSurface: AppColor.textColor,
+          //                       ),
+          //                       textButtonTheme: TextButtonThemeData(
+          //                         style: TextButton.styleFrom(
+          //                           foregroundColor: AppColor.secondaryColor, // button text color
+          //                         ),
+          //                       ),
+          //                     ),
+          //                     child: child!,
+          //                   );
+          //                 },
+          //               );
+          //
+          //               if (picked != null) {
+          //                 setState(() {
+          //                   lastDate = DateFormat("dd-MM-yyyy").format(picked);
+          //                 });
+          //               }
+          //             },
+          //             child: DateFilterContainer(lastDate.toString() == "null" || lastDate.toString() == "" ? "End Date" : lastDate.toString())),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Expanded(
             child: revenueTeamList.isEmpty
                 ? Center(

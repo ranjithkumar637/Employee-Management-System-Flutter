@@ -40,6 +40,7 @@ class _AboutState extends State<About> {
 
   openCameraStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
+      imageQuality: 50,
       source: ImageSource.camera,
     );
     if (pickedFile != null) {
@@ -54,6 +55,7 @@ class _AboutState extends State<About> {
 
   openGalleryStart() async {
     XFile? pickedFile = await ImagePicker().pickImage(
+      imageQuality: 50,
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {

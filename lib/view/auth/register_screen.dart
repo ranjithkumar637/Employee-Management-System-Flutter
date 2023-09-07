@@ -105,6 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(height: 2.h),
               Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.always,
                 child: Column(
                   children: [
                     Padding(
@@ -195,7 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   if (value!.isEmpty) {
                                     return 'Enter mobile number';
                                   } else if (value.length < 10) {
-                                    return 'Mobile Number must be 10 digits';
+                                    return 'Mobile Number must be 10 digit';
                                   }
                                   return null;
                                 },
@@ -277,7 +278,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
-                                  suffixIcon: !hasValue ? const SizedBox() : Icon(isValid ? Icons.done_all : Icons.error_outline, color: isValid ? Colors.green : Colors.red, size: 5.w,),
+                                  // suffixIcon: !hasValue ? const SizedBox() : Icon(isValid ? Icons.done_all : Icons.error_outline, color: isValid ? Colors.green : Colors.red, size: 5.w,),
                                   isDense: true,
                                   border: InputBorder.none,
                                   hintText: "johndoe@gmail.com",

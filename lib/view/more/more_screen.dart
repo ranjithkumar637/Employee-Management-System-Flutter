@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -12,6 +13,8 @@ import 'package:sizer/sizer.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/navigation_provider.dart';
 import '../../providers/profile_provider.dart';
+import '../../providers/team_provider.dart';
+import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
@@ -32,6 +35,11 @@ class _MoreScreenState extends State<MoreScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
     });
+  }
+
+  double calculateProgressValue(String progress){
+    double value = int.parse(progress) / 100;
+    return value;
   }
 
   @override
@@ -77,16 +85,17 @@ class _MoreScreenState extends State<MoreScreen> {
                     builder: (context, profile, child) {
                       return Row(
                         children: [
-                          Container(
-                            height: 12.h,
-                            width: 24.w,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppColor.imageBorderColor, width: 3.0),
-                                color: Colors.white,
-                                image: const DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage("https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1680345590~exp=1680346190~hmac=eb31a40018f2115d71ee38e25576a27bf9933b85d832af6bb6ece771dc2c4d42"))
+                          ClipOval(
+                            child: CachedNetworkImage(
+                              height: 12.h,
+                              width: 24.w,
+                              fit: BoxFit.cover,
+                              imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${profile.organizerDetails.profilePhoto.toString()}",
+                              errorWidget: (context, url, widget){
+                                return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
+                                  width: 28.w,
+                                  fit: BoxFit.cover,);
+                              },
                             ),
                           ),
                           SizedBox(width: 4.w),
@@ -136,17 +145,17 @@ class _MoreScreenState extends State<MoreScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text("66%",
+                                      Text("${profile.organizerDetails.progressValue}%",
                                         style: fontRegular.copyWith(
                                             fontSize: 9.sp,
                                             color: AppColor.lightColor
                                         ),),
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(3.0),
-                                        child: const LinearProgressIndicator(
-                                          color: Color(0xffF9D700),
+                                        child: LinearProgressIndicator(
+                                          color: const Color(0xffF9D700),
                                           backgroundColor: AppColor.lightColor,
-                                          value: 0.66,
+                                          value: double.parse(calculateProgressValue(profile.organizerDetails.progressValue.toString()).toString()),
                                         ),
                                       ),
                                     ],
@@ -241,6 +250,9 @@ class _MoreScreenState extends State<MoreScreen> {
                             padding: EdgeInsets.symmetric(
                               horizontal: 3.w,
                               vertical: 1.2.h,
+                            ),
+                            margin: EdgeInsets.only(
+                              top: 2.h
                             ),
                             decoration: BoxDecoration(
                               color: AppColor.redColor,
@@ -418,6 +430,9 @@ class _MoreScreenState extends State<MoreScreen> {
                                     // Snackbar.hideSnackBar(context);
                                   });
                                   Dialogs.snackbar("You've been logged out. Please log back in.", context, isError: false);
+                                  Provider.of<NavigationProvider>(context, listen: false).resetEverything();
+                                  Provider.of<TeamProvider>(context, listen: false).resetEverything();
+                                  Provider.of<ProfileProvider>(context, listen: false).resetEverything();
                                   SharedPreferences preferences =
                                   await SharedPreferences.getInstance();
                                   preferences.clear();

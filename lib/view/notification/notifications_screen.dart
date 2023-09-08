@@ -37,6 +37,7 @@ class _NotificationsState extends State<Notifications> {
         return notificationList;
       });
     });
+    Provider.of<ProfileProvider>(context, listen: false).readNotification();
   }
 
   setDelay() async{

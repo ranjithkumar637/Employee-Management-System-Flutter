@@ -195,10 +195,6 @@ class _AddAddressState extends State<AddAddress> {
                                   () => EagerGestureRecognizer(),
                             ),
                           },
-                          myLocationButtonEnabled: true,
-                          myLocationEnabled: true,
-                          zoomControlsEnabled: true,
-                          compassEnabled: false,
                           initialCameraPosition: CameraPosition(
                             target: _latLong,
                             zoom: 17,
@@ -225,6 +221,10 @@ class _AddAddressState extends State<AddAddress> {
                               locating = false;
                             });
                           },
+                          myLocationButtonEnabled: true,
+                          myLocationEnabled: true,
+                          zoomControlsEnabled: true,
+                          compassEnabled: false,
                         ),
                       ),
                       Positioned(

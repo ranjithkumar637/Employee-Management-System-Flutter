@@ -186,8 +186,11 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                 || checkTimePassed(todayMatches.first.teamAData!.bookingSlotStart) < 0
             ? const SizedBox()
             : Container(
-              height: 5.h,
               width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal: 2.w,
+                vertical: 1.h,
+              ),
               decoration: BoxDecoration(
                 color: AppColor.lightColor,
                 borderRadius: BorderRadius.circular(10),
@@ -195,7 +198,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               child: Center(
                 child: RichText(
                   text: TextSpan(
-                    text: "The next match scheduled at ground name is SET to begin in another ",style: fontRegular.copyWith(
+                    text: "The next match scheduled is SET to begin in another ",style: fontRegular.copyWith(
                     fontSize: 11.sp,color: AppColor.hintColour,
                   ),
                     children: <TextSpan>[

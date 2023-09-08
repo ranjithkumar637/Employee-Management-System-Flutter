@@ -59,7 +59,7 @@ class RevenueReferDataBox extends StatelessWidget {
                         color: AppColor.textColor
                     ),),
                   SizedBox(height: 1.h),
-                  Text("${Strings.rupee} $value",
+                  Text(value,
                     style: fontMedium.copyWith(
                         fontSize: 20.sp,
                         color: AppColor.textColor

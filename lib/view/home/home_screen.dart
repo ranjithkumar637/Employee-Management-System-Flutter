@@ -222,7 +222,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   GestureDetector(
                                       onTap:(){
-                                        Navigator.pushNamed(context, "notification_screen");
+                                        Navigator.pushNamed(context, "notification_screen")
+                                        .then((value) {
+                                          Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+                                        });
                                       },
                                       child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.5.w,)),
                                   profile.profileModel.notifyCount.toString() == "0"

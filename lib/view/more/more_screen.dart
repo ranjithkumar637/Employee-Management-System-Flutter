@@ -429,7 +429,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   ).then((value) {
                                     // Snackbar.hideSnackBar(context);
                                   });
-                                  Dialogs.snackbar("You've been logged out. Please log back in.", context, isError: false);
+                                  Dialogs.snackbar("You've been logged out.", context, isError: false);
                                   Provider.of<NavigationProvider>(context, listen: false).resetEverything();
                                   Provider.of<TeamProvider>(context, listen: false).resetEverything();
                                   Provider.of<ProfileProvider>(context, listen: false).resetEverything();

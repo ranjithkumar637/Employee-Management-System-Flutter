@@ -172,6 +172,53 @@ class ProfileProvider extends ChangeNotifier{
       notifyListeners();
     }
 
+    //read notification
+    Future<ResponseModel> readNotification() async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? accToken = preferences.getString("access_token");
+      var body = jsonEncode({
+        'role': "2"
+      });
+      try {
+        final response = await http.post(
+          Uri.parse(AppConstants.readNotification),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accToken',
+          },
+          body: body,
+        ).timeout(const Duration(seconds: 15));
+        var decodedJson = json.decode(response.body);
+        print(decodedJson);
+        print(response.statusCode);
+        if (response.statusCode == 200) {
+          responseModel = ResponseModel.fromJson(decodedJson);
+          notifyListeners();
+        } else if(response.statusCode == 500){
+          print("Internal server error");
+        } else if(response.statusCode == 401){
+          print("Unauthorized");
+        }else if(response.statusCode == 404){
+          print("Data not found");
+        }else if(response.statusCode == 429){
+          print("Too many requests");
+        } else {
+          throw const HttpException('Failed to load data');
+        }
+      } on TimeoutException {
+        print('Request timed out');
+      } on SocketException {
+        print('No internet connection');
+      } on HttpException {
+        print('Failed to load data');
+      } on FormatException {
+        print('read notification- Invalid data format');
+      } catch (e) {
+        print(e);
+      }
+      return responseModel;
+    }
+
   List<SlotList> slotList = [];
 
     NotificationListModel notificationListModel = NotificationListModel();
@@ -550,8 +597,8 @@ class ProfileProvider extends ChangeNotifier{
       print('Failed to load data');
     } on FormatException {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Dialogs.snackbar("No data found. Sign in again to continue", context, isError: true, isLong: true);
-        Navigator.pushNamed(
+        Dialogs.snackbar("Sign in again to continue", context, isError: true, isLong: true);
+        Navigator.pushReplacementNamed(
             context, 'login_screen'
         );
       });

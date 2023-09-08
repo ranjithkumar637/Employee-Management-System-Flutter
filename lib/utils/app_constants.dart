@@ -6,6 +6,9 @@ class AppConstants {
   // static const String baseUrl = "https://11s-staging.rezndus.com/api";
   // static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
 
+  // static const String baseUrl = "https://app.11scricket360.com/api";
+  // static const String imageBaseUrl = 'https://app.11scricket360.com/';
+
   static const String imageBaseUrlGallery = 'storage/app/public/ground/';
   static const String imageBaseUrlProfile = 'storage/app/public/profile/';
 
@@ -92,6 +95,7 @@ class AppConstants {
   static const String resendOtpLogin = '$baseUrl/login-resend-otp';
   static const String resendOtpRegister = '$baseUrl/register-resend-otp';
 
+  static const String readNotification = '$baseUrl/read-notification';
 
 
 

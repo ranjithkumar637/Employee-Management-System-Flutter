@@ -9,6 +9,7 @@ import '../../models/revenue_team_list_model.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
+import '../../utils/strings.dart';
 import '../../utils/styles.dart';
 import '../my_matches/match_history.dart';
 import '../widgets/loader.dart';
@@ -89,7 +90,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
               ? const SizedBox()
           : Consumer<ProfileProvider>(
             builder: (context, profile, child) {
-              return RevenueReferDataBox(profile.profileModel.totalRevenue.toString(), 2);
+              return RevenueReferDataBox("${Strings.rupee} ${profile.profileModel.totalRevenue.toString()}", 2);
             }
           ),
           SizedBox(height: 2.h),

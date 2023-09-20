@@ -25,7 +25,7 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
   bool floodLight = false;
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
-  List<String> pitchTypes = ["Green", "Dry", "Hard"];
+  List<String> pitchTypes = ["Mat", "Turf"];
   String? dropDownValue;
 
   setData(){
@@ -102,7 +102,7 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
                           color: AppColor.textMildColor,
                           fontSize: 10.sp
                       ),),
-                    value: dropDownValue,
+                    value: dropDownValue!.isNotEmpty ? dropDownValue : null,
                     items: pitchTypes
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -115,7 +115,7 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        dropDownValue = newValue!;
+                        dropDownValue = newValue;
                       });
                     },
                   ),

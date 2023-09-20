@@ -9,6 +9,7 @@ import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/navigation_provider.dart';
@@ -320,9 +321,23 @@ class _MoreScreenState extends State<MoreScreen> {
                           color: AppColor.textColor
                       ),),
                     SizedBox(height: 1.h),
-                    const ProfileOption("Terms & conditions"),
+                    InkWell(
+                        onTap: (){
+                          _launchUrl("https://11scricket360.com/terms-conditions/");
+                        },
+                        child: const ProfileOption("Terms & conditions")),
                     const Divider(thickness: 0.7,),
-                    const ProfileOption("Privacy Policy"),
+                    InkWell(
+                        onTap: (){
+                          _launchUrl("https://11scricket360.com/privacy-policy/");
+                        },
+                        child: const ProfileOption("Privacy Policy")),
+                    const Divider(thickness: 0.7,),
+                    InkWell(
+                        onTap: (){
+                          _launchUrl("https://11scricket360.com/cancellation-and-refund-policy/");
+                        },
+                        child: const ProfileOption("Cancellation and Refund Policy")),
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
@@ -338,6 +353,13 @@ class _MoreScreenState extends State<MoreScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
   }
 
   Future<void> openLogoutSheet() {

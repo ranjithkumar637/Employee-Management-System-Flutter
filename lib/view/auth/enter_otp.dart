@@ -123,7 +123,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: 15.w,
               ),
-              child: Text("Please enter your the 4 digit code sent to ${widget.mobileNumber}",
+              child: Text("Please enter the 4 digit code sent to ${widget.mobileNumber}",
                 textAlign: TextAlign.center,
                 style: fontRegular.copyWith(
                     color: AppColor.textColor,

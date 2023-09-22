@@ -67,13 +67,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Positioned(
                         child: Column(
                           children: [
-                            Text("Hello Again!",
+                            Text("Greetings Organizer",
                               style: fontBold.copyWith(
                                   fontSize: 20.sp,
                                   color: AppColor.textColor
                               ),),
                             SizedBox(height: 1.h),
-                            Text("Welcome back. You’ve been missed!",
+                            Text("Let's cricket together",
                               style: fontRegular.copyWith(
                                   fontSize: 11.sp,
                                   color: AppColor.textColor
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
-                                hintText: "9999911111",
+                                hintText: "Enter mobile number",
                                 hintStyle: fontRegular.copyWith(
                                     fontSize: 10.sp,
                                     color: AppColor.textMildColor

@@ -149,7 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   border: InputBorder.none,
-                                  hintText: "John Doe",
+                                  hintText: "Enter your name",
                                   hintStyle: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textMildColor
@@ -209,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   border: InputBorder.none,
-                                  hintText: "9999911111",
+                                  hintText: "Enter mobile number",
                                   hintStyle: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textMildColor
@@ -281,7 +281,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   // suffixIcon: !hasValue ? const SizedBox() : Icon(isValid ? Icons.done_all : Icons.error_outline, color: isValid ? Colors.green : Colors.red, size: 5.w,),
                                   isDense: true,
                                   border: InputBorder.none,
-                                  hintText: "johndoe@gmail.com",
+                                  hintText: "Enter email address",
                                   hintStyle: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textMildColor
@@ -344,7 +344,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   border: InputBorder.none,
-                                  hintText: "Ex: XYZ organizers",
+                                  hintText: "Enter company name",
                                   hintStyle: fontRegular.copyWith(
                                       fontSize: 10.sp,
                                       color: AppColor.textMildColor

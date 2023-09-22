@@ -29,6 +29,7 @@ import '../../utils/styles.dart';
 import '../my_matches/match_info_screen.dart';
 import '../my_matches/upcoming_battle.dart';
 import '../my_matches/upcoming_match_card.dart';
+import '../profile/edit_profile.dart';
 import '../refer_and_earn/refer_and_earn_screen.dart';
 import '../widgets/loader.dart';
 import '../widgets/slot_colour_info.dart';
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: loading
-          ? Center(child: Lottie.asset("assets/wicket.json", width: 100.w))
+          ? const Loader()
           : Consumer<ProfileProvider>(
           builder: (context, profile, child) {
             return Column(
@@ -311,27 +312,50 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                         Consumer<ProfileProvider>(
                             builder: (context, profile, child) {
-                              return profile.organizerDetails.groundApprove == 0
-                                  ? Container(
+                              return profile.organizerDetails.groundApprove != 0
+                                  ? Bounceable(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return const EditProfile();
+                                    }),
+                                  ).then((value) {
+                                    getProfile();
+                                  });
+                                },
+                                    child: Container(
                                 margin: EdgeInsets.symmetric(
-                                  horizontal: 5.w,
+                                    horizontal: 5.w,
                                 ) + EdgeInsets.only(
-                                  top: 2.h
+                                    top: 2.h
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w,
-                                  vertical: 1.2.h,
+                                    horizontal: 3.w,
+                                    vertical: 1.2.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColor.redColor,
-                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: AppColor.redColor.withOpacity(0.6),
+                                    borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                child: Text("Update the ground details to get approved",
-                                  style: fontMedium.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                              )
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text("Update the ground details to get approved",
+                                          style: fontMedium.copyWith(
+                                              fontSize: 10.sp,
+                                              color: AppColor.lightColor
+                                          ),),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: AppColor.lightColor,
+                                      size: 6.w,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                                  )
                                   : const SizedBox();
                             }
                         ),
@@ -484,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ? AppColor.availableSlot : AppColor.textColor
                                                 ),
                                                 child: Center(
-                                                  child: Text("${convertTo12HourFormat(slotsList[index].start.toString())} - ${convertTo12HourFormat(slotsList[index].end.toString())}",
+                                                  child: Text("${convertTo12HourFormat(slotsList[index].start.toString())}}",
                                                     style: fontRegular.copyWith(
                                                         color: AppColor.lightColor,
                                                         fontSize: 8.5.sp

@@ -181,7 +181,7 @@ class _ProfileState extends State<Profile> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         border: InputBorder.none,
-                                        hintText: "Ex: Square out fighters",
+                                        hintText: "Enter ground name",
                                         hintStyle: fontRegular.copyWith(
                                             fontSize: 10.sp,
                                             color: AppColor.hintColour
@@ -240,7 +240,7 @@ class _ProfileState extends State<Profile> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         border: InputBorder.none,
-                                        hintText: "Ex: 9876546576",
+                                        hintText: "Enter mobile number",
                                         hintStyle: fontRegular.copyWith(
                                             fontSize: 10.sp,
                                             color: AppColor.hintColour
@@ -294,7 +294,7 @@ class _ProfileState extends State<Profile> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         border: InputBorder.none,
-                                        hintText: "Ex: ABC Organizers",
+                                        hintText: "Enter company name",
                                         hintStyle: fontRegular.copyWith(
                                             fontSize: 10.sp,
                                             color: AppColor.hintColour
@@ -365,7 +365,7 @@ class _ProfileState extends State<Profile> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         border: InputBorder.none,
-                                        hintText: "Ex: John Doe",
+                                        hintText: "Enter your name",
                                         hintStyle: fontRegular.copyWith(
                                             fontSize: 10.sp,
                                             color: AppColor.hintColour
@@ -424,7 +424,7 @@ class _ProfileState extends State<Profile> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         border: InputBorder.none,
-                                        hintText: "Ex: 9876546576",
+                                        hintText: "Enter mobile number",
                                         hintStyle: fontRegular.copyWith(
                                             fontSize: 10.sp,
                                             color: AppColor.hintColour
@@ -463,7 +463,7 @@ class _ProfileState extends State<Profile> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          date == "" ? "Select Date" : date,
+                                          date == "" ? "Select Date of birth" : date,
                                           style: fontRegular.copyWith(
                                               color: date == "" ? AppColor.textMildColor : AppColor.textColor,
                                               fontSize: 11.sp
@@ -705,7 +705,7 @@ class _ProfileState extends State<Profile> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         border: InputBorder.none,
-                                        hintText: "Ex: 600001",
+                                        hintText: "Enter pin code",
                                         hintStyle: fontRegular.copyWith(
                                             fontSize: 10.sp,
                                             color: AppColor.hintColour

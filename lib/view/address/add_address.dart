@@ -7,10 +7,10 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:location_platform_interface/location_platform_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
 import 'package:sizer/sizer.dart';
@@ -46,13 +46,13 @@ class _AddAddressState extends State<AddAddress> {
   final TextEditingController pinCodeController = TextEditingController();
 
   final Completer<GoogleMapController> _controller = Completer();
-  LocationData? currentPosition;
-  LatLng _latLong = const LatLng(12.9664127, 80.2154874);
+  LatLng _latLong = const LatLng(13.0832, 80.2755);
   bool locating = false;
   geocoding.Placemark? _placeMark;
   late CameraPosition cameraPosition;
   String? street, subLocality, locality, postalCode, country;
-  String? lat, long;
+  String? lat,long;
+
   String trackLocation = "";
 
   getCityList(){
@@ -80,21 +80,53 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  getData() {
-    _getUserLocation();
+  @override
+  void initState() {
+    _requestLocationPermission();
+
+    super.initState();
     _latLong = LatLng(
       _latLong.latitude,
       _latLong.longitude,
     );
-    getLocation();
+    if (kDebugMode) {
+      print("lat_long: $lat $long");
+    }
   }
 
-  _getUserLocation() async {
-    _requestLocationPermission();
+  void _getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        _latLong = LatLng(position.latitude, position.longitude);
+      });
+      getUserAddress();
+      if (controller != null) {
+        print("GoogleMapController is not null.");
+        controller?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: _latLong,
+              zoom: 15.0, // Adjust the zoom level as needed
+            ),
+          ),
+        );
+      } else {
+        print("GoogleMapController is null.");
+      }
+    } catch (e) {
+      print("Error getting current location: $e");
+    }
   }
 
   Future<void> _requestLocationPermission() async {
-    await Permission.location.request();
+    await Permission.location.request().then((value) {
+      if(value.isGranted || value.isLimited || value.isProvisional){
+        _getCurrentLocation();
+      }
+    });
   }
 
   getUserAddress() async {
@@ -116,36 +148,7 @@ class _AddAddressState extends State<AddAddress> {
       trackLocation = "${street.toString()}, ${subLocality.toString()}, ${locality.toString()}, ${postalCode.toString()}";
       pinCodeController.text = postalCode.toString();
     });
-  }
-
-  void getLocation() async{
-    Location location = Location();
-    LocationData locationData = await location.getLocation();
-    if(mounted){
-      setState(() {
-        _latLong = LatLng(double.parse(locationData.latitude.toString()), double.parse(locationData.longitude.toString()));
-      });
-    }
-    if (controller != null) {
-      print("animating");
-      _goToCurrentPosition(_latLong);
-    }
-  }
-
-  Future<void> _goToCurrentPosition(LatLng latlng) async {
-    controller?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            bearing: 192.8334901395799,
-            target: LatLng(latlng.latitude, latlng.longitude),
-            zoom: 17)
-    ));
-    getUserAddress();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
+    print("address $trackLocation");
   }
 
   @override
@@ -203,14 +206,12 @@ class _AddAddressState extends State<AddAddress> {
                             setState(() {
                               controller = control;
                             });
-                            _controller.complete(controller);
+                            _controller.complete(control);
                           },
                           onCameraMove: (CameraPosition position) async {
-                            setState(() {
-                              cameraPosition = position;
-                              locating = true;
-                              _latLong = position.target;
-                            });
+                            cameraPosition = position;
+                            locating = true;
+                            _latLong = position.target;
                             if (kDebugMode) {
                               print("${_latLong.latitude}  ${_latLong.longitude}");
                             }
@@ -220,6 +221,7 @@ class _AddAddressState extends State<AddAddress> {
                               getUserAddress();
                               locating = false;
                             });
+
                           },
                           myLocationButtonEnabled: true,
                           myLocationEnabled: true,
@@ -412,7 +414,7 @@ class _AddAddressState extends State<AddAddress> {
                                             cursorColor: AppColor.secondaryColor,
                                             validator: (value) {
                                               if (value!.isEmpty) {
-                                                return 'Enter house/flat no';
+                                                return 'Enter plot no';
                                               }
                                               return null;
                                             },
@@ -425,7 +427,7 @@ class _AddAddressState extends State<AddAddress> {
                                             decoration: InputDecoration(
                                               isDense: true,
                                               border: InputBorder.none,
-                                              hintText: "Ex: 14/s1",
+                                              hintText: "Enter plot no",
                                               hintStyle: fontRegular.copyWith(
                                                   fontSize: 10.sp,
                                                   color: AppColor.textMildColor
@@ -473,7 +475,7 @@ class _AddAddressState extends State<AddAddress> {
                                             decoration: InputDecoration(
                                               isDense: true,
                                               border: InputBorder.none,
-                                              hintText: "Ex: Sakthi nagar",
+                                              hintText: "Enter street name",
                                               hintStyle: fontRegular.copyWith(
                                                   fontSize: 10.sp,
                                                   color: AppColor.textMildColor
@@ -588,6 +590,7 @@ class _AddAddressState extends State<AddAddress> {
                                         ),
                                         child: Center(
                                           child: TextFormField(
+                                            readOnly: true,
                                             controller: pinCodeController,
                                             cursorColor: AppColor.secondaryColor,
                                             inputFormatters: [
@@ -610,7 +613,7 @@ class _AddAddressState extends State<AddAddress> {
                                             decoration: InputDecoration(
                                               isDense: true,
                                               border: InputBorder.none,
-                                              hintText: "Ex: 630606",
+                                              hintText: "Enter pincode",
                                               hintStyle: fontRegular.copyWith(
                                                   fontSize: 10.sp,
                                                   color: AppColor.textMildColor

@@ -80,7 +80,7 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
                       FlutterClipboard.copy(widget.refCode).then(( value ){
                         print('copied');
                         Navigator.pop(context);
-                        Dialogs.snackbar("Referral code ${widget.refCode} is copied to clipboard", context, isError: false);
+                        Dialogs.snackbar("Referral code ${widget.refCode} is copied", context, isError: false);
                       });
 
                     },
@@ -95,7 +95,9 @@ class _RefCodeDialogState extends State<RefCodeDialog> {
             children: [
               Bounceable(
                 onTap: (){
-                  Share.share(widget.refCode, subject: 'Share your referral code');
+                  String url = "https://play.google.com/store/apps/details?id=com.eleven.captain";
+                  Share.share('Hey fellow cricket captains! Enjoy the game even more by using our referral code ${widget.refCode}.'
+                      ' It\'s your ticket to fantastic cricket experiences. Share the code and let\'s play together! 🏏🤝 \n $url');
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

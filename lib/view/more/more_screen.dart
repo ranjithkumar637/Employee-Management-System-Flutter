@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:elevens_organizer/view/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -119,8 +120,12 @@ class _MoreScreenState extends State<MoreScreen> {
                                 Bounceable(
                                   onTap:(){
                                     Provider.of<ProfileProvider>(context, listen: false).clearGroundAddress();
-                                    Navigator.pushNamed(context, 'edit_profile')
-                                        .then((value) {
+                                    Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return const EditProfile();
+                                  }),
+                                ).then((value) {
                                       getProfile();
                                     });
                                   },
@@ -222,7 +227,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                               onTap: (){
                                                 FlutterClipboard.copy(profile.organizerDetails.organizerRefCode.toString()).then(( value ){
                                                   print('copied');
-                                                  Dialogs.snackbar("Referral code copied to clipboard", context, isError: false);
+                                                  Dialogs.snackbar("Referral code copied", context, isError: false);
                                                 });
 
                                               },
@@ -234,7 +239,9 @@ class _MoreScreenState extends State<MoreScreen> {
                                   SizedBox(width: 10.w),
                                   InkWell(
                                       onTap: (){
-                                        Share.share(profile.organizerDetails.organizerRefCode.toString());
+                                        String url = "https://play.google.com/store/apps/details?id=com.eleven.captain";
+                                        Share.share('Hey fellow cricket captains! Enjoy the game even more by using our referral code ${profile.organizerDetails.organizerRefCode.toString()}.'
+                                            ' It\'s your ticket to fantastic cricket experiences. Share the code and let\'s play together! 🏏🤝 \n $url');
                                       },
                                       child: SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,))
                                 ],
@@ -256,7 +263,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               top: 2.h
                             ),
                             decoration: BoxDecoration(
-                              color: AppColor.redColor,
+                              color: AppColor.redColor.withOpacity(0.7),
                               borderRadius: BorderRadius.circular(5.0),
                               ),
                                 child: Text("Update the ground details to get approved",
@@ -443,21 +450,18 @@ class _MoreScreenState extends State<MoreScreen> {
                           child: InkWell(
                             splashColor: Colors.grey,
                             onTap: () async {
+                              SharedPreferences preferences =
+                              await SharedPreferences.getInstance();
                               AuthProvider().logout().then((value) async {
                                 if (value.status == true) {
-                                  Navigator.pop(context);
-                                  Navigator.pushNamed(
-                                      context, 'login_screen'
-                                  ).then((value) {
-                                    // Snackbar.hideSnackBar(context);
-                                  });
                                   Dialogs.snackbar("You've been logged out.", context, isError: false);
+                                  preferences.clear();
                                   Provider.of<NavigationProvider>(context, listen: false).resetEverything();
                                   Provider.of<TeamProvider>(context, listen: false).resetEverything();
                                   Provider.of<ProfileProvider>(context, listen: false).resetEverything();
-                                  SharedPreferences preferences =
-                                  await SharedPreferences.getInstance();
-                                  preferences.clear();
+                                  Navigator.pushNamed(
+                                      context, 'login_screen'
+                                  );
                                 }
                               });
                             },

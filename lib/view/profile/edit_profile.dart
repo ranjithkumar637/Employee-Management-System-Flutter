@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -120,6 +121,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   int newTabIndex = 0;
 
+  Future<void> _requestLocationPermission() async {
+    await Permission.location.request();
+  }
 
   @override
   void initState() {
@@ -132,6 +136,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
       });
     });
     getProfile();
+    _requestLocationPermission();
   }
 
   @override

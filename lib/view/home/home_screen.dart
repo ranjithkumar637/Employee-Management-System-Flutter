@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/offing_list_model.dart';
@@ -26,6 +27,7 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/scale_route.dart';
 import '../../utils/styles.dart';
+import '../auth/login_screen.dart';
 import '../my_matches/match_info_screen.dart';
 import '../my_matches/upcoming_battle.dart';
 import '../my_matches/upcoming_match_card.dart';
@@ -154,7 +156,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getProfile() async {
-    Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+    ProfileProvider().getProfile(context)
+        .then((value) async {
+      if(value.status == true){
+        Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+      } else if(value.status == false && value.message.toString() == "Unauthenticated"){
+        Dialogs.snackbar("User unauthenticated", context, isError: true);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return const LoginScreen();
+          }),
+        );
+        SharedPreferences preferences =
+            await SharedPreferences.getInstance();
+        preferences.clear();
+      }
+    });
     Provider.of<ProfileProvider>(context, listen: false).getReferralsList();
   }
 
@@ -225,7 +243,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onTap:(){
                                         Navigator.pushNamed(context, "notification_screen")
                                         .then((value) {
-                                          Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+                                          ProfileProvider().getProfile(context)
+                                              .then((value) async {
+                                            if(value.status == true){
+                                              Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+                                            } else if(value.status == false && value.message.toString() == "Unauthenticated"){
+                                              Dialogs.snackbar("User unauthenticated", context, isError: true);
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) {
+                                                  return const LoginScreen();
+                                                }),
+                                              );
+                                              SharedPreferences preferences =
+                                                  await SharedPreferences.getInstance();
+                                              preferences.clear();
+                                            }
+                                          });
                                         });
                                       },
                                       child: SvgPicture.asset(Images.notification, color: AppColor.lightColor, width: 5.5.w,)),
@@ -312,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                         Consumer<ProfileProvider>(
                             builder: (context, profile, child) {
-                              return profile.organizerDetails.groundApprove != 0
+                              return profile.organizerDetails.groundApprove == 0
                                   ? Bounceable(
                                 onTap: (){
                                   Navigator.push(
@@ -508,7 +542,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ? AppColor.availableSlot : AppColor.textColor
                                                 ),
                                                 child: Center(
-                                                  child: Text("${convertTo12HourFormat(slotsList[index].start.toString())}}",
+                                                  child: Text(convertTo12HourFormat(slotsList[index].start.toString()),
                                                     style: fontRegular.copyWith(
                                                         color: AppColor.lightColor,
                                                         fontSize: 8.5.sp

@@ -81,12 +81,35 @@ class _LocationDataState extends State<LocationData> {
                         }),
                       );
                     },
-                      child: Padding(
+                      child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 1.w,
-                          vertical: 0.5.h
+                          horizontal: 2.5.w,
+                          vertical: 0.8.h,
                         ),
-                        child: SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,),
+                        decoration: BoxDecoration(
+                          color: AppColor.iconBgColor,
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.add_circle_outline_rounded, color: AppColor.iconColour, size: 4.5.w,),
+                            SizedBox(width: 2.w),
+                            if(profile.groundAddress == "" && widget.ground.address.toString() == "null")...[
+                              Text("Add Location",
+                                style: fontMedium.copyWith(
+                                    color: AppColor.iconColour,
+                                    fontSize: 8.sp
+                                ),),
+                            ] else...[
+                              Text("Edit Location",
+                                style: fontMedium.copyWith(
+                                    color: AppColor.iconColour,
+                                    fontSize: 8.sp
+                                ),),
+                            ]
+
+                          ],
+                        ),
                       )),
                 ],
               ),

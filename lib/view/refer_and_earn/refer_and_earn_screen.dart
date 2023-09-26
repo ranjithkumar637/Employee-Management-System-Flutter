@@ -1,10 +1,13 @@
 import 'package:elevens_organizer/view/refer_and_earn/invite.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/no_internet_view.dart';
 import '../widgets/revenue_refer_data_box.dart';
 import 'my_referrals.dart';
 
@@ -29,6 +32,10 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       body: Column(
         children: [

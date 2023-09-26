@@ -8,11 +8,13 @@ import 'package:sizer/sizer.dart';
 import '../../models/revenue_team_list_model.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/strings.dart';
 import '../../utils/styles.dart';
 import '../my_matches/match_history.dart';
 import '../widgets/loader.dart';
+import '../widgets/no_internet_view.dart';
 import '../widgets/revenue_refer_data_box.dart';
 
 class RevenueScreen extends StatefulWidget {
@@ -64,6 +66,10 @@ class _RevenueScreenState extends State<RevenueScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       body: Column(
         children: [

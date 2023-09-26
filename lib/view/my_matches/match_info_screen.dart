@@ -12,9 +12,11 @@ import '../../providers/booking_provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
+import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../widgets/loader.dart';
+import '../widgets/no_internet_view.dart';
 
 class MatchInfoScreen extends StatefulWidget {
   final String matchId;
@@ -98,6 +100,10 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    if (connectionStatus == ConnectivityStatus.offline) {
+      return const NoInternetView();
+    }
     return Scaffold(
       body: Consumer<ProfileProvider>(
           builder: (context, match, child) {

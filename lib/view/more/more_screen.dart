@@ -20,6 +20,7 @@ import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../auth/login_screen.dart';
 import '../toss/flip_call_upcoming_list.dart';
 import '../widgets/snackbar.dart';
 
@@ -35,7 +36,23 @@ class _MoreScreenState extends State<MoreScreen> {
 
   getProfile(){
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+      ProfileProvider().getProfile(context)
+          .then((value) async {
+        if(value.status == true){
+          Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+        } else if(value.status == false && value.message.toString() == "Unauthenticated"){
+          Dialogs.snackbar("User unauthenticated", context, isError: true);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return const LoginScreen();
+            }),
+          );
+          SharedPreferences preferences =
+              await SharedPreferences.getInstance();
+          preferences.clear();
+        }
+      });
     });
   }
 
@@ -263,7 +280,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               top: 2.h
                             ),
                             decoration: BoxDecoration(
-                              color: AppColor.redColor.withOpacity(0.7),
+                              color: AppColor.redColor.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(5.0),
                               ),
                                 child: Text("Update the ground details to get approved",
@@ -456,12 +473,23 @@ class _MoreScreenState extends State<MoreScreen> {
                                 if (value.status == true) {
                                   Dialogs.snackbar("You've been logged out.", context, isError: false);
                                   preferences.clear();
-                                  Provider.of<NavigationProvider>(context, listen: false).resetEverything();
-                                  Provider.of<TeamProvider>(context, listen: false).resetEverything();
-                                  Provider.of<ProfileProvider>(context, listen: false).resetEverything();
-                                  Navigator.pushNamed(
-                                      context, 'login_screen'
-                                  );
+                                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                                    Navigator.pushReplacementNamed(
+                                        context, 'login_screen'
+                                    );
+                                    await Future.delayed(const Duration(seconds: 3));
+                                    NavigationProvider().resetEverything();
+                                    TeamProvider().resetEverything();
+                                    ProfileProvider().resetEverything();
+                                   });
+                                } else if (value.status == false) {
+                                  Dialogs.snackbar(
+                                      value.message.toString(),
+                                      context, isError: true);
+                                } else {
+                                  Dialogs.snackbar(
+                                      "Something went wrong. Please try again",
+                                      context, isError: true);
                                 }
                               });
                             },

@@ -560,7 +560,7 @@ class ProfileProvider extends ChangeNotifier{
   }
 
   //get profile
-  getProfile(BuildContext context) async {
+  Future<ProfileModel> getProfile(BuildContext context) async {
     slotList.clear();
      notifyListeners();
     SharedPreferences preferences = await SharedPreferences.getInstance();

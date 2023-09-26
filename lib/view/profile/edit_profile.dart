@@ -9,13 +9,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/profile_provider.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
+import '../auth/login_screen.dart';
 import '../widgets/custom_dialog_box.dart';
+import '../widgets/snackbar.dart';
 import 'information.dart';
 
 class EditProfile extends StatefulWidget {
@@ -72,7 +75,23 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   getProfile(){
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+      ProfileProvider().getProfile(context)
+          .then((value) async {
+        if(value.status == true){
+          Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+        } else if(value.status == false && value.message.toString() == "Unauthenticated"){
+          Dialogs.snackbar("User unauthenticated", context, isError: true);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return const LoginScreen();
+            }),
+          );
+          SharedPreferences preferences =
+              await SharedPreferences.getInstance();
+          preferences.clear();
+        }
+      });
       Provider.of<ProfileProvider>(context, listen: false).getGroundDetails();
     });
   }

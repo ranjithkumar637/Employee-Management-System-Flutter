@@ -183,7 +183,8 @@ class _AboutState extends State<About> {
                           ),),
                       ],
                     ),
-                  )),
+                  )
+              ),
             ],
           ),
           widget.ground.groundImages.isEmpty

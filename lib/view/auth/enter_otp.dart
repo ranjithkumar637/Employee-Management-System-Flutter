@@ -13,6 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/navigation_provider.dart';
+import '../../providers/profile_provider.dart';
+import '../../providers/team_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
@@ -22,9 +25,9 @@ import '../widgets/no_internet_view.dart';
 import '../widgets/snackbar.dart';
 
 class EnterOtpScreen extends StatefulWidget {
-  final bool login, register;
+  final bool login, register, fromSplash;
   final String otp, userTempId, mobileNumber;
-  const EnterOtpScreen(this.login, this.register, this.otp, this.userTempId, this.mobileNumber, {Key? key}) : super(key: key);
+  const EnterOtpScreen(this.login, this.register, this.otp, this.userTempId, this.mobileNumber, this.fromSplash, {Key? key}) : super(key: key);
 
   @override
   State<EnterOtpScreen> createState() => _EnterOtpScreenState();
@@ -113,13 +116,23 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(),
+                    widget.fromSplash
+                        ? const SizedBox()
+                        : InkWell(
+                        onTap:(){
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
+
                     Text(widget.login ? "Enter your OTP" : "Verify your mobile number",
-                    style: fontSemiBold.copyWith(
-                      color: AppColor.textColor,
-                      fontSize: widget.login ? 16.sp : 14.sp
-                    ),),
-                    const SizedBox(),
+                      style: fontSemiBold.copyWith(
+                          color: AppColor.textColor,
+                          fontSize: widget.login ? 16.sp : 14.sp
+                      ),),
+
+                    widget.fromSplash
+                        ? const SizedBox()
+                        : Icon(Icons.arrow_back_ios_outlined, color: Colors.transparent, size: 7.w,),
                   ],
                 ),
               ),

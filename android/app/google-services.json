@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "917179682463",
+    "project_id": "stech-organizer",
+    "storage_bucket": "stech-organizer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917179682463:android:7d9e2cb34bfb0587a25caa",
+        "android_client_info": {
+          "package_name": "com.eleven.organizer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_40YjLzYOgz5FzcougNRUCgoMUUPHi9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

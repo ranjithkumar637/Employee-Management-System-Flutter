@@ -263,7 +263,7 @@ class _AddAddressState extends State<AddAddress> {
                         left: 5.w,
                         right: 5.w,
                         child: SearchMapPlaceWidget(
-                          apiKey: "AIzaSyC4RAObrZV1IG-a1o2IF2nRrrA7BR28yxI",
+                          apiKey: "AIzaSyBNVJ9diKsQN3TLrDRIJJF1Fhe5-sEPm9o",
                           language: 'en',
                           placeholder: "Enter your address",
                           iconColor: AppColor.textColor,

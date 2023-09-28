@@ -156,24 +156,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getProfile() async {
-    ProfileProvider().getProfile(context)
-        .then((value) async {
-      if(value.status == true){
-        Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
-      } else if(value.status == false && value.message.toString() == "Unauthenticated"){
-        Dialogs.snackbar("User unauthenticated", context, isError: true);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return const LoginScreen();
-          }),
-        );
-        SharedPreferences preferences =
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    bool? login = preferences.getBool("isLoggedIn");
+    if(login == true){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ProfileProvider().getProfile(context)
+            .then((value) async {
+          if(value.status == true){
+            Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
+          } else if(value.status == false && value.message.toString() == "Unauthenticated"){
+            Dialogs.snackbar("User unauthenticated", context, isError: true);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return const LoginScreen();
+              }),
+            );
+            SharedPreferences preferences =
             await SharedPreferences.getInstance();
-        preferences.clear();
-      }
-    });
-    Provider.of<ProfileProvider>(context, listen: false).getReferralsList();
+            preferences.clear();
+          }
+        });
+        Provider.of<ProfileProvider>(context, listen: false).getReferralsList();
+       });
+    }
   }
 
   @override

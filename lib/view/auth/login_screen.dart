@@ -10,6 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/navigation_provider.dart';
+import '../../providers/profile_provider.dart';
+import '../../providers/team_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
@@ -31,6 +34,22 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController mobileController = TextEditingController();
+
+  clearData() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if(mounted){
+      Provider.of<NavigationProvider>(context, listen: false).resetEverything();
+      Provider.of<TeamProvider>(context, listen: false).clearData();
+      Provider.of<ProfileProvider>(context, listen: false).resetEverything();
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    clearData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               MaterialPageRoute(builder: (context) {
                 return EnterOtpScreen(true, false, value.loginData!.otp.toString(),
-                    value.loginData!.userId.toString(), mobileController.text);
+                    value.loginData!.userId.toString(), mobileController.text, false);
               }),
             );
           }

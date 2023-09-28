@@ -477,10 +477,6 @@ class _MoreScreenState extends State<MoreScreen> {
                                     Navigator.pushReplacementNamed(
                                         context, 'login_screen'
                                     );
-                                    await Future.delayed(const Duration(seconds: 3));
-                                    NavigationProvider().resetEverything();
-                                    TeamProvider().resetEverything();
-                                    ProfileProvider().resetEverything();
                                    });
                                 } else if (value.status == false) {
                                   Dialogs.snackbar(

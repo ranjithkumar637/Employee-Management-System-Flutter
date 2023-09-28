@@ -83,14 +83,14 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              return EnterOtpScreen(true, false, "", userId.toString(), mobile.toString());
+              return EnterOtpScreen(true, false, "", userId.toString(), mobile.toString(), true);
             }),
           );
         } else{
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              return EnterOtpScreen(false, true, "", userId.toString(), mobile.toString());
+              return EnterOtpScreen(false, true, "", userId.toString(), mobile.toString(), true);
             }),
           );
         }

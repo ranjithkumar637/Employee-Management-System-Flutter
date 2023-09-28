@@ -119,9 +119,10 @@ class _InformationState extends State<Information> {
     if(profile.mainImg == "" && mainImg.isEmpty){
       Dialogs.snackbar("Upload main ground image", context, isError: true);
     }
-    else if(gallery.isEmpty && profile.groundImages.isEmpty){
-      Dialogs.snackbar("Upload gallery images", context, isError: true);
-    } else if(pitch == ""){
+    // else if(gallery.isEmpty && profile.groundImages.isEmpty){
+    //   Dialogs.snackbar("Upload gallery images", context, isError: true);
+    // }
+    else if(pitch == ""){
       Dialogs.snackbar("Set pitch data", context, isError: true);
     } else if(boundaryLine == ""){
       Dialogs.snackbar("Set boundary line", context, isError: true);

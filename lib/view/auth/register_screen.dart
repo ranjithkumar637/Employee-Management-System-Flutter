@@ -433,7 +433,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return EnterOtpScreen(false, true, value.otp.toString(), value.userTempId.toString(), mobileController.text);
+                  return EnterOtpScreen(false, true, value.otp.toString(), value.userTempId.toString(), mobileController.text, false);
                 }),
               );
             }

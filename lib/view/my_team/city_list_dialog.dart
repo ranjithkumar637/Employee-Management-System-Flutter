@@ -8,14 +8,17 @@ import '../../utils/styles.dart';
 
 
 class CityListDialog extends StatelessWidget {
-  final bool fromOrganizer;
-  const CityListDialog({Key? key, required this.fromOrganizer}) : super(key: key);
+  final bool fromOrganizer, orgCity;
+  const CityListDialog({Key? key, required this.fromOrganizer, required this.orgCity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
+      ),
+      insetPadding: EdgeInsets.symmetric(
+          horizontal: 5.w
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -52,20 +55,34 @@ class CityListDialog extends StatelessWidget {
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       separatorBuilder: (context, _){
-                        return SizedBox(height: 3.h);
+                        return SizedBox(height: 2.h);
                       },
                       itemCount: state.stateBasedCityList.length,
                       itemBuilder: (context, index){
                         return InkWell(
                           onTap: (){
-                            Provider.of<TeamProvider>(context, listen: false).storeStateBasedCity(state.stateBasedCityList[index].cityName.toString(), state.stateBasedCityList[index].id.toString());
+                            if(orgCity == true){
+                              Provider.of<TeamProvider>(context, listen: false).storeStateBasedCityOrganizer(state.stateBasedCityList[index].cityName.toString(), state.stateBasedCityList[index].id.toString());
+                            } else {
+                              Provider.of<TeamProvider>(context, listen: false).storeStateBasedCity(state.stateBasedCityList[index].cityName.toString(), state.stateBasedCityList[index].id.toString());
+                            }
                             Navigator.pop(context);
                           },
-                          child: Text(state.stateBasedCityList[index].cityName.toString(),
-                            style: fontRegular.copyWith(
-                                color: AppColor.textColor,
-                                fontSize: 11.sp
-                            ),),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 2.w,
+                              vertical: 1.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColor.textFieldBg1,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Text(state.stateBasedCityList[index].cityName.toString(),
+                              style: fontRegular.copyWith(
+                                  color: AppColor.textColor,
+                                  fontSize: 11.sp
+                              ),),
+                          ),
                         );
                       },
                     ),

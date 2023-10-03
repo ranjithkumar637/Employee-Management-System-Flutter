@@ -43,7 +43,7 @@ class OffingsListView extends StatelessWidget {
                 errorWidget:(context, url, error) =>
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        child: Image.asset(Images.groundImage, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.groundSmall, fit: BoxFit.cover, width: 20.w,
                           height: 10.h,)),
               )),
           SizedBox(width: 4.w),
@@ -134,6 +134,12 @@ class OffingsListView extends StatelessWidget {
                           ),),
                         SizedBox(height: 0.5.h),
                         Text(organizerName,
+                          style: fontRegular.copyWith(
+                              fontSize: 9.sp,
+                              color: AppColor.textMildColor
+                          ),),
+                        SizedBox(height: 0.5.h),
+                        Text(location,
                           style: fontRegular.copyWith(
                               fontSize: 9.sp,
                               color: AppColor.textMildColor

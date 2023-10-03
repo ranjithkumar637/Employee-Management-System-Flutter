@@ -19,8 +19,8 @@ import '../widgets/loader.dart';
 import '../widgets/no_internet_view.dart';
 
 class MatchInfoScreen extends StatefulWidget {
-  final String matchId;
-  const MatchInfoScreen({Key? key, required this.matchId}) : super(key: key);
+  final String matchId, matchNumber;
+  const MatchInfoScreen({Key? key, required this.matchId, required this.matchNumber}) : super(key: key);
 
   @override
   State<MatchInfoScreen> createState() => _MatchInfoScreenState();
@@ -132,7 +132,7 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.arrow_back, color: AppColor.lightColor, size: 7.w,)),
-                          Text("Team",
+                          Text("#${widget.matchNumber}",
                             style: fontMedium.copyWith(
                                 fontSize: 15.sp,
                                 color: AppColor.lightColor

@@ -49,12 +49,16 @@ class ProfileProvider extends ChangeNotifier{
   List<String> newGroundImages = [];
   List<String> mainImage = [];
 
-  //storing locally
+  List<String> galleryImage = [];
+
+
+    //storing locally
   String groundAddress = "";
     String groundStreet = "";
     String groundHouseNo = "", groundPinCode = "";
     String groundLatitude = "", groundLongitude = "";
     String stateIdGround = "", cityIdGround = "";
+    String stateGround = "", cityGround = "";
 
     //from api
   String address = "", street = "";
@@ -115,7 +119,7 @@ class ProfileProvider extends ChangeNotifier{
   }
 
   //save ground address locally
-  void saveGroundAddress(String streetData, String subLocality, String locality, String pin, String lat, String long, String houseNumber, String sId, String cId) {
+  void saveGroundAddress(String streetData, String subLocality, String locality, String pin, String lat, String long, String houseNumber, String sId, String cId, String state, String city) {
     print(streetData);
     groundAddress = "$streetData, $subLocality, $locality, $pin";
     groundLatitude = lat;
@@ -125,6 +129,8 @@ class ProfileProvider extends ChangeNotifier{
     groundLongitude = long;
     stateIdGround = sId;
     cityIdGround = cId;
+    stateGround = state;
+    cityGround = city;
     notifyListeners();
   }
 
@@ -240,6 +246,7 @@ class ProfileProvider extends ChangeNotifier{
     Future<MatchDetailsModel> getMatchDetails(String matchId) async {
       matchDetailsModel = MatchDetailsModel();
       matchDetails = MatchDetails();
+      galleryImage = [];
       print("match id $matchId");
       var body = jsonEncode({
         'id': matchId,
@@ -260,6 +267,20 @@ class ProfileProvider extends ChangeNotifier{
         if (response.statusCode == 200) {
           matchDetailsModel = MatchDetailsModel.fromJson(decodedJson);
           matchDetails = MatchDetails.fromJson(decodedJson['match_details']);
+          if (decodedJson['match_details']['ground_image'] == null) {
+            // Handle the case when 'gallery_image' is empty
+            // You can set it to an empty list or some default value
+            galleryImage = [];
+          } else if (decodedJson['match_details']['ground_image'] is List) {
+            // Handle the case when 'gallery_image' is a list of strings
+            for (var data in decodedJson['match_details']['ground_image']) {
+              galleryImage.add(data);
+              notifyListeners();
+            }
+          } else {
+            // Handle any other case when 'gallery_image' has unexpected data
+            // You may want to set a default value or handle the error accordingly
+          }
           notifyListeners();
         } else {
           throw const HttpException('Failed to load data');

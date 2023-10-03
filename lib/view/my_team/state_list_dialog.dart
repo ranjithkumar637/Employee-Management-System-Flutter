@@ -8,14 +8,17 @@ import '../../utils/styles.dart';
 
 
 class StateListDialog extends StatelessWidget {
-  final bool fromOrganizer;
-  const StateListDialog({Key? key, required this.fromOrganizer}) : super(key: key);
+  final bool fromOrganizer, orgCity;
+  const StateListDialog({Key? key, required this.fromOrganizer, required this.orgCity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
+      ),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: 5.w
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -58,14 +61,28 @@ class StateListDialog extends StatelessWidget {
                     itemBuilder: (context, index){
                       return InkWell(
                         onTap: (){
-                          Provider.of<TeamProvider>(context, listen: false).storeState(state.stateList[index].name.toString(), state.stateList[index].id.toString());
+                          if(orgCity == true){
+                            Provider.of<TeamProvider>(context, listen: false).storeStateOrganizer(state.stateList[index].name.toString(), state.stateList[index].id.toString());
+                          } else {
+                            Provider.of<TeamProvider>(context, listen: false).storeState(state.stateList[index].name.toString(), state.stateList[index].id.toString());
+                          }
                           Navigator.pop(context);
                         },
-                        child: Text(state.stateList[index].name.toString(),
-                        style: fontRegular.copyWith(
-                          color: AppColor.textColor,
-                          fontSize: 11.sp
-                        ),),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 2.w,
+                            vertical: 1.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.textFieldBg1,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Text(state.stateList[index].name.toString(),
+                          style: fontRegular.copyWith(
+                            color: AppColor.textColor,
+                            fontSize: 11.sp
+                          ),),
+                        ),
                       );
                     },
                   ),

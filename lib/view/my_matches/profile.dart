@@ -1,4 +1,5 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elevens_organizer/view/my_matches/profile_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -7,6 +8,7 @@ import '../../../utils/colours.dart';
 import '../../../utils/styles.dart';
 import '../../models/player_info_model.dart';
 import '../../providers/profile_provider.dart';
+import '../../utils/app_constants.dart';
 import '../../utils/images.dart';
 import '../widgets/loader.dart';
 import 'matches_profile.dart';
@@ -29,8 +31,8 @@ class _PlayerProfileState extends State<PlayerProfile> with SingleTickerProvider
     setState(() {
       loading = true;
     });
+    await Future.delayed(const Duration(seconds: 1));
     getPlayerInfo();
-    await Future.delayed(const Duration(seconds: 2));
   }
 
   getPlayerInfo(){
@@ -111,16 +113,13 @@ class _PlayerProfileState extends State<PlayerProfile> with SingleTickerProvider
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 14.h,
-                      width: 28.w,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(color: AppColor.imageBorderColor, width: 2),
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage("https://cdn-icons-png.flaticon.com/256/4389/4389644.png"))
+                    ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${playerInfo.profilePhoto.toString()}',
+                        fit: BoxFit.cover,
+                        height: 14.h,
+                        width: 28.w,
+                        errorWidget: (context, url, error) => Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png"),
                       ),
                     ),
                     SizedBox(height: 2.h),

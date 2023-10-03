@@ -81,9 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  getOffingsList(String cityId){
-    print("get offing city id $cityId");
-    futureData = PaymentInfoProvider().getOffingsList(cityId)
+  getOffingsList(){
+    // print("get offing city id $cityId");
+    futureData = PaymentInfoProvider().getOffingsList()
         .then((value) {
       if(mounted){
         setState(() {
@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if(mounted){
       final profile = Provider.of<ProfileProvider>(context, listen: false);
       getSlotsList(profile.organizerDetails.groundId.toString());
-      getOffingsList(profile.organizerDetails.cityId.toString());
+      getOffingsList();
     }
   }
 
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         });
         Provider.of<ProfileProvider>(context, listen: false).getReferralsList();
-       });
+      });
     }
   }
 
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   GestureDetector(
                                       onTap:(){
                                         Navigator.pushNamed(context, "notification_screen")
-                                        .then((value) {
+                                            .then((value) {
                                           ProfileProvider().getProfile(context)
                                               .then((value) async {
                                             if(value.status == true){
@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 }),
                                               );
                                               SharedPreferences preferences =
-                                                  await SharedPreferences.getInstance();
+                                              await SharedPreferences.getInstance();
                                               preferences.clear();
                                             }
                                           });
@@ -324,11 +324,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         if(profile.profileModel.refPoints.toString() != "null")...[
                           Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 5.w
+                                horizontal: 5.w
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
+                              children: [
                                 PointsAndRevenueBox(
                                     Images.revenueAmountImage,
                                     "Total Referral\nPoints",
@@ -364,38 +364,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                     getProfile();
                                   });
                                 },
-                                    child: Container(
-                                margin: EdgeInsets.symmetric(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
                                     horizontal: 5.w,
-                                ) + EdgeInsets.only(
-                                    top: 2.h
-                                ),
-                                padding: EdgeInsets.symmetric(
+                                  ) + EdgeInsets.only(
+                                      top: 2.h
+                                  ),
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 3.w,
                                     vertical: 1.2.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.redColor.withOpacity(0.6),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.redColor.withOpacity(0.6),
                                     borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text("Update the ground details to get approved",
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text("Awaiting admin's approval, your ground will be approved very shortly",
                                           style: fontMedium.copyWith(
                                               fontSize: 10.sp,
                                               color: AppColor.lightColor
                                           ),),
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward,
-                                      color: AppColor.lightColor,
-                                      size: 6.w,
-                                    ),
-                                  ],
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        color: AppColor.lightColor,
+                                        size: 6.w,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                                  )
+                              )
                                   : const SizedBox();
                             }
                         ),
@@ -580,23 +580,37 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 3.h),
                         //in the offing title
                         offingsList.isEmpty
-                            ? Container(
-                          margin: EdgeInsets.symmetric(
+                            ? Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 5.w,
                           ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 2.h,
-                              horizontal: 4.w
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "In The Offing",
+                                style: fontMedium.copyWith(
+                                    fontSize: 12.sp, color: AppColor.textColor),
+                              ),
+                              SizedBox(height: 2.h),
+                              Container(
+                                width: double.maxFinite,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.h,
+                                    horizontal: 4.w
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColor.redColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Text("No offings found",
+                                  style: fontMedium.copyWith(
+                                      color: AppColor.redColor,
+                                      fontSize: 11.sp
+                                  ),),
+                              ),
+                            ],
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColor.redColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Text("No offings found",
-                            style: fontMedium.copyWith(
-                                color: AppColor.redColor,
-                                fontSize: 11.sp
-                            ),),
                         )
                             : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -615,13 +629,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: (){
                                       Provider.of<TeamProvider>(context, listen: false).removeFilterCity();
                                       Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                                  return InTheOffing(offingsList);
-                                                }),
-                                              );
-                                            },
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) {
+                                              return InTheOffing(offingsList);
+                                            }),
+                                      );
+                                    },
                                     child: Text(
                                       "View all",
                                       style: fontMedium.copyWith(
@@ -635,32 +649,32 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 19.h,
                                 child: FutureBuilder(
-                                  future: futureData,
-                                  builder: (context, snapshot) {
-                                    if(snapshot.connectionState == ConnectionState.waiting){
-                                      return const Loader();
+                                    future: futureData,
+                                    builder: (context, snapshot) {
+                                      if(snapshot.connectionState == ConnectionState.waiting){
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                      if(snapshot.connectionState == ConnectionState.done){
+                                        return ListView.separated(
+                                          scrollDirection: Axis.horizontal,
+                                          physics: const BouncingScrollPhysics(),
+                                          separatorBuilder: (context ,_){
+                                            return SizedBox(width: 2.w,);
+                                          },
+                                          itemCount: offingsList.length > 3 ? 3 : offingsList.length,
+                                          itemBuilder: (context, index){
+                                            final offing = offingsList[index];
+                                            return Bounceable(
+                                                onTap: (){
+                                                  Navigator.push(context, ScaleRoute(page: OffingDetailScreen(offing.matchId.toString(), offing)));
+                                                },
+                                                child: OffingCard(offing, offingsList.length));
+                                          },
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
                                     }
-                                    if(snapshot.connectionState == ConnectionState.done){
-                                      return ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        physics: const BouncingScrollPhysics(),
-                                        separatorBuilder: (context ,_){
-                                          return SizedBox(width: 2.w,);
-                                        },
-                                        itemCount: offingsList.length > 3 ? 3 : offingsList.length,
-                                        itemBuilder: (context, index){
-                                          final offing = offingsList[index];
-                                          return Bounceable(
-                                              onTap: (){
-                                                Navigator.push(context, ScaleRoute(page: OffingDetailScreen(offing.matchId.toString(), offing)));
-                                              },
-                                              child: OffingCard(offing, offingsList.length));
-                                        },
-                                      );
-                                    } else {
-                                      return const Loader();
-                                    }
-                                  }
                                 ),
                               ),
                             ],
@@ -669,23 +683,37 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 2.h),
                         //my matches title
                         upcomingMatchList.isEmpty
-                            ? Container(
-                          margin: EdgeInsets.symmetric(
+                            ? Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 5.w,
                           ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 2.h,
-                            horizontal: 4.w
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "My Matches",
+                                style: fontMedium.copyWith(
+                                    fontSize: 12.sp, color: AppColor.textColor),
+                              ),
+                              SizedBox(height: 2.h),
+                              Container(
+                                width: double.maxFinite,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.h,
+                                    horizontal: 4.w
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColor.redColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Text("No matches found",
+                                  style: fontMedium.copyWith(
+                                      color: AppColor.redColor,
+                                      fontSize: 11.sp
+                                  ),),
+                              ),
+                            ],
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColor.redColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                          child: Text("No matches found",
-                          style: fontMedium.copyWith(
-                            color: AppColor.redColor,
-                            fontSize: 11.sp
-                          ),),
                         )
                             : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -721,7 +749,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     future: futureData,
                                     builder: (context, snapshot) {
                                       if(snapshot.connectionState == ConnectionState.waiting){
-                                        return const Loader();
+                                        return const Center(child: CircularProgressIndicator());
                                       }
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return ListView.separated(
@@ -737,7 +765,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                         );
                                       } else {
-                                        return const Loader();
+                                        return const Center(child: CircularProgressIndicator());
                                       }
                                     }
                                 ),
@@ -767,13 +795,13 @@ class RevenueOnly extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
-          Navigator.pushNamed(context, "revenue_screen");
+        Navigator.pushNamed(context, "revenue_screen");
       },
       child: Container(
         height: 14.h,
         width: 90.w,
         margin: EdgeInsets.symmetric(
-          horizontal: 5.w
+            horizontal: 5.w
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),

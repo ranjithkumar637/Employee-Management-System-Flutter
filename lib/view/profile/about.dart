@@ -136,17 +136,35 @@ class _AboutState extends State<About> {
             ],
           ),
           SizedBox(height: 2.h),
-          Text("Description",
+          Text("Description *",
             style: fontMedium.copyWith(
                 color: AppColor.textColor,
                 fontSize: 11.sp
             ),),
           SizedBox(height: 1.h),
-          Text(widget.ground.description.toString() == "" ? "-" : widget.ground.description.toString(),
-            style: fontRegular.copyWith(
-                color: AppColor.textColor,
-                fontSize: 10.sp
-            ),),
+          if(widget.ground.description.toString() == "")...[
+            InkWell(
+              onTap: (){
+                showDialog(context: context,
+                    builder: (BuildContext context){
+                      return UpdateAboutDialog(
+                          widget.ground.description);
+                    }
+                );
+              },
+              child: Text("Enter details about your ground",
+                style: fontRegular.copyWith(
+                    color: AppColor.hintColour,
+                    fontSize: 10.sp
+                ),),
+            ),
+          ] else...[
+            Text(widget.ground.description.toString(),
+              style: fontRegular.copyWith(
+                  color: AppColor.textColor,
+                  fontSize: 10.sp
+              ),),
+          ],
           const Dash(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

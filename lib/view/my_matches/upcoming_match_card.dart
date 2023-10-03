@@ -12,6 +12,7 @@ import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/dot.dart';
 import 'match_info_screen.dart';
 
 class UpcomingMatchCard extends StatelessWidget {
@@ -31,7 +32,7 @@ class UpcomingMatchCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) {
-                  return MatchInfoScreen(matchId: match.matchId.toString());
+                  return MatchInfoScreen(matchId: match.matchId.toString(), matchNumber: match.matchNumber.toString());
                 }),
           );
         }
@@ -59,7 +60,7 @@ class UpcomingMatchCard extends StatelessWidget {
                     height: 9.h,
                     errorWidget: (context, url, widget){
                       return ClipOval(
-                        child: Image.asset(Images.groundImage, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 20.w,
                           height: 9.h,),
                       );
                     },
@@ -108,7 +109,7 @@ class UpcomingMatchCard extends StatelessWidget {
                     height: 9.h,
                     errorWidget: (context, url, widget){
                       return ClipOval(
-                        child: Image.asset(Images.groundImage, fit: BoxFit.cover, width: 20.w,
+                        child: Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 20.w,
                           height: 9.h,),
                       );
                     },
@@ -137,9 +138,31 @@ class UpcomingMatchCard extends StatelessWidget {
                               fontSize: 9.5.sp,
                               color: const Color(0xff6495ED)
                           ),),
-                        match.matchStatus == "Booked"
-                            ? const SizedBox()
-                            : SizedBox(height: 1.h),
+                        match.live.toString() == "1" || match.matchStatus == "Cancelled"
+                            ? SizedBox(
+                            height: 1.h) : const SizedBox(),
+                        match.live.toString() == "1" && match.matchStatus != "Cancelled"
+                            ? Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 2.w,
+                            vertical: 0.4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.redColor,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Row(
+                            children: [
+                              const Dot(),
+                              SizedBox(width: 1.w),
+                              Text("Live",
+                                style: fontMedium.copyWith(
+                                    fontSize: 8.sp,
+                                    color: AppColor.lightColor
+                                ),),
+                            ],
+                          ),
+                        ) : const SizedBox(),
                         match.matchStatus == "Booked"
                             ? const SizedBox()
                             : Container(

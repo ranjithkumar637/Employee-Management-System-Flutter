@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if(mounted){
       Provider.of<NavigationProvider>(context, listen: false).resetEverything();
       Provider.of<TeamProvider>(context, listen: false).clearData();
+      Provider.of<TeamProvider>(context, listen: false).clearDataOrganizer();
       Provider.of<ProfileProvider>(context, listen: false).resetEverything();
     }
   }

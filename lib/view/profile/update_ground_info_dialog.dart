@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
+import '../widgets/snackbar.dart';
 
 
 class UpdateGroundInfoDialog extends StatefulWidget {
@@ -49,6 +50,9 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
         borderRadius: BorderRadius.circular(20.0),
       ),
       elevation: 0,
+      insetPadding: EdgeInsets.symmetric(
+          horizontal: 5.w
+      ),
       backgroundColor: Colors.transparent,
       child: contentBox(context),
     );
@@ -79,7 +83,7 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Pitch",
+                Text("Pitch *",
                   style: fontRegular.copyWith(
                       fontSize: 10.sp,
                       color: AppColor.textColor
@@ -149,12 +153,12 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
                           fontSize: 10.sp,
                           color: AppColor.textColor
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Enter Boundary line';
-                        }
-                        return null;
-                      },
+                      // validator: (value) {
+                      //   if (value!.isEmpty) {
+                      //     return 'Enter Boundary line';
+                      //   }
+                      //   return null;
+                      // },
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
@@ -197,7 +201,11 @@ class _UpdateGroundInfoDialogState extends State<UpdateGroundInfoDialog> {
             ? const CircularProgressIndicator()
             : Bounceable(
               onTap: (){
-                validate();
+                if(dropDownValue!.isEmpty){
+                  Dialogs.snackbar("Set pitch data", context, isError: true);
+                } else {
+                  validate();
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

@@ -41,7 +41,7 @@ class OffingCard extends StatelessWidget {
                     imageUrl: "${
                         AppConstants.imageBaseUrl
                     }${AppConstants.imageBaseUrlTeam}${offing.teamALogo}",
-                    errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 4.w, fit: BoxFit.cover,),
+                    errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, width: 4.w, fit: BoxFit.cover,),
                     width: 20.w,
                     height: 9.h,
                     fit: BoxFit.cover,
@@ -81,7 +81,7 @@ class OffingCard extends StatelessWidget {
                     imageUrl: "${
                         AppConstants.imageBaseUrl
                     }${AppConstants.imageBaseUrlTeam}${offing.teamBLogo}",
-                    errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 4.w, fit: BoxFit.cover,),
+                    errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, width: 4.w, fit: BoxFit.cover,),
                     width: 20.w,
                     height: 9.h,
                     fit: BoxFit.cover,

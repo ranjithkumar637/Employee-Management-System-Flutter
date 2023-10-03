@@ -45,7 +45,7 @@ class _NotificationsState extends State<Notifications> {
       loading = true;
     });
     getNotifications();
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       loading = false;
     });
@@ -145,7 +145,8 @@ class _NotificationsState extends State<Notifications> {
                             return RegularNotification(
                                 notificationList[index].title.toString(),
                                 notificationList[index].note.toString(),
-                                notificationList[index].groundImage.toString());
+                                notificationList[index].groundImage.toString(),
+                                notificationList[index].read.toString());
                           }
                       ),
                     );

@@ -124,33 +124,35 @@ class _YourTeamState extends State<YourTeam> {
                     ),
                     captainList.isEmpty
                         ? const SizedBox()
-                        : MediaQuery.removePadding(
+                        : FadeIn(
+                          child: MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
                       child: ListView.separated(
 
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, _){
-                            return const Divider();
-                          },
-                          itemCount: captainList.length,
-                          itemBuilder: (context, index){
-                            final player = captainList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.h,
-                              ),
-                              child: PlayerListCard(captainList[index].name.toString(),
-                                  captainList[index].role.toString(),
-                                  captainList[index].profilePhoto.toString(), false,
-                                  "", '', "", player, captainList[index].playerId.toString()
-                              ),
-                            );
-                          }
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, _){
+                              return const Divider();
+                            },
+                            itemCount: captainList.length,
+                            itemBuilder: (context, index){
+                              final player = captainList[index];
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.w,
+                                  vertical: 1.h,
+                                ),
+                                child: PlayerListCard(captainList[index].name.toString(),
+                                    captainList[index].role.toString(),
+                                    captainList[index].profilePhoto.toString(), false,
+                                    "", '', "", player, captainList[index].playerId.toString()
+                                ),
+                              );
+                            }
                       ),
                     ),
+                        ),
                     vcList.isEmpty
                         ? const SizedBox()
                         : Padding(

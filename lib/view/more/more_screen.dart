@@ -271,23 +271,46 @@ class _MoreScreenState extends State<MoreScreen> {
                     Consumer<ProfileProvider>(
                         builder: (context, profile, child) {
                           return profile.organizerDetails.groundApprove == 0
-                              ? Container(
+                              ? Bounceable(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return const EditProfile();
+                                }),
+                              ).then((value) {
+                                getProfile();
+                              });
+                            },
+                                child: Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 3.w,
-                              vertical: 1.2.h,
+                                horizontal: 3.w,
+                                vertical: 1.2.h,
                             ),
                             margin: EdgeInsets.only(
-                              top: 2.h
+                                top: 2.h
                             ),
                             decoration: BoxDecoration(
-                              color: AppColor.redColor.withOpacity(0.6),
-                              borderRadius: BorderRadius.circular(5.0),
-                              ),
-                                child: Text("Update the ground details to get approved",
+                                color: AppColor.redColor.withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text("Awaiting admin's approval, your ground will be approved very shortly",
                             style: fontMedium.copyWith(
-                                  fontSize: 10.sp,
-                                  color: AppColor.lightColor
+                                          fontSize: 10.sp,
+                                          color: AppColor.lightColor
                             ),),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        color: AppColor.lightColor,
+                                        size: 6.w,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               )
                               : const SizedBox();
                         }
@@ -312,12 +335,12 @@ class _MoreScreenState extends State<MoreScreen> {
                         },
                         child: const ProfileOption("Matches")),
                     const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, "payment_information");
-                        },
-                        child: const ProfileOption("Payment Information")),
-                    const Divider(thickness: 0.7,),
+                    // InkWell(
+                    //     onTap: (){
+                    //       Navigator.pushNamed(context, "payment_information");
+                    //     },
+                    //     child: const ProfileOption("Payment Information")),
+                    // const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
                           Navigator.push(context,
@@ -359,7 +382,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     const Divider(thickness: 0.7,),
                     InkWell(
                         onTap: (){
-                          _launchUrl("https://11scricket360.com/cancellation-and-refund-policy/");
+                          _launchUrl("https://11scricket360.com/cancellation-refund-policy");
                         },
                         child: const ProfileOption("Cancellation and Refund Policy")),
                     const Divider(thickness: 0.7,),

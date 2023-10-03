@@ -49,6 +49,8 @@ class GroundDetails {
   dynamic houseNo;
   dynamic streetName;
   List<String>? galleryImage;
+  dynamic stateName;
+  dynamic cityName;
 
   GroundDetails(
       {id,
@@ -70,7 +72,9 @@ class GroundDetails {
         groundCreatedBy,
         houseNo,
         streetName,
-        galleryImage});
+        galleryImage,
+      stateName,
+      cityName});
 
   GroundDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -97,6 +101,8 @@ class GroundDetails {
     } else {
       galleryImage = [];
     }
+    stateName = json['state_name'];
+    cityName = json['city_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -121,6 +127,8 @@ class GroundDetails {
     data['house_no'] = houseNo;
     data['street_name'] = streetName;
     data['gallery_image'] = galleryImage;
+    data['state_name'] = stateName;
+    data['city_name'] = cityName;
     return data;
   }
 }

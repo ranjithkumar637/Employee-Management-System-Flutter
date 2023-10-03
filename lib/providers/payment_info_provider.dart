@@ -257,21 +257,17 @@ class PaymentInfoProvider extends ChangeNotifier {
   OffingsListModel offingsListModel = OffingsListModel();
 
   //offings list
-  Future<List<OffingsList>> getOffingsList(String cityId) async {
+  Future<List<OffingsList>> getOffingsList() async {
     offingsList = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
-    var body = jsonEncode({
-      'city_id': cityId,
-    });
     try {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse(AppConstants.intheoffing),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accToken',
         },
-        body: body
       );
       var decodedJson = json.decode(response.body);
       print(decodedJson);

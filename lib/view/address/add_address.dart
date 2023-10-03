@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:elevens_organizer/models/ground_details_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:location/location.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
 import 'package:sizer/sizer.dart';
@@ -21,13 +20,16 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../my_team/city_list_dialog.dart';
-import '../my_team/create_team.dart';
 import '../my_team/state_list_dialog.dart';
+import '../my_team/team_detail_data.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/snackbar.dart';
 
 class AddAddress extends StatefulWidget {
-  const AddAddress({Key? key}) : super(key: key);
+  final bool update;
+  final ProfileProvider profile;
+  final GroundDetails ground;
+  const AddAddress(this.update, this.profile, this.ground, {Key? key}) : super(key: key);
 
   @override
   State<AddAddress> createState() => _AddAddressState();
@@ -63,7 +65,7 @@ class _AddAddressState extends State<AddAddress> {
     Provider.of<TeamProvider>(context, listen: false).getStateBasedCityList(stateBasedCityId);
     showDialog(context: context,
         builder: (BuildContext context){
-          return const CityListDialog(fromOrganizer: false,);
+          return const CityListDialog(fromOrganizer: false, orgCity: false);
         }
     );
   }
@@ -75,9 +77,42 @@ class _AddAddressState extends State<AddAddress> {
   void openStateSheet() {
     showDialog(context: context,
         builder: (BuildContext context){
-          return const StateListDialog(fromOrganizer: false,);
+          return const StateListDialog(fromOrganizer: false, orgCity: false);
         }
     );
+  }
+
+  checkAddOrUpdate(){
+    if(widget.update){
+      print("updating");
+      if(widget.ground.address.toString() != "null"){
+        setState(() {
+          _latLong = LatLng(
+            double.parse(widget.ground.latitude.toString()),
+            double.parse(widget.ground.longitude.toString()),
+          );
+          houseController.text = widget.ground.houseNo.toString();
+          streetController.text = widget.ground.streetName.toString();
+        });
+        Provider.of<TeamProvider>(context, listen: false).storeState(widget.ground.stateName.toString(), widget.ground.stateId.toString());
+        Provider.of<TeamProvider>(context, listen: false).storeStateBasedCity(widget.ground.cityName.toString(), widget.ground.cityId.toString());
+      } else {
+        setState(() {
+          _latLong = LatLng(
+            double.parse(widget.profile.groundLatitude.toString()),
+            double.parse(widget.profile.groundLongitude.toString()),
+          );
+          houseController.text = widget.profile.groundHouseNo.toString();
+          streetController.text = widget.profile.groundStreet.toString();
+        });
+        Provider.of<TeamProvider>(context, listen: false).storeState(widget.profile.stateGround.toString(), widget.profile.stateIdGround.toString());
+        Provider.of<TeamProvider>(context, listen: false).storeStateBasedCity(widget.profile.cityGround.toString(), widget.profile.cityIdGround.toString());
+      }
+
+    } else {
+      print("adding");
+      _getCurrentLocation();
+    }
   }
 
   @override
@@ -92,6 +127,7 @@ class _AddAddressState extends State<AddAddress> {
     if (kDebugMode) {
       print("lat_long: $lat $long");
     }
+    checkAddOrUpdate();
   }
 
   void _getCurrentLocation() async {
@@ -124,7 +160,11 @@ class _AddAddressState extends State<AddAddress> {
   Future<void> _requestLocationPermission() async {
     await Permission.location.request().then((value) {
       if(value.isGranted || value.isLimited || value.isProvisional){
-        _getCurrentLocation();
+        if(widget.update){
+
+        } else {
+          _getCurrentLocation();
+        }
       }
     });
   }
@@ -489,7 +529,7 @@ class _AddAddressState extends State<AddAddress> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const FieldHeading("State *"),
+                                      const FieldHeading("State *", false),
                                       SizedBox(height:1.h),
                                       Consumer<TeamProvider>(
                                           builder: (context, team, child) {
@@ -527,7 +567,7 @@ class _AddAddressState extends State<AddAddress> {
                                           }
                                       ),
                                       SizedBox(height: 2.h),
-                                      const FieldHeading("City *"),
+                                      const FieldHeading("City *", false),
                                       SizedBox(height:1.h),
                                       Consumer<TeamProvider>(
                                           builder: (context, team, child) {
@@ -629,7 +669,7 @@ class _AddAddressState extends State<AddAddress> {
                                     child: CircularProgressIndicator(),)
                                       : Bounceable(
                                       onTap: () {
-                                        validate(team.stateId, team.stateBasedCityId);
+                                        validate(team.stateId, team.stateBasedCityId, team.state, team.stateBasedCity);
                                       },
                                       child: const CustomButton(
                                           AppColor.textColor, 'Save',
@@ -651,7 +691,7 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  validate(String stateId, String stateBasedCityId) {
+  validate(String stateId, String stateBasedCityId, String state, String city) {
     if (_formKey.currentState!.validate()) {
       if(stateId == "" || stateBasedCityId == ""){
         Dialogs.snackbar("Choose both State & City", context, isError: true);
@@ -663,10 +703,11 @@ class _AddAddressState extends State<AddAddress> {
         String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
         Provider.of<ProfileProvider>(context, listen: false).saveGroundAddress(
             streetController.text.toString(), subLocality.toString(), locality.toString(),
-            postalCode.toString(), lat.toString(), long.toString(), houseController.text.toString(), stateId, cityId);
+            postalCode.toString(), lat.toString(), long.toString(), houseController.text.toString(), stateId, cityId, state, city);
         setState(() {
           loading = false;
         });
+        Provider.of<TeamProvider>(context, listen: false).clearData();
         Navigator.pop(context);
       }
     }

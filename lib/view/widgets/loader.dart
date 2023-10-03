@@ -74,7 +74,7 @@ class _LoaderState extends State<Loader> {
       padding: EdgeInsets.only(
         top: 15.h,
       ),
-      child: Center(child: Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Lottie.asset("assets/wicket.json", width: 100.w),
@@ -93,7 +93,7 @@ class _LoaderState extends State<Loader> {
             ),
           ),
         ],
-      )),
+      ),
     );
   }
 }

@@ -77,23 +77,28 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
     else if(userId.isNotEmpty) {
+      // Timer(
+      //     const Duration(seconds: 2), () async {
+      //   if(isLogin == true){
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) {
+      //         return EnterOtpScreen(true, false, "", userId.toString(), mobile.toString(), true);
+      //       }),
+      //     );
+      //   } else{
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) {
+      //         return EnterOtpScreen(false, true, "", userId.toString(), mobile.toString(), true);
+      //       }),
+      //     );
+      //   }
+      // }
+      // );
       Timer(
           const Duration(seconds: 2), () async {
-        if(isLogin == true){
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return EnterOtpScreen(true, false, "", userId.toString(), mobile.toString(), true);
-            }),
-          );
-        } else{
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return EnterOtpScreen(false, true, "", userId.toString(), mobile.toString(), true);
-            }),
-          );
-        }
+        Navigator.pushNamed(context, 'login_screen');
       }
       );
     } else{

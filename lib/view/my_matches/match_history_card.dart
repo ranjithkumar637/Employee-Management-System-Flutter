@@ -39,7 +39,7 @@ class MatchHistoryCard extends StatelessWidget {
                       imageUrl: "${
                           AppConstants.imageBaseUrl
                       }${AppConstants.imageBaseUrlTeam}${match.teamALogo}",
-                      errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
+                      errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, width: 5.w, fit: BoxFit.cover,),
                       width: 20.w,
                       height: 9.h,
                       fit: BoxFit.cover,
@@ -82,7 +82,7 @@ class MatchHistoryCard extends StatelessWidget {
                     child: CachedNetworkImage(imageUrl: "${
                         AppConstants.imageBaseUrl
                     }${AppConstants.imageBaseUrlTeam}${match.teamBLogo}",
-                      errorWidget: (context, url, error) => Image.asset(Images.groundImage, width: 5.w, fit: BoxFit.cover,),
+                      errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, width: 5.w, fit: BoxFit.cover,),
                       width: 20.w,
                       height: 9.h,
                       fit: BoxFit.cover,

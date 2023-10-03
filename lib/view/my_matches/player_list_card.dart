@@ -17,7 +17,7 @@ class PlayerListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Bounceable(
+    return InkWell(
       onTap: (){
         Navigator.push(context, ScaleRoute(page:  PlayerProfile(playerId.toString())));
       },

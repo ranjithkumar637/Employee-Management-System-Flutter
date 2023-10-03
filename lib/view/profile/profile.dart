@@ -13,8 +13,8 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../my_team/city_list_dialog.dart';
-import '../my_team/create_team.dart';
 import '../my_team/state_list_dialog.dart';
+import '../my_team/team_detail_data.dart';
 import '../widgets/snackbar.dart';
 import 'location_data.dart';
 
@@ -54,11 +54,11 @@ class _ProfileState extends State<Profile> {
     Provider.of<TeamProvider>(context, listen: false).getCityList();
   }
 
-  void openCitySheet(String stateBasedCityId) {
+  void openCitySheet(String stateBasedCityId, bool value) {
     Provider.of<TeamProvider>(context, listen: false).getStateBasedCityList(stateBasedCityId);
     showDialog(context: context,
         builder: (BuildContext context){
-          return const CityListDialog(fromOrganizer: true);
+          return CityListDialog(fromOrganizer: true, orgCity: value);
         }
     );
   }
@@ -67,10 +67,10 @@ class _ProfileState extends State<Profile> {
     Provider.of<TeamProvider>(context, listen: false).getStateList();
   }
 
-  void openStateSheet() {
+  void openStateSheet(bool value) {
     showDialog(context: context,
         builder: (BuildContext context){
-          return const StateListDialog(fromOrganizer: true);
+          return StateListDialog(fromOrganizer: true, orgCity : value);
         }
     );
   }
@@ -513,68 +513,81 @@ class _ProfileState extends State<Profile> {
                           ),
                           SizedBox(height: 2.h),
                           //location
-                          Padding(
+                          profile.organizerDetails.state.toString() != ""
+                              ? Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 5.w
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    const FieldHeading("State *"),
-                                    const Spacer(),
-                                    editState ? InkWell(
-                                        onTap: (){
-                                          setState(() {
-                                            editState = false;
-                                          });
-                                        },
-                                        child: Icon(Icons.close, color: AppColor.secondaryColor, size: 5.w,))
-                                        : const SizedBox(),
-                                  ],
+                                const FieldHeading("State *", false),
+                                SizedBox(height:1.h),
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.5.h
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Text(profile.organizerDetails.state.toString(),
+                                    style: fontRegular.copyWith(
+                                        color: AppColor.textColor
+                                    ),),
                                 ),
+                                SizedBox(height: 2.h),
+                                const FieldHeading("City *", false),
+                                SizedBox(height:1.h),
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 2.5.h
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.lightColor,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Text(profile.organizerDetails.city.toString(),
+                                    style: fontRegular.copyWith(
+                                        color: AppColor.textColor
+                                    ),),
+                                ),
+                              ],
+                            ),
+                          )
+                          : Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.w
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const FieldHeading("State *", false),
                                 SizedBox(height:1.h),
                                 Consumer<TeamProvider>(
                                     builder: (context, team, child) {
                                       return InkWell(
                                         onTap: (){
                                           getStateList();
-                                          openStateSheet();
+                                          openStateSheet(true);
                                         },
                                         child: Container(
                                           width: double.infinity,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
-                                              vertical: 1.4.h
+                                              vertical: 2.5.h
                                           ),
                                           decoration: BoxDecoration(
                                             color: AppColor.lightColor,
                                             borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                          child: profile.organizerDetails.state.toString() != "" && !editState
-                                              ? Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(profile.organizerDetails.state.toString(),
-                                                      style: fontRegular.copyWith(
-                                                          color: AppColor.textColor
-                                                      ),),
-                                                  ),
-                                                  profile.organizerDetails.state.toString() != ""
-                                                      ? InkWell(
-                                                      onTap: (){
-                                                        setState(() {
-                                                          editState = true;
-                                                        });
-                                                      },
-                                                      child: Icon(Icons.edit, color: AppColor.secondaryColor, size: 4.w,))
-                                                      : const SizedBox()
-                                                ],
-                                              )
-                                          : Row(
+                                          child: Row(
                                             children: [
-                                              Text(team.state == "" ? "Choose state" : team.state,
+                                              Text(team.organizerState == "" ? "Choose state" : team.organizerState,
                                                 style: fontRegular.copyWith(
                                                     color: AppColor.textColor
                                                 ),),
@@ -587,64 +600,31 @@ class _ProfileState extends State<Profile> {
                                     }
                                 ),
                                 SizedBox(height: 2.h),
-                                Row(
-                                  children: [
-                                    const FieldHeading("City *"),
-                                    const Spacer(),
-                                    editCity ? InkWell(
-                                        onTap: (){
-                                          setState(() {
-                                            editCity = false;
-                                          });
-                                        },
-                                        child: Icon(Icons.close, color: AppColor.secondaryColor, size: 5.w,))
-                                        : const SizedBox(),
-                                  ],
-                                ),
+                                const FieldHeading("City *", false),
                                 SizedBox(height:1.h),
                                 Consumer<TeamProvider>(
                                     builder: (context, team, child) {
                                       return InkWell(
                                         onTap: (){
-                                          if(team.stateId == ""){
+                                          if(team.organizerStateId == ""){
                                             Dialogs.snackbar("Choose state first", context, isError: true);
                                           } else {
-                                            openCitySheet(team.stateId);
+                                            openCitySheet(team.organizerStateId, true);
                                           }
                                         },
                                         child: Container(
                                           width: double.infinity,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 5.w,
-                                              vertical: 1.4.h
+                                              vertical: 2.5.h
                                           ),
                                           decoration: BoxDecoration(
                                             color: AppColor.lightColor,
                                             borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                          child: profile.organizerDetails.city.toString() != "" && !editCity
-                                          ? Row(
+                                          child: Row(
                                             children: [
-                                              Expanded(
-                                                child: Text(profile.organizerDetails.city.toString(),
-                                                  style: fontRegular.copyWith(
-                                                      color: AppColor.textColor
-                                                  ),),
-                                              ),
-                                              profile.organizerDetails.city.toString() != ""
-                                                  ? InkWell(
-                                                  onTap: (){
-                                                    setState(() {
-                                                      editCity = true;
-                                                    });
-                                                  },
-                                                  child: Icon(Icons.edit, color: AppColor.secondaryColor, size: 4.w,))
-                                                  : const SizedBox()
-                                            ],
-                                          )
-                                          : Row(
-                                            children: [
-                                              Text(team.stateBasedCity == "" ? "Choose city" : team.stateBasedCity,
+                                              Text(team.organizerStateBasedCity == "" ? "Choose city" : team.organizerStateBasedCity,
                                                 style: fontRegular.copyWith(
                                                     color: AppColor.textColor
                                                 ),),
@@ -684,6 +664,7 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   child: Center(
                                     child: TextFormField(
+                                      readOnly: orgPinCodeController.text.isEmpty ? false : true,
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(6),
                                         FilteringTextInputFormatter.digitsOnly
@@ -747,8 +728,24 @@ class _ProfileState extends State<Profile> {
     String address = "", houseNo = "", pinCode = "", street = "", latitude = "", longitude = "";
     String cityIdG = "", stateIdG = "";
 
-    if(profile.address == "" && profile.groundAddress == "") {
+    //profile
+    String cityId = Provider.of<TeamProvider>(context, listen: false).organizerStateBasedCityId;
+    String stateId = Provider.of<TeamProvider>(context, listen: false).organizerStateId;
+
+    if(groundNameController.text.isEmpty){
+      Dialogs.snackbar("Enter ground name", context, isError: true);
+    }
+    else if(groundMobileController.text.isEmpty){
+      Dialogs.snackbar("Enter ground mobile number", context, isError: true);
+    }
+    else if(orgPinCodeController.text.isEmpty){
+      Dialogs.snackbar("Enter your pin code", context, isError: true);
+    }
+    else if(profile.address == "" && profile.groundAddress == "") {
       Dialogs.snackbar("Set ground location", context, isError: true);
+    }
+    else if(cityId == "" || stateId == ""){
+      Dialogs.snackbar("Select your state and city", context, isError: true);
     }
     else if(profile.groundAddress == ""){
       address = Provider.of<ProfileProvider>(context, listen: false).address;
@@ -766,9 +763,7 @@ class _ProfileState extends State<Profile> {
       latitude = Provider.of<ProfileProvider>(context, listen: false).groundLatitude;
       longitude = Provider.of<ProfileProvider>(context, listen: false).groundLongitude;
     }
-    //profile
-    String cityId = Provider.of<TeamProvider>(context, listen: false).stateBasedCityId;
-    String stateId = Provider.of<TeamProvider>(context, listen: false).stateId;
+
 
     //ground
     if(profile.cityIdGround == "" && profile.stateIdGround == ""){

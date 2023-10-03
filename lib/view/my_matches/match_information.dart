@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -47,7 +48,11 @@ class _MatchInformationState extends State<MatchInformation> {
               children: [
                 ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),
-                    child: Image.network('${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.image}', width: double.infinity, height: 16.h, fit: BoxFit.cover,)),
+                    child: CachedNetworkImage(imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.image}',
+                      width: double.infinity, height: 16.h, fit: BoxFit.cover,
+                        errorWidget: (context, url, widget){
+                          return Image.asset(Images.groundBig, width: double.infinity, height: 16.h, fit: BoxFit.cover);
+                        })),
                 Container(
                     width: double.infinity, height: 16.h,
                     decoration: BoxDecoration(

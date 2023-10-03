@@ -38,7 +38,7 @@ class PlayerMatchCard extends StatelessWidget {
               width: 24.w,
               fit: BoxFit.cover,
               errorWidget:(context, url, error) =>
-                  Image.asset(Images.groundImage, fit: BoxFit.cover, height: 12.h,
+                  Image.asset(Images.groundSmall, fit: BoxFit.cover, height: 12.h,
                     width: 24.w,),
             ),
           ),

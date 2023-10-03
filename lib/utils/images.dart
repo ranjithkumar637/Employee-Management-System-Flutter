@@ -100,6 +100,8 @@ class Images {
   static const String revenue = 'assets/images/revenue.svg';
   static const String moreIcon = 'assets/images/more_icon.svg';
 
+  static const String groundSmall = 'assets/images/ground_default_small.png';
+  static const String groundBig = 'assets/images/ground_default_big.png';
 
 
 }

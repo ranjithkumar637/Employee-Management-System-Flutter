@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -12,6 +13,7 @@ import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
+import '../widgets/gallery_image_view.dart';
 
 class OffingMatchInfo extends StatefulWidget {
   const OffingMatchInfo({Key? key}) : super(key: key);
@@ -67,7 +69,8 @@ class _OffingMatchInfoState extends State<OffingMatchInfo> {
                             match.matchDetails.mainImage.toString(),
                             match.matchDetails.organizerName.toString(),
                             match.matchDetails.latitude.toString(),
-                            match.matchDetails.longitude.toString());
+                            match.matchDetails.longitude.toString(),
+                            match.galleryImage);
                       }
                   ),
                 ],
@@ -83,7 +86,8 @@ class _OffingMatchInfoState extends State<OffingMatchInfo> {
 class MatchInformation extends StatefulWidget {
   final String date, slot, team, ground, location, opponent, groundImage, organizer, latitude, longitude;
   final bool confirmed;
-  const MatchInformation(this.date, this.slot, this.team, this.ground, this.location, this.opponent, this.confirmed, this.groundImage, this.organizer, this.latitude, this.longitude, {Key? key}) : super(key: key);
+  final List<String> galleryImage;
+  const MatchInformation(this.date, this.slot, this.team, this.ground, this.location, this.opponent, this.confirmed, this.groundImage, this.organizer, this.latitude, this.longitude, this.galleryImage, {Key? key}) : super(key: key);
 
   @override
   State<MatchInformation> createState() => _MatchInformationState();
@@ -121,7 +125,12 @@ class _MatchInformationState extends State<MatchInformation> {
               children: [
                 ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),
-                    child: Image.network('${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.groundImage}', width: double.infinity, height: 16.h, fit: BoxFit.cover,)),
+                    child: CachedNetworkImage(
+                      imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.groundImage}',
+                      width: double.infinity, height: 16.h, fit: BoxFit.cover,
+                        errorWidget: (context, url, widget){
+                          return Image.asset(Images.groundBig, width: double.infinity, height: 16.h, fit: BoxFit.cover);
+                        })),
                 Container(
                   width: double.infinity, height: 16.h,
                   decoration: BoxDecoration(
@@ -202,11 +211,20 @@ class _MatchInformationState extends State<MatchInformation> {
                 widget.confirmed ? const SizedBox() : Positioned(
                   right: 3.w,
                   bottom: 1.5.h,
-                  child: Text("5+ Photos",
-                    style: fontRegular.copyWith(
-                        fontSize: 10.sp,
-                        color: AppColor.lightColor
-                    ),),
+                  child:  widget.galleryImage.isEmpty
+                      ? const SizedBox()
+                      : InkWell(
+                    onTap: (){
+                      showGroundGalleryImages(widget.galleryImage);
+                    },
+                    child: Text(getPhotoCount(widget.galleryImage) == "0"
+                        ? "1 Photo"
+                        : "${getPhotoCount(widget.galleryImage)}+ Photos",
+                      style: fontRegular.copyWith(
+                          fontSize: 10.sp,
+                          color: AppColor.lightColor
+                      ),),
+                  ),
                 ),
               ],
             ),
@@ -214,6 +232,21 @@ class _MatchInformationState extends State<MatchInformation> {
         ],
       ),
     );
+  }
+
+  String getPhotoCount(List<String> galleryImage) {
+    int length = galleryImage.length - 1;
+    return length.toString();
+  }
+
+  void showGroundGalleryImages(dynamic galleryImage) {
+    showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return GalleryImageView(galleryImage);
+        });
   }
 
   openMaps(String latitude, String longitude) async {

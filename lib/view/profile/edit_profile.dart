@@ -296,7 +296,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                               && imageFiles.isEmpty)...[
                             ClipRRect(
                               borderRadius: BorderRadius.circular(15.0),
-                              child: Image.asset(Images.groundImage, width: 90.w,
+                              child: Image.asset(Images.groundBig, width: 90.w,
                                 fit: BoxFit.cover,
                                 height: 18.h,),
                             ),
@@ -331,7 +331,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                       fit: BoxFit.cover,
                                       height: 18.h,
                                       errorWidget: (context, error, url) =>
-                                          Image.asset(Images.groundImage, width: 90.w,
+                                          Image.asset(Images.groundBig, width: 90.w,
                                             fit: BoxFit.cover,
                                             height: 18.h,),
                                     ))

@@ -33,7 +33,7 @@ class UpcomingCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) {
-                  return MatchInfoScreen(matchId: match.matchId.toString());
+                  return MatchInfoScreen(matchId: match.matchId.toString(), matchNumber: match.matchNumber.toString(),);
                 }),
           );
         }

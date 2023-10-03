@@ -116,17 +116,22 @@ class _InformationState extends State<Information> {
       mainImg = Provider.of<ProfileProvider>(context, listen: false).mainImage;
     // }
     print("gallery image length ${gallery.length}");
-    if(profile.mainImg == "" && mainImg.isEmpty){
-      Dialogs.snackbar("Upload main ground image", context, isError: true);
-    }
+    // if(profile.mainImg == "" && mainImg.isEmpty){
+    //   Dialogs.snackbar("Upload main ground image", context, isError: true);
+    // }
     // else if(gallery.isEmpty && profile.groundImages.isEmpty){
     //   Dialogs.snackbar("Upload gallery images", context, isError: true);
     // }
-    else if(pitch == ""){
+    // else
+      if(pitch == ""){
       Dialogs.snackbar("Set pitch data", context, isError: true);
-    } else if(boundaryLine == ""){
-      Dialogs.snackbar("Set boundary line", context, isError: true);
-    } else if(pinCode == ""){
+    } else if(description == ""){
+        Dialogs.snackbar("Enter ground description", context, isError: true);
+      }
+    //   else if(boundaryLine == ""){
+    //   Dialogs.snackbar("Set boundary line", context, isError: true);
+    // }
+      else if(pinCode == ""){
       Dialogs.snackbar("Provide ground address details", context, isError: true);
     } else if(stateId == "" || cityId == ""){
       Dialogs.snackbar("Select ground state & city", context, isError: true);

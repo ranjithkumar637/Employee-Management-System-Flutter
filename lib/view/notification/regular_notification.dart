@@ -7,15 +7,10 @@ import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
-class RegularNotification extends StatefulWidget {
-  final String title, body, image;
-  const RegularNotification(this.title, this.body, this.image, {Key? key}) : super(key: key);
+class RegularNotification extends StatelessWidget {
+  final String title, body, image, read;
+  const RegularNotification(this.title, this.body, this.image, this.read, {Key? key}) : super(key: key);
 
-  @override
-  State<RegularNotification> createState() => _RegularNotificationState();
-}
-
-class _RegularNotificationState extends State<RegularNotification> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,12 +30,12 @@ class _RegularNotificationState extends State<RegularNotification> {
         children: [
           ClipOval(
             child: CachedNetworkImage(
-              imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.image}",
+              imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$image",
               height: 7.h,
               width: 14.w,
               fit: BoxFit.cover,
               errorWidget: (context, url, widget){
-                return Image.asset(Images.groundListImage2, fit: BoxFit.cover, height: 7.h,
+                return Image.asset(Images.groundSmall, fit: BoxFit.cover, height: 7.h,
                   width: 14.w,);
               },
             ),
@@ -50,13 +45,13 @@ class _RegularNotificationState extends State<RegularNotification> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.title,
+                Text(title,
                   style: fontMedium.copyWith(
                       fontSize: 11.sp,
                       color: AppColor.redColor
                   ),),
                 SizedBox(height: 1.h),
-                Text(widget.body,
+                Text(body,
                   style: fontRegular.copyWith(
                       fontSize: 10.sp,
                       color: AppColor.textColor
@@ -65,10 +60,11 @@ class _RegularNotificationState extends State<RegularNotification> {
             ),
           ),
           SizedBox(width: 3.w),
-          const CircleAvatar(
+          read == "0"
+          ? const CircleAvatar(
             radius: 4,
             backgroundColor: AppColor.secondaryColor,
-          ),
+          ) : const SizedBox(),
         ],
       ),
     );

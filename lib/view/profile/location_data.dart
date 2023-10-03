@@ -66,7 +66,7 @@ class _LocationDataState extends State<LocationData> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Location",
+                  Text("Location *",
                     style: fontMedium.copyWith(
                         color: AppColor.textColor,
                         fontSize: 12.sp
@@ -74,12 +74,22 @@ class _LocationDataState extends State<LocationData> {
                   InkWell(
                       onTap: (){
                         Provider.of<TeamProvider>(context, listen: false).clearData();
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return const AddAddress();
-                        }),
-                      );
+                        if(profile.groundAddress == "" && widget.ground.address.toString() == "null"){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return AddAddress(false, profile, widget.ground);
+                            }),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return AddAddress(true, profile, widget.ground);
+                            }),
+                          );
+                        }
+
                     },
                       child: Container(
                         padding: EdgeInsets.symmetric(

@@ -47,6 +47,7 @@ class NotificationList {
   dynamic groundLongitude;
   dynamic title;
   dynamic note;
+  dynamic read;
 
   NotificationList(
       {id,
@@ -67,7 +68,8 @@ class NotificationList {
         groundLatitude,
         groundLongitude,
         title,
-        note});
+        note,
+      read});
 
   NotificationList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -89,6 +91,7 @@ class NotificationList {
     groundLongitude = json['ground_longitude'];
     title = json['title'];
     note = json['note'];
+    read = json['read_notify'];
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +115,7 @@ class NotificationList {
     data['ground_longitude'] = groundLongitude;
     data['title'] = title;
     data['note'] = note;
+    data['read_notify'] = read;
     return data;
   }
 }

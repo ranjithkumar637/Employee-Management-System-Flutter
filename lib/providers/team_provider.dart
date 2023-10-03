@@ -38,6 +38,10 @@ class TeamProvider extends ChangeNotifier{
 
   String state = "", stateId = "";
   String stateBasedCity = "", stateBasedCityId = "";
+
+  String organizerState = "", organizerStateId = "";
+  String organizerStateBasedCity = "", organizerStateBasedCityId = "";
+
   String captainName = "", captainId = "";
 
   SquadFromTeamModel squadFromTeamModel = SquadFromTeamModel();
@@ -62,11 +66,33 @@ class TeamProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  storeStateOrganizer(String stateName, String id){
+    organizerState = stateName;
+    organizerStateId = id;
+    notifyListeners();
+  }
+
+  storeStateBasedCityOrganizer(String cityName, String id){
+    organizerStateBasedCity = cityName;
+    organizerStateBasedCityId = id;
+    notifyListeners();
+  }
+
   clearData(){
+    print("clearing location data");
     state = "";
     stateId = "";
     stateBasedCity = "";
     stateBasedCityId = "";
+    notifyListeners();
+  }
+
+  clearDataOrganizer(){
+    print("clearing location data - organizer");
+    organizerState = "";
+    organizerStateId = "";
+    organizerStateBasedCity = "";
+    organizerStateBasedCityId = "";
     notifyListeners();
   }
 

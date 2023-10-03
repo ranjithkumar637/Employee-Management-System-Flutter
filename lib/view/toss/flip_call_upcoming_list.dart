@@ -302,7 +302,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                         child: CachedNetworkImage(imageUrl: "${
                                             AppConstants.imageBaseUrl
                                         }${AppConstants.imageBaseUrlTeam}${todayMatches[index].teamAData?.logo}",
-                                          errorWidget: (context, url, error) => Image.asset(Images.groundImage, fit: BoxFit.cover, width: 22.w,
+                                          errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 22.w,
                                             height: 10.h,),
                                           width: 22.w,
                                           height: 10.h,
@@ -383,7 +383,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                         child: CachedNetworkImage(imageUrl: "${
                                             AppConstants.imageBaseUrl
                                         }${AppConstants.imageBaseUrlTeam}${todayMatches[index].teamBData?.logo}",
-                                          errorWidget: (context, url, error) => Image.asset(Images.groundImage, fit: BoxFit.cover, width: 22.w,
+                                          errorWidget: (context, url, error) => Image.asset(Images.createTeamBg, fit: BoxFit.cover, width: 22.w,
                                             height: 10.h,),
                                           width: 22.w,
                                           height: 10.h,

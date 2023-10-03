@@ -14,7 +14,7 @@ class PlayerImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       child: CachedNetworkImage(
-        imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlCaptain}$imageUrl', height: imageHeight,
+        imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}$imageUrl', height: imageHeight,
         width: imageWidth, fit: BoxFit.cover,
         errorWidget: (context, url, error) =>  Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: imageHeight,
           width: imageWidth,),

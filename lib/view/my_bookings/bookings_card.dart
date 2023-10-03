@@ -42,7 +42,7 @@ class BookingsCard extends StatelessWidget {
                 width: 28.w,
                 fit: BoxFit.cover,
                 errorWidget: (context, error, url) =>
-                    Image.asset(Images.groundImage, width: 90.w,
+                    Image.asset(Images.createTeamBg, width: 90.w,
                       fit: BoxFit.cover,
                       height: 12.h,),
               ),

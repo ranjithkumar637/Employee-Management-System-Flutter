@@ -93,7 +93,11 @@ class _OffingDetailScreenState extends State<OffingDetailScreen> with SingleTick
                               Navigator.pop(context);
                             },
                             child: Icon(Icons.arrow_back, color: AppColor.lightColor, size: 7.w,)),
-                        SizedBox(width: 7.w,),
+                        Text("#${widget.offing.matchNumber}",
+                          style: fontMedium.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColor.lightColor
+                          ),),
                         SizedBox(width: 7.w,),
                       ],
                     ),

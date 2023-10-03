@@ -328,7 +328,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) {
-                                          return MatchInfoScreen(matchId: matchHistoryList[index].id.toString());
+                                          return MatchInfoScreen(matchId: matchHistoryList[index].id.toString(), matchNumber: matchHistoryList[index].matchNumber.toString(),);
                                         }),
                                   );
                                 }
@@ -362,7 +362,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                           context,
                           MaterialPageRoute(
                               builder: (context) {
-                                return MatchInfoScreen(matchId: filteredItems[index].id.toString());
+                                return MatchInfoScreen(matchId: filteredItems[index].id.toString(), matchNumber: filteredItems[index].matchNumber.toString(),);
                               }),
                         );
                       },

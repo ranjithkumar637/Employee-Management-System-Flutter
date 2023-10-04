@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:elevens_organizer/providers/team_provider.dart';
@@ -30,7 +32,9 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
   Future<List<TodayMatches>> ? futureData;
   bool loading = false;
 
-  String pendingTime = "45 minutes";
+  String timeDifference = 'Calculating...';
+  StreamController<String> timerController = StreamController<String>();
+
 
   bool checkTossGraceTimePassed(String startTime) {
     DateTime currentTime = DateTime.now();
@@ -150,12 +154,15 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
      loading=false;
    });
   }
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setDelay();
   }
+
   @override
   Widget build(BuildContext context) {
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
@@ -245,6 +252,9 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                   itemCount: todayMatches.length,
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, int index) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      startTimer(todayMatches[index].teamBData!.bookingSlotStart.toString());
+                    });
                     return Bounceable(
                       onTap: (){
                         if(todayMatches[index].freezeCount.toString() == "2" && todayMatches[index].teamACaptain.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "1"){
@@ -477,38 +487,52 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                                       ],
                                     ),
                                   ),
-                                 Row(
-                                   children: [
-                                     Container(
-                                       padding:
-                                       EdgeInsets.symmetric(
-                                         horizontal: 1.w,
-                                         vertical: 0.5.h,
-                                       ),
-                                       decoration: BoxDecoration(
-                                           color: AppColor
-                                               .secondaryColor
-                                               .withOpacity(0.2),
-                                           shape: BoxShape.circle),
-                                       child: Icon(
-                                         Icons.location_on_outlined,
-                                         color: AppColor
-                                             .secondaryColor,
-                                         size: 3.5.w,
-                                       ),
-                                     ),
-                                     SizedBox(width: 1.w),
-                                     Text(
-                                         todayMatches[index].teamAData!.cityName.toString(),
-                                       style: fontMedium
-                                           .copyWith(
-                                           fontSize:
-                                           9.sp,
-                                           color: AppColor
-                                               .textColor),
-                                     ),
-                                   ],
-                                 )
+                                  StreamBuilder<String>(
+                                    stream: timerController.stream,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        String timeDifference = snapshot.data!;
+                                        return Text(
+                                          timeDifference,
+                                          style: TextStyle(fontSize: 18),
+                                        );
+                                      } else {
+                                        return Text('Loading...');
+                                      }
+                                    },
+                                  )
+                                 // Row(
+                                 //   children: [
+                                 //     Container(
+                                 //       padding:
+                                 //       EdgeInsets.symmetric(
+                                 //         horizontal: 1.w,
+                                 //         vertical: 0.5.h,
+                                 //       ),
+                                 //       decoration: BoxDecoration(
+                                 //           color: AppColor
+                                 //               .secondaryColor
+                                 //               .withOpacity(0.2),
+                                 //           shape: BoxShape.circle),
+                                 //       child: Icon(
+                                 //         Icons.location_on_outlined,
+                                 //         color: AppColor
+                                 //             .secondaryColor,
+                                 //         size: 3.5.w,
+                                 //       ),
+                                 //     ),
+                                 //     SizedBox(width: 1.w),
+                                 //     Text(
+                                 //         todayMatches[index].teamAData!.cityName.toString(),
+                                 //       style: fontMedium
+                                 //           .copyWith(
+                                 //           fontSize:
+                                 //           9.sp,
+                                 //           color: AppColor
+                                 //               .textColor),
+                                 //     ),
+                                 //   ],
+                                 // )
                                 ],
                               ),
                             ),
@@ -525,4 +549,44 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
       ),
     );
   }
+
+  void startTimer(String start) {
+    DateTime currentTime = DateTime.now();
+    DateFormat format = DateFormat("h:mm a");
+    DateTime startTime = DateTime(
+      currentTime.year,
+      currentTime.month,
+      currentTime.day,
+      format.parse(start).hour,
+      format.parse(start).minute,
+    );
+
+    // Replace '2023-10-05 17:30:00' with your desired time in the format 'YYYY-MM-DD HH:MM:SS'.
+    DateTime targetTime = DateTime.parse(startTime.toString());
+    int differenceInSeconds = targetTime.difference(currentTime).inSeconds;
+
+    timerController.sink.add(formatTime(differenceInSeconds));
+    // Start a timer that updates the time difference every minute
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      currentTime = DateTime.now();
+      int newTimeDifferenceInMinutes =
+          startTime.difference(currentTime).inSeconds + 1;
+      timerController.sink.add(formatTime(newTimeDifferenceInMinutes));
+    });
+  }
+
+  String formatTime(int seconds) {
+    // int minutes = seconds ~/ 60;
+    // int remainingSeconds = seconds % 60;
+    Duration duration = Duration(seconds: seconds);
+
+    if (duration.inHours >= 1) {
+      // More than an hour remaining, format as "hh:mm:ss"
+      return '${duration.inHours}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
+    } else {
+      // Less than an hour remaining, format as "mm:ss"
+      return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
+    }
+  }
+
 }

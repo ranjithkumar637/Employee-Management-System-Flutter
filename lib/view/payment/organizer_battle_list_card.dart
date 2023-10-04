@@ -58,13 +58,13 @@ class OrganizerBattleListCard extends StatelessWidget {
                             fontSize: 12.sp,
                             color: AppColor.textColor
                         ),),
-                      // status == "0"
-                      // ? InkWell(
-                      //     onTap: (){
-                      //       showPopupMenu(context, paidPrice, totalPrice, team);
-                      //     },
-                      //     child: Icon(Icons.more_vert_rounded, color: AppColor.textColor, size: 5.w,))
-                      // : const SizedBox(),
+                      status == "0"
+                      ? InkWell(
+                          onTap: (){
+                            showPopupMenu(context, paidPrice, totalPrice, team);
+                          },
+                          child: Icon(Icons.more_vert_rounded, color: AppColor.textColor, size: 5.w,))
+                      : const SizedBox(),
                     ],
                   ),
                   SizedBox(height: 1.h),

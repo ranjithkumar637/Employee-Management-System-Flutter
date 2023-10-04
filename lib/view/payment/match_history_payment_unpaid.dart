@@ -107,7 +107,7 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2000),
-                              lastDate: DateTime.now(),
+                              lastDate: DateTime.now().add(const Duration(days: 7)),
                               builder: (context, child) {
                                 return Theme(
                                   data: Theme.of(context).copyWith(
@@ -144,7 +144,7 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2000),
-                              lastDate: DateTime.now(),
+                              lastDate: DateTime.now().add(const Duration(days: 7)),
                               builder: (context, child) {
                                 return Theme(
                                   data: Theme.of(context).copyWith(

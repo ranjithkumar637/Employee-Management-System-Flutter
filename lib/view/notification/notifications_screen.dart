@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:elevens_organizer/view/notification/regular_notification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -37,6 +40,7 @@ class _NotificationsState extends State<Notifications> {
         return notificationList;
       });
     });
+
     Provider.of<ProfileProvider>(context, listen: false).readNotification();
   }
 

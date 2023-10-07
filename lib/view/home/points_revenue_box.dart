@@ -3,8 +3,10 @@ import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../providers/navigation_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 
@@ -47,12 +49,7 @@ class PointsAndRevenueBox extends StatelessWidget {
           InkWell(
             onTap: (){
               if(id == 2){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const RevenueScreen();
-                  }),
-                );
+                Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(3);
               } else if(id == 1){
                 Navigator.push(
                   context,
@@ -74,12 +71,7 @@ class PointsAndRevenueBox extends StatelessWidget {
             onTap: (){
               print(id);
               if(id == 2){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const RevenueScreen();
-                  }),
-                );
+                Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(3);
               } else if(id == 1){
                 Navigator.push(
                   context,

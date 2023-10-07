@@ -55,6 +55,12 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
+  moveToRevenue() {
+    setState(() {
+      _currentIndex = 3;
+    });
+  }
+
   moveToHome(){
     setState(() {
       _currentIndex = 0;
@@ -246,6 +252,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 moveToBookings();
               } else if(nav.currentIndex == 2){
                 moveToMatches();
+              }else if(nav.currentIndex == 3){
+                moveToRevenue();
               } else if(nav.currentIndex == 4){
                 moveToMore();
               }
@@ -256,6 +264,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   if (move.bookings == true) {
                     moveToBookings();
                   } else if(move.matches == true){
+                    moveToMatches();
+                  }
+                  else if(move.revenue == true){
                     moveToMatches();
                   }
                   else

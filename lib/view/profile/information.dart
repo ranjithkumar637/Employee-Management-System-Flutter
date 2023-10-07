@@ -50,22 +50,22 @@ class _InformationState extends State<Information> {
                   ),
                   //about
                   About(widget.ground),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    child: loading
+                        ? const Center(child: CircularProgressIndicator(),)
+                        : Bounceable(
+                        onTap: (){
+                          validate();
+                        },
+                        child: const CustomButton(AppColor.textColor, "Update Ground Details", AppColor.lightColor)),
+                  ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 5.w,
-              vertical: 2.h,
-            ),
-            child: loading
-                ? const Center(child: CircularProgressIndicator(),)
-                : Bounceable(
-                onTap: (){
-                  validate();
-                },
-                child: const CustomButton(AppColor.textColor, "Update Ground Details", AppColor.lightColor)),
           ),
         ],
       ),

@@ -697,22 +697,22 @@ class _ProfileState extends State<Profile> {
                               ],
                             ),
                           ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                              vertical: 2.h,
+                            ),
+                            child: loading
+                                ? const Center(child: CircularProgressIndicator(),)
+                                : Bounceable(
+                                onTap: (){
+                                  validate();
+                                },
+                                child: const CustomButton(AppColor.textColor, "Save Profile", AppColor.lightColor)),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 5.w,
-                      vertical: 2.h,
-                    ),
-                    child: loading
-                      ? const Center(child: CircularProgressIndicator(),)
-                    : Bounceable(
-                        onTap: (){
-                          validate();
-                        },
-                        child: const CustomButton(AppColor.textColor, "Save Profile", AppColor.lightColor)),
                   ),
                 ],
               );

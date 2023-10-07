@@ -148,11 +148,22 @@ class ProfileProvider extends ChangeNotifier{
 
   bool bookings = false;
   bool matches = false;
+    bool revenue = false;
 
   moveToBookings() {
     bookings = true;
     notifyListeners();
   }
+
+    moveToRevenue() {
+      revenue = true;
+      notifyListeners();
+    }
+
+    removeRevenue() {
+      revenue = false;
+      notifyListeners();
+    }
 
     removeBookings() {
       bookings = false;
@@ -175,6 +186,7 @@ class ProfileProvider extends ChangeNotifier{
       email = "";
       bookings = false;
       matches = false;
+      revenue = false;
       notifyListeners();
     }
 

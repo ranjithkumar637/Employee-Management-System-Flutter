@@ -258,25 +258,34 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                     return Bounceable(
                       onTap: (){
                         if(todayMatches[index].freezeCount.toString() == "2" && todayMatches[index].teamACaptain.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "1"){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>
-                                  Toss(
-                                    todayMatches[index].teamAData!.teamName
-                                        .toString(),
-                                    todayMatches[index].teamAData!.teamId
-                                        .toString(),
-                                    todayMatches[index].teamBData!.teamName
-                                        .toString(),
-                                    todayMatches[index].teamBData!.teamId
-                                        .toString(),
-                                    todayMatches[index].teamAData!.matchId
-                                        .toString(),
-                                    todayMatches[index].teamAData!.logo
-                                        .toString(),
-                                    todayMatches[index].teamBData!.logo
-                                        .toString(),
-                                  )));
-                        } else if(todayMatches[index].teamBData!.teamFreeze.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "0"
+                          if(int.parse(todayMatches[index].matchTeamACount.toString()) >= 11 && int.parse(todayMatches[index].matchTeamBCount.toString()) >= 11){
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) =>
+                                    Toss(
+                                      todayMatches[index].teamAData!.teamName
+                                          .toString(),
+                                      todayMatches[index].teamAData!.teamId
+                                          .toString(),
+                                      todayMatches[index].teamBData!.teamName
+                                          .toString(),
+                                      todayMatches[index].teamBData!.teamId
+                                          .toString(),
+                                      todayMatches[index].teamAData!.matchId
+                                          .toString(),
+                                      todayMatches[index].teamAData!.logo
+                                          .toString(),
+                                      todayMatches[index].teamBData!.logo
+                                          .toString(),
+                                    )));
+                          } else if(int.parse(todayMatches[index].matchTeamACount.toString()) >= 11 && int.parse(todayMatches[index].matchTeamBCount.toString()) < 11){
+                            Dialogs.snackbar("Team ${todayMatches[index].teamBData?.teamName.toString()} is yet to be frozen with a minimum of 11 players", context, isError: true);
+                          } else if(int.parse(todayMatches[index].matchTeamACount.toString()) < 11 && int.parse(todayMatches[index].matchTeamBCount.toString()) >= 11){
+                            Dialogs.snackbar("Team ${todayMatches[index].teamAData?.teamName.toString()} is yet to be frozen with a minimum of 11 players", context, isError: true);
+                          } else if(int.parse(todayMatches[index].matchTeamACount.toString()) < 11 && int.parse(todayMatches[index].matchTeamBCount.toString()) < 11){
+                            Dialogs.snackbar("Both teams yet to be frozen with a minimum of 11 players", context, isError: true);
+                          }
+                        }
+                        else if(todayMatches[index].teamBData!.teamFreeze.toString() == "1" && todayMatches[index].teamBCaptain.toString() == "0"
                             && todayMatches[index].teamAData!.teamFreeze.toString() == "1" && todayMatches[index].teamACaptain.toString() == "0"){
                           Dialogs.snackbar("No captain assigned in both teams", context, isError: true);
                         } else if(todayMatches[index].teamAData!.teamFreeze.toString() == "1" && todayMatches[index].teamACaptain.toString() == "0"){

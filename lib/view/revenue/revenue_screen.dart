@@ -33,7 +33,9 @@ class _RevenueScreenState extends State<RevenueScreen> {
   bool loading = false;
 
   List<TeamsList> revenueTeamList = [];
+
   getRevenueTeamList(){
+    Provider.of<PaymentInfoProvider>(context, listen: false).getRevenueTeamList();
     futureData = PaymentInfoProvider().getRevenueTeamList().then((value){
       setState(() {
         revenueTeamList = [];
@@ -43,6 +45,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
       return revenueTeamList;
     });
   }
+
   setDelay() async{
     if(mounted){
       setState(() {
@@ -57,11 +60,11 @@ class _RevenueScreenState extends State<RevenueScreen> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
     setDelay();
-
   }
 
   @override
@@ -94,9 +97,9 @@ class _RevenueScreenState extends State<RevenueScreen> {
           ),
           revenueTeamList.isEmpty
               ? const SizedBox()
-          : Consumer<ProfileProvider>(
-            builder: (context, profile, child) {
-              return RevenueReferDataBox("${Strings.rupee} ${profile.profileModel.totalRevenue.toString()}", 2);
+          : Consumer<PaymentInfoProvider>(
+            builder: (context, revenue, child) {
+              return RevenueReferDataBox("${Strings.rupee} ${revenue.revenueTeamListModel.totalRevenue.toString()}", 2);
             }
           ),
           SizedBox(height: 2.h),
@@ -114,6 +117,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
           //             onTap: () async {
           //               final DateTime? picked = await showDatePicker(
           //                 context: context,
+          // initialEntryMode: DatePickerEntryMode.calendarOnly,
           //                 initialDate: DateTime.now(),
           //                 firstDate: DateTime(2000),
           //                 lastDate: DateTime.now(),
@@ -151,6 +155,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
           //             onTap: () async {
           //               final DateTime? picked = await showDatePicker(
           //                 context: context,
+          // initialEntryMode: DatePickerEntryMode.calendarOnly,
           //                 initialDate: DateTime.now(),
           //                 firstDate: DateTime(2000),
           //                 lastDate: DateTime.now(),

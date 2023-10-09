@@ -128,6 +128,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                           onTap: () async {
                             final DateTime? picked = await showDatePicker(
                               context: context,
+                              initialEntryMode: DatePickerEntryMode.calendarOnly,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2000),
                               lastDate: DateTime.now(),
@@ -165,6 +166,7 @@ class _MatchHistoryState extends State<MatchHistory> {
                           onTap: () async {
                             final DateTime? picked = await showDatePicker(
                               context: context,
+                              initialEntryMode: DatePickerEntryMode.calendarOnly,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(2000),
                               lastDate: DateTime.now().add(const Duration(days: 7)),
@@ -356,15 +358,19 @@ class _MatchHistoryState extends State<MatchHistory> {
                   final match = filteredItems[index];
                   return Bounceable(
                       onTap: (){
-                        Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
-                        Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return MatchInfoScreen(matchId: filteredItems[index].id.toString(), matchNumber: filteredItems[index].matchNumber.toString(),);
-                              }),
-                        );
+                          if(match.matchStatus.toString() == "Abandoned" || match.matchStatus.toString() == "Cancelled"){
+
+                          } else {
+                            Provider.of<BookingProvider>(context, listen: false).removeMatchTeamData();
+                            Provider.of<BookingProvider>(context, listen: false).clearMatchInfo();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) {
+                                    return MatchInfoScreen(matchId: filteredItems[index].id.toString(), matchNumber: filteredItems[index].matchNumber.toString(),);
+                                  }),
+                            );
+                          }
                       },
                       child: MatchHistoryCard(match)
                   );

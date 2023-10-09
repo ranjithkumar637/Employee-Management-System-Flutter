@@ -41,6 +41,7 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
                       onTap: () async {
                         final DateTime? picked = await showDatePicker(
                           context: context,
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
@@ -78,6 +79,7 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
                       onTap: () async {
                         final DateTime? picked = await showDatePicker(
                           context: context,
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),

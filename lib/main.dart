@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:elevens_organizer/providers/auth_provider.dart';
 import 'package:elevens_organizer/providers/booking_provider.dart';
 import 'package:elevens_organizer/providers/navigation_provider.dart';
+import 'package:elevens_organizer/providers/payment_info_provider.dart';
 import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/providers/team_provider.dart';
 import 'package:elevens_organizer/utils/colours.dart';
@@ -56,6 +57,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => TeamProvider()),
         ChangeNotifierProvider(create: (context) => BookingProvider()),
         ChangeNotifierProvider(create: (context) => NavigationProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentInfoProvider()),
       ],
       child: const MyApp(),
     ),

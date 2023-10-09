@@ -82,7 +82,7 @@ class _RecentBookingsState extends State<RecentBookings> {
                   children: [
                     Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
                     SizedBox(height: 3.h),
-                    Text("No matches found",
+                    Text("No bookings found",
                       style: fontMedium.copyWith(
                           fontSize: 12.sp,
                           color: AppColor.redColor

@@ -125,6 +125,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                 onTap: () async {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
+                                    initialEntryMode: DatePickerEntryMode.calendarOnly,
                                     initialDate: DateTime.now(),
                                     firstDate: DateTime(2000),
                                     lastDate: DateTime.now(),
@@ -162,6 +163,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                 onTap: () async {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
+                                    initialEntryMode: DatePickerEntryMode.calendarOnly,
                                     initialDate: DateTime.now(),
                                     firstDate: DateTime(2000),
                                     lastDate: DateTime.now().add(const Duration(days: 7)),
@@ -285,7 +287,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                       children: [
                         Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
                         SizedBox(height: 3.h),
-                        Text("No matches found",
+                        Text("No bookings found",
                           style: fontMedium.copyWith(
                               fontSize: 12.sp,
                               color: AppColor.redColor

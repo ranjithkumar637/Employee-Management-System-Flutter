@@ -474,6 +474,7 @@ class _ProfileState extends State<Profile> {
                                           onTap: () async {
                                             final DateTime? picked = await showDatePicker(
                                               context: context,
+                                              initialEntryMode: DatePickerEntryMode.calendarOnly,
                                               initialDate: DateTime.now(),
                                               firstDate: DateTime(1950),
                                               lastDate: DateTime.now(),

@@ -111,10 +111,12 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value){
       if(value.status == true){
         print(value.slotTimeList);
-        setState(() {
-          slotsList = [];
-          slotsList = value.slotTimeList!;
-        });
+        if(mounted){
+          setState(() {
+            slotsList = [];
+            slotsList = value.slotTimeList!;
+          });
+        }
       }
     });
 
@@ -459,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   itemWidth: 15.w),
                               SizedBox(height: 2.h),
                               slotsList.isEmpty
-                                  ? Text("Slots not available",
+                                  ? Text("Slots will be opened shortly",
                                 style: fontMedium.copyWith(
                                     color: AppColor.redColor,
                                     fontSize: 11.sp

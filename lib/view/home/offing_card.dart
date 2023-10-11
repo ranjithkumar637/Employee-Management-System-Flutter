@@ -21,7 +21,7 @@ class OffingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: length == 1 ? 90.w : 80.w,
-      height: 25.h,
+      height: 26.h,
       decoration: BoxDecoration(
         color: AppColor.lightColor,
         borderRadius: BorderRadius.circular(12.0),
@@ -98,78 +98,89 @@ class OffingCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: 3.w,
             ) + EdgeInsets.only(
-                top: 1.2.h, bottom: 2.h
+                top: 1.5.h, bottom: 1.5.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
+                Text("#${offing.matchNumber}",
+                  style: fontBold.copyWith(
+                      fontSize: 10.sp,
+                      color: AppColor.matchNumberColor
+                  ),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 1.w,
-                        vertical: 0.5.h,
-                      ),
-                      decoration: BoxDecoration(
-                          color: AppColor.secondaryColor.withOpacity(0.2),
-                          shape: BoxShape.circle
-                      ),
-                      child: SvgPicture.asset(Images.calendarIcon, color: AppColor.secondaryColor, width: 3.5.w,),
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 1.w,
+                            vertical: 0.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                              color: AppColor.secondaryColor.withOpacity(0.2),
+                              shape: BoxShape.circle
+                          ),
+                          child: SvgPicture.asset(Images.calendarIcon, color: AppColor.secondaryColor, width: 3.w,),
+                        ),
+                        SizedBox(width: 1.w),
+                        FittedBox(
+                          child: Text(offing.bookingDate.toString(),
+                            style: fontMedium.copyWith(
+                                fontSize: 8.5.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 1.w),
-                    FittedBox(
-                      child: Text(offing.bookingDate.toString(),
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
+                    SizedBox(height: 0.5.h),
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 1.w,
+                            vertical: 0.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                              color: AppColor.secondaryColor.withOpacity(0.2),
+                              shape: BoxShape.circle
+                          ),
+                          child: Icon(Icons.access_time, color: AppColor.secondaryColor, size: 3.w,),
+                        ),
+                        SizedBox(width: 1.w),
+                        Text(offing.bookingSlotStart.toString(),
+                          style: fontMedium.copyWith(
+                              fontSize: 8.5.sp,
+                              color: AppColor.textColor
+                          ),),
+                      ],
                     ),
                   ],
                 ),
-                SizedBox(width: 1.w),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 1.w,
-                        vertical: 0.5.h,
-                      ),
-                      decoration: BoxDecoration(
-                          color: AppColor.secondaryColor.withOpacity(0.2),
-                          shape: BoxShape.circle
-                      ),
-                      child: Icon(Icons.access_time, color: AppColor.secondaryColor, size: 3.5.w,),
-                    ),
-                    SizedBox(width: 1.w),
-                    Text(offing.bookingSlotStart.toString(),
-                      style: fontMedium.copyWith(
-                          fontSize: 9.sp,
-                          color: AppColor.textColor
-                      ),),
-                  ],
-                ),
-                SizedBox(width: 1.w),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 1.w,
-                        vertical: 0.5.h,
-                      ),
-                      decoration: BoxDecoration(
-                          color: AppColor.secondaryColor.withOpacity(0.2),
-                          shape: BoxShape.circle
-                      ),
-                      child: SvgPicture.asset(Images.location, color: AppColor.secondaryColor, width: 3.5.w,),
-                    ),
-                    SizedBox(width: 1.w),
-                    Text(offing.cityName.toString(),
-                      style: fontMedium.copyWith(
-                          fontSize: 9.sp,
-                          color: AppColor.textColor
-                      ),),
-                  ],
-                ),
+
+                // SizedBox(width: 1.w),
+                // Row(
+                //   children: [
+                //     Container(
+                //       padding: EdgeInsets.symmetric(
+                //         horizontal: 1.w,
+                //         vertical: 0.5.h,
+                //       ),
+                //       decoration: BoxDecoration(
+                //           color: AppColor.secondaryColor.withOpacity(0.2),
+                //           shape: BoxShape.circle
+                //       ),
+                //       child: SvgPicture.asset(Images.location, color: AppColor.secondaryColor, width: 3.5.w,),
+                //     ),
+                //     SizedBox(width: 1.w),
+                //     Text(offing.cityName.toString(),
+                //       style: fontMedium.copyWith(
+                //           fontSize: 9.sp,
+                //           color: AppColor.textColor
+                //       ),),
+                //   ],
+                // ),
               ],
             ),
           ),

@@ -1,10 +1,10 @@
 class AppConstants {
 
-  // static const String baseUrl = 'https://11s-dev.rezndus.com/api';
-  // static const String imageBaseUrl = 'https://11s-dev.rezndus.com/';
+  static const String baseUrl = 'https://11s-dev.rezndus.com/api';
+  static const String imageBaseUrl = 'https://11s-dev.rezndus.com/';
 
-  static const String baseUrl = "https://11s-staging.rezndus.com/api";
-  static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
+  // static const String baseUrl = "https://11s-staging.rezndus.com/api";
+  // static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
 
   // static const String baseUrl = "https://app.11scricket360.com/api";
   // static const String imageBaseUrl = 'https://app.11scricket360.com/';

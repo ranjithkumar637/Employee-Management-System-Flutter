@@ -649,7 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: 2.h),
                               //horizontal listview
                               SizedBox(
-                                height: 19.h,
+                                height: 21.h,
                                 child: FutureBuilder(
                                     future: futureData,
                                     builder: (context, snapshot) {

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elevens_organizer/providers/payment_info_provider.dart';
 import 'package:elevens_organizer/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -8,12 +9,13 @@ import 'package:sizer/sizer.dart';
 import '../../../../utils/colours.dart';
 import '../../../../utils/images.dart';
 import '../../../../utils/styles.dart';
+import '../widgets/snackbar.dart';
 import 'add_amount_dialog_box.dart';
 
 class OrganizerBattleListCard extends StatelessWidget {
-  final String image, paidPrice, totalPrice, date, time, team, status, matchId, teamId;
+  final String image, paidPrice, totalPrice, date, time, team, status, matchId, teamId, matchNumber;
   final VoidCallback refresh;
-  const OrganizerBattleListCard(this.image, this.paidPrice, this.totalPrice, this.date, this.time, this.team, this.status, this.matchId, this.teamId, this.refresh,
+  const OrganizerBattleListCard(this.image, this.paidPrice, this.totalPrice, this.date, this.time, this.team, this.status, this.matchId, this.teamId, this.refresh, this.matchNumber,
       {Key? key}) : super(key: key);
 
   @override
@@ -53,65 +55,75 @@ class OrganizerBattleListCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(team,
-                        style: fontMedium.copyWith(
-                            fontSize: 12.sp,
-                            color: AppColor.textColor
+                      Text("#$matchNumber",
+                        style: fontBold.copyWith(
+                            fontSize: 11.sp,
+                            color: AppColor.matchNumberColor
                         ),),
                       status == "0"
-                      ? InkWell(
+                          ? InkWell(
                           onTap: (){
                             showPopupMenu(context, paidPrice, totalPrice, team);
                           },
                           child: Icon(Icons.more_vert_rounded, color: AppColor.textColor, size: 5.w,))
-                      : const SizedBox(),
+                          : const SizedBox(),
                     ],
                   ),
+                  SizedBox(height: 0.5.h),
+                  Text(team,
+                    style: fontMedium.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColor.textColor
+                    ),),
                   SizedBox(height: 1.h),
                   Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 0.8.w,
-                          vertical: 0.4.h,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.5.w,),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.8.w,
+                              vertical: 0.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppColor.iconBgColor,
+                                shape: BoxShape.circle
+                            ),
+                            child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.5.w,),
+                          ),
+                          SizedBox(width: 3.w),
+                          Text(date,
+                            style: fontMedium.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ],
                       ),
-                      SizedBox(width: 3.w),
-                      Text(date,
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
+                      SizedBox(width: 2.w),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.8.w,
+                              vertical: 0.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppColor.iconBgColor,
+                                shape: BoxShape.circle
+                            ),
+                            child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.5.w,),
+                          ),
+                          SizedBox(width: 3.w),
+                          Text(time,
+                            style: fontMedium.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(height: 0.5.h),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 0.8.w,
-                          vertical: 0.4.h,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.5.w,),
-                      ),
-                      SizedBox(width: 3.w),
-                      Text(time,
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
-                    ],
-                  ),
-                  SizedBox(height: 0.5.h),
+                  SizedBox(height: 1.h),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -194,11 +206,22 @@ class OrganizerBattleListCard extends StatelessWidget {
         value: 'item2',
         child: InkWell(
           onTap: (){
-
+            PaymentInfoProvider().requestPayment(teamId, matchId)
+                .then((value) {
+                if(value.status == true){
+                  Dialogs.snackbar(value.message.toString(), context, isError: false);
+                  Navigator.pop(context);
+                  refresh();
+                } else if(value.status == false){
+                  Dialogs.snackbar(value.message.toString(), context, isError: true);
+                } else {
+                  Dialogs.snackbar("Something went wrong. Please try again.", context, isError: true);
+                }
+            });
           },
           child: Row(
             children: [
-              Text('Send Notifications',
+              Text('Request Payment',
                 style: fontRegular.copyWith(
                     color: AppColor.textColor
                 ),),

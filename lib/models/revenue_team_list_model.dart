@@ -5,7 +5,7 @@ class RevenueTeamListModel {
   List<TeamsList>? teamsList;
 
   RevenueTeamListModel(
-      {this.status, this.message, this.totalRevenue, this.teamsList});
+      {status, message, totalRevenue, teamsList});
 
   RevenueTeamListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -21,11 +21,11 @@ class RevenueTeamListModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    data['total_revenue'] = this.totalRevenue;
-    if (this.teamsList != null) {
-      data['teams_list'] = this.teamsList!.map((v) => v.toJson()).toList();
+    data['status'] = status;
+    data['message'] = message;
+    data['total_revenue'] = totalRevenue;
+    if (teamsList != null) {
+      data['teams_list'] = teamsList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -46,22 +46,24 @@ class TeamsList {
   dynamic stateId;
   dynamic cityName;
   dynamic stateName;
+  dynamic matchNumber;
 
   TeamsList(
-      {this.matchId,
-        this.teamId,
-        this.teamName,
-        this.logo,
-        this.totalPrice,
-        this.paidPrice,
-        this.paidStatus,
-        this.bookingDate,
-        this.bookingSlotStart,
-        this.bookingSlotEnd,
-        this.cityId,
-        this.stateId,
-        this.cityName,
-        this.stateName});
+      {matchId,
+        teamId,
+        teamName,
+        logo,
+        totalPrice,
+        paidPrice,
+        paidStatus,
+        bookingDate,
+        bookingSlotStart,
+        bookingSlotEnd,
+        cityId,
+        stateId,
+        cityName,
+        stateName,
+      matchNumber});
 
   TeamsList.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
@@ -78,24 +80,26 @@ class TeamsList {
     stateId = json['state_id'];
     cityName = json['city_name'];
     stateName = json['state_name'];
+    matchNumber = json['match_number'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['match_id'] = this.matchId;
-    data['team_id'] = this.teamId;
-    data['team_name'] = this.teamName;
-    data['logo'] = this.logo;
-    data['total_price'] = this.totalPrice;
-    data['paid_price'] = this.paidPrice;
-    data['paid_status'] = this.paidStatus;
-    data['booking_date'] = this.bookingDate;
-    data['booking_slot_start'] = this.bookingSlotStart;
-    data['booking_slot_end'] = this.bookingSlotEnd;
-    data['city_id'] = this.cityId;
-    data['state_id'] = this.stateId;
-    data['city_name'] = this.cityName;
-    data['state_name'] = this.stateName;
+    data['match_id'] = matchId;
+    data['team_id'] = teamId;
+    data['team_name'] = teamName;
+    data['logo'] = logo;
+    data['total_price'] = totalPrice;
+    data['paid_price'] = paidPrice;
+    data['paid_status'] = paidStatus;
+    data['booking_date'] = bookingDate;
+    data['booking_slot_start'] = bookingSlotStart;
+    data['booking_slot_end'] = bookingSlotEnd;
+    data['city_id'] = cityId;
+    data['state_id'] = stateId;
+    data['city_name'] = cityName;
+    data['state_name'] = stateName;
+    data['match_number'] = matchNumber;
     return data;
   }
 }

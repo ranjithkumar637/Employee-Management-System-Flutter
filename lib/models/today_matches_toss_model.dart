@@ -51,8 +51,8 @@ class TodayMatches {
     teamACaptain = json['team_a_captain'];
     teamBCaptain = json['team_b_captain'];
     matchNumber = json['match_number'];
-    matchTeamACount = json['match_teama_count'];
-    matchTeamBCount = json['match_teamb_count'];
+    matchTeamACount = json['match_teamA_count'];
+    matchTeamBCount = json['match_teamB_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,8 +67,8 @@ class TodayMatches {
     data['team_a_captain'] = teamACaptain;
     data['team_b_captain'] = teamBCaptain;
     data['match_number'] = matchNumber;
-    data['match_teama_count'] = matchTeamACount;
-    data['match_teamb_count'] = matchTeamBCount;
+    data['match_teamA_count'] = matchTeamACount;
+    data['match_teamB_count'] = matchTeamBCount;
     return data;
   }
 }

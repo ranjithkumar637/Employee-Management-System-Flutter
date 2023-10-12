@@ -96,6 +96,7 @@ class AppConstants {
   static const String resendOtpRegister = '$baseUrl/register-resend-otp';
 
   static const String readNotification = '$baseUrl/read-notification';
+  static const String requestPayment = '$baseUrl/organizer/request-payment';
 
 
 

@@ -5,6 +5,7 @@ import '../../models/match_history_payment_model.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
+import '../widgets/loader.dart';
 import 'match_history_payment_paid.dart';
 import 'match_history_payment_unpaid.dart';
 
@@ -68,7 +69,9 @@ class _MatchHistoryPaymentState extends State<MatchHistoryPayment> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return loading
+    ? const Loader()
+    : Column(
       children: [
         SizedBox(height: 1.h),
         Center(

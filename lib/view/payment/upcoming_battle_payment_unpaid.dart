@@ -60,7 +60,8 @@ class UpcomingBattlePaymentUnPaid extends StatelessWidget {
                     unpaidUpcomingList[index].paidStatus.toString(),
                     unpaidUpcomingList[index].matchId.toString(),
                     unpaidUpcomingList[index].teamId.toString(),
-                    refresh
+                    refresh,
+                    unpaidUpcomingList[index].matchNumber.toString()
                   );
                 },
               ),

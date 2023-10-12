@@ -44,12 +44,13 @@ class UpcomingBattlePaymentPaid extends StatelessWidget {
           paidUpcomingList[index].paidPrice.toString(),
           paidUpcomingList[index].totalPrice.toString(),
           paidUpcomingList[index].bookingDate.toString(),
-          Converter().convertTo12HourFormat(paidUpcomingList[index].bookingSlotStart.toString()),
+          paidUpcomingList[index].bookingSlotStart.toString(),
           paidUpcomingList[index].teamName.toString(),
           paidUpcomingList[index].paidStatus.toString(),
           paidUpcomingList[index].matchId.toString(),
           paidUpcomingList[index].teamId.toString(),
-          refresh
+          refresh,
+          paidUpcomingList[index].matchNumber.toString(),
         );
       },
     );

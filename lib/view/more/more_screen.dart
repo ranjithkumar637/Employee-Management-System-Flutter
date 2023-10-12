@@ -1,9 +1,12 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:elevens_organizer/view/profile/edit_profile.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
@@ -33,8 +36,45 @@ class MoreScreen extends StatefulWidget {
 
 class _MoreScreenState extends State<MoreScreen> {
 
+  bool permissionGranted = true;
 
-  getProfile(){
+
+  getProfile() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      if(mounted){
+        setState(() {
+          permissionGranted = true;
+        });
+      }
+      print('User granted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      if(mounted){
+        setState(() {
+          permissionGranted = true;
+        });
+      }
+      print('User granted provisional permission');
+    } else {
+      if(mounted){
+        setState(() {
+          permissionGranted = false;
+        });
+      }
+      print('User declined or has not accepted permission');
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ProfileProvider().getProfile(context)
           .then((value) async {
@@ -73,235 +113,281 @@ class _MoreScreenState extends State<MoreScreen> {
     double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       backgroundColor: AppColor.bgColor,
-      body: Column(
+      body: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.bottomCenter,
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
+          Column(
             children: [
-              SizedBox(
-                width: double.infinity,
-                height: 28.h,
-                child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
-              ),
-              Positioned(
-                top: 2.h + statusBarHeight,
-                left: 5.w,
-                right: 5.w,
-                child: Center(
-                  child: Text("Profile",
-                    style: fontMedium.copyWith(
-                        fontSize: 16.sp,
-                        color: AppColor.lightColor
-                    ),),
-                ),
-              ),
-              Positioned(
-                top: 10.h,
-                left: 5.w,
-                right: 5.w,
-                child: Consumer<ProfileProvider>(
-                    builder: (context, profile, child) {
-                      return Row(
-                        children: [
-                          ClipOval(
-                            child: CachedNetworkImage(
-                              height: 12.h,
-                              width: 24.w,
-                              fit: BoxFit.cover,
-                              imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${profile.organizerDetails.profilePhoto.toString()}",
-                              errorWidget: (context, url, widget){
-                                return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
-                                  width: 28.w,
-                                  fit: BoxFit.cover,);
-                              },
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(profile.getName(),
-                                  style: fontMedium.copyWith(
-                                      fontSize: 15.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                                SizedBox(height: 0.5.h),
-                                Text(profile.getMobile(),
-                                  style: fontRegular.copyWith(
-                                      fontSize: 10.sp,
-                                      color: AppColor.lightColor
-                                  ),),
-                                SizedBox(height: 0.5.h),
-                                Bounceable(
-                                  onTap:(){
-                                    Provider.of<ProfileProvider>(context, listen: false).clearGroundAddress();
-                                    Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return const EditProfile();
-                                  }),
-                                ).then((value) {
-                                      getProfile();
-                                    });
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 28.h,
+                    child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
+                  ),
+                  Positioned(
+                    top: 2.h + statusBarHeight,
+                    left: 5.w,
+                    right: 5.w,
+                    child: Center(
+                      child: Text("Profile",
+                        style: fontMedium.copyWith(
+                            fontSize: 16.sp,
+                            color: AppColor.lightColor
+                        ),),
+                    ),
+                  ),
+                  Positioned(
+                    top: 10.h,
+                    left: 5.w,
+                    right: 5.w,
+                    child: Consumer<ProfileProvider>(
+                        builder: (context, profile, child) {
+                          return Row(
+                            children: [
+                              ClipOval(
+                                child: CachedNetworkImage(
+                                  height: 12.h,
+                                  width: 24.w,
+                                  fit: BoxFit.cover,
+                                  imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${profile.organizerDetails.profilePhoto.toString()}",
+                                  errorWidget: (context, url, widget){
+                                    return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
+                                      width: 28.w,
+                                      fit: BoxFit.cover,);
                                   },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 3.w,
-                                      vertical: 1.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xffF9D700),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    child: Text("Edit Profile",
-                                      style: fontRegular.copyWith(
-                                          color: AppColor.textColor,
-                                          fontSize: 8.sp
-                                      ),),
-                                  ),
                                 ),
-                                SizedBox(height: 0.5.h),
-                                SizedBox(
-                                  width: 40.w,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text("${profile.organizerDetails.progressValue}%",
-                                        style: fontRegular.copyWith(
-                                            fontSize: 9.sp,
-                                            color: AppColor.lightColor
-                                        ),),
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(3.0),
-                                        child: LinearProgressIndicator(
-                                          color: const Color(0xffF9D700),
-                                          backgroundColor: AppColor.lightColor,
-                                          value: double.parse(calculateProgressValue(profile.organizerDetails.progressValue.toString()).toString()),
+                              ),
+                              SizedBox(width: 4.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(profile.getName(),
+                                      style: fontMedium.copyWith(
+                                          fontSize: 15.sp,
+                                          color: AppColor.lightColor
+                                      ),),
+                                    SizedBox(height: 0.5.h),
+                                    Text(profile.getMobile(),
+                                      style: fontRegular.copyWith(
+                                          fontSize: 10.sp,
+                                          color: AppColor.lightColor
+                                      ),),
+                                    SizedBox(height: 0.5.h),
+                                    Bounceable(
+                                      onTap:(){
+                                        Provider.of<ProfileProvider>(context, listen: false).clearGroundAddress();
+                                        Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return const EditProfile();
+                                      }),
+                                    ).then((value) {
+                                          getProfile();
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 3.w,
+                                          vertical: 1.h,
                                         ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffF9D700),
+                                          borderRadius: BorderRadius.circular(5.0),
+                                        ),
+                                        child: Text("Edit Profile",
+                                          style: fontRegular.copyWith(
+                                              color: AppColor.textColor,
+                                              fontSize: 8.sp
+                                          ),),
+                                      ),
+                                    ),
+                                    SizedBox(height: 0.5.h),
+                                    SizedBox(
+                                      width: 40.w,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text("${profile.organizerDetails.progressValue}%",
+                                            style: fontRegular.copyWith(
+                                                fontSize: 9.sp,
+                                                color: AppColor.lightColor
+                                            ),),
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(3.0),
+                                            child: LinearProgressIndicator(
+                                              color: const Color(0xffF9D700),
+                                              backgroundColor: AppColor.lightColor,
+                                              value: double.parse(calculateProgressValue(profile.organizerDetails.progressValue.toString()).toString()),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 5.w
+                  ),
+                  child: MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        Consumer<ProfileProvider>(
+                            builder: (context, profile, child) {
+                              return profile.organizerDetails.adminApprove == 1
+                                  ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Referral Code",
+                                    style: fontMedium.copyWith(
+                                        fontSize: 14.sp,
+                                        color: AppColor.textColor
+                                    ),),
+                                  SizedBox(height: 2.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w,
+                                            vertical: 1.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: const Color(0xffFAEDD0),
+                                              borderRadius: BorderRadius.circular(5.0),
+                                              border: RDottedLineBorder.all(color: AppColor.primaryColor)
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(profile.organizerDetails.organizerRefCode.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: fontMedium.copyWith(
+                                                    fontSize: 14.sp,
+                                                    color: AppColor.textColor
+                                                ),),
+                                              InkWell(
+                                                  onTap: (){
+                                                    FlutterClipboard.copy(profile.organizerDetails.organizerRefCode.toString()).then(( value ){
+                                                      print('copied');
+                                                      Dialogs.snackbar("Referral code copied", context, isError: false);
+                                                    });
+
+                                                  },
+                                                  child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      InkWell(
+                                          onTap: (){
+                                            String url = "https://play.google.com/store/apps/details?id=com.eleven.captain";
+                                            Share.share('Hey fellow cricket captains! Enjoy the game even more by using our referral code ${profile.organizerDetails.organizerRefCode.toString()}.'
+                                                ' It\'s your ticket to fantastic cricket experiences. Share the code and let\'s play together! 🏏🤝 \n $url');
+                                          },
+                                          child: SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,))
+                                    ],
+                                  ),
+                                ],
+                              )
+                                  : const SizedBox();
+                            }
+                        ),
+                        Consumer<ProfileProvider>(
+                            builder: (context, profile, child) {
+                              return profile.profileModel.groundCount.toString() == "0" ?
+                              Bounceable(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return const EditProfile();
+                                    }),
+                                  ).then((value) {
+                                    getProfile();
+                                  });
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      top: 2.h
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 3.w,
+                                    vertical: 1.2.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.redColor.withOpacity(0.6),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text("Currently, we're awaiting your update on the ground info!",
+                                          style: fontMedium.copyWith(
+                                              fontSize: 10.sp,
+                                              color: AppColor.lightColor
+                                          ),),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        color: AppColor.lightColor,
+                                        size: 6.w,
                                       ),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 2.h),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 5.w
-              ),
-              child: MediaQuery.removePadding(
-                removeTop: true,
-                context: context,
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children: [
-                    Consumer<ProfileProvider>(
-                        builder: (context, profile, child) {
-                          return profile.organizerDetails.adminApprove == 1
-                              ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Referral Code",
-                                style: fontMedium.copyWith(
-                                    fontSize: 14.sp,
-                                    color: AppColor.textColor
-                                ),),
-                              SizedBox(height: 2.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w,
-                                        vertical: 1.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffFAEDD0),
-                                          borderRadius: BorderRadius.circular(5.0),
-                                          border: RDottedLineBorder.all(color: AppColor.primaryColor)
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(profile.organizerDetails.organizerRefCode.toString(),
-                                            textAlign: TextAlign.center,
-                                            style: fontMedium.copyWith(
-                                                fontSize: 14.sp,
-                                                color: AppColor.textColor
-                                            ),),
-                                          InkWell(
-                                              onTap: (){
-                                                FlutterClipboard.copy(profile.organizerDetails.organizerRefCode.toString()).then(( value ){
-                                                  print('copied');
-                                                  Dialogs.snackbar("Referral code copied", context, isError: false);
-                                                });
-
-                                              },
-                                              child: Icon(Icons.copy, color: const Color(0xff8E8E8E), size: 5.w,))
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10.w),
-                                  InkWell(
-                                      onTap: (){
-                                        String url = "https://play.google.com/store/apps/details?id=com.eleven.captain";
-                                        Share.share('Hey fellow cricket captains! Enjoy the game even more by using our referral code ${profile.organizerDetails.organizerRefCode.toString()}.'
-                                            ' It\'s your ticket to fantastic cricket experiences. Share the code and let\'s play together! 🏏🤝 \n $url');
-                                      },
-                                      child: SvgPicture.asset(Images.share, color: AppColor.textColor, width: 6.w,))
-                                ],
-                              ),
-                            ],
-                          )
-                              : const SizedBox();
-                        }
-                    ),
-                    Consumer<ProfileProvider>(
-                        builder: (context, profile, child) {
-                          return profile.organizerDetails.groundApprove == 0
-                              ? Bounceable(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return const EditProfile();
-                                }),
-                              ).then((value) {
-                                getProfile();
-                              });
-                            },
+                              ) :
+                              profile.profileModel.groundCount.toString() == "1" && profile.organizerDetails.groundApprove == 0
+                                  ? Bounceable(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return const EditProfile();
+                                    }),
+                                  ).then((value) {
+                                    getProfile();
+                                  });
+                                },
                                 child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 3.w,
-                                vertical: 1.2.h,
-                            ),
-                            margin: EdgeInsets.only(
-                                top: 2.h
-                            ),
-                            decoration: BoxDecoration(
-                                color: AppColor.redColor.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(5.0),
-                                ),
+                                  margin: EdgeInsets.only(
+                                      top: 2.h
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 3.w,
+                                    vertical: 1.2.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.redColor.withOpacity(0.6),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
                                   child: Row(
                                     children: [
                                       Expanded(
                                         child: Text("Awaiting admin's approval, your ground will be approved very shortly",
-                            style: fontMedium.copyWith(
-                                          fontSize: 10.sp,
-                                          color: AppColor.lightColor
-                            ),),
+                                          style: fontMedium.copyWith(
+                                              fontSize: 10.sp,
+                                              color: AppColor.lightColor
+                                          ),),
                                       ),
                                       Icon(
                                         Icons.arrow_forward,
@@ -312,88 +398,140 @@ class _MoreScreenState extends State<MoreScreen> {
                                   ),
                                 ),
                               )
-                              : const SizedBox();
-                        }
-                    ),
+                                  : const SizedBox();
+                            }
+                        ),
 
-                    SizedBox(height: 2.h),
-                    Text("Overview",
-                      style: fontMedium.copyWith(
-                          fontSize: 14.sp,
-                          color: AppColor.textColor
-                      ),),
-                    SizedBox(height: 1.h),
-                    InkWell(
-                        onTap: (){
-                          Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(1);
-                        },
-                        child: const ProfileOption("Bookings")),
-                    const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(2);
-                        },
-                        child: const ProfileOption("Matches")),
-                    const Divider(thickness: 0.7,),
-                    // InkWell(
-                    //     onTap: (){
-                    //       Navigator.pushNamed(context, "payment_information");
-                    //     },
-                    //     child: const ProfileOption("Payment Information")),
-                    // const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => const FlipCallUpcomingList()));
-                        },
-                        child: const ProfileOption("Flip/Call toss")),
-                    const Divider(thickness: 0.7,),
-                    SizedBox(height: 2.h),
-                    Text("Settings",
-                      style: fontMedium.copyWith(
-                          fontSize: 14.sp,
-                          color: AppColor.textColor
-                      ),),
-                    SizedBox(height: 1.h),
-                    InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, "notification_screen");
-                        },
-                        child: const ProfileOption("Notifications")),
-                    const Divider(thickness: 0.7,),
-                    SizedBox(height: 2.h),
-                    Text("About",
-                      style: fontMedium.copyWith(
-                          fontSize: 14.sp,
-                          color: AppColor.textColor
-                      ),),
-                    SizedBox(height: 1.h),
-                    InkWell(
-                        onTap: (){
-                          _launchUrl("https://11scricket360.com/terms-conditions/");
-                        },
-                        child: const ProfileOption("Terms & conditions")),
-                    const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          _launchUrl("https://11scricket360.com/privacy-policy/");
-                        },
-                        child: const ProfileOption("Privacy Policy")),
-                    const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          _launchUrl("https://11scricket360.com/cancellation-refund-policy");
-                        },
-                        child: const ProfileOption("Cancellation and Refund Policy")),
-                    const Divider(thickness: 0.7,),
-                    InkWell(
-                        onTap: (){
-                          openLogoutSheet();
-                        },
-                        child: const ProfileOption("Log out")),
-                    const Divider(thickness: 0.7,),
-                  ],
+                        SizedBox(height: 2.h),
+                        Text("Overview",
+                          style: fontMedium.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColor.textColor
+                          ),),
+                        SizedBox(height: 1.h),
+                        InkWell(
+                            onTap: (){
+                              Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(1);
+                            },
+                            child: const ProfileOption("Bookings")),
+                        const Divider(thickness: 0.7,),
+                        InkWell(
+                            onTap: (){
+                              Provider.of<NavigationProvider>(context, listen: false).setCurrentIndex(2);
+                            },
+                            child: const ProfileOption("Matches")),
+                        const Divider(thickness: 0.7,),
+                        // InkWell(
+                        //     onTap: (){
+                        //       Navigator.pushNamed(context, "payment_information");
+                        //     },
+                        //     child: const ProfileOption("Payment Information")),
+                        // const Divider(thickness: 0.7,),
+                        InkWell(
+                            onTap: (){
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => const FlipCallUpcomingList()));
+                            },
+                            child: const ProfileOption("Flip/Call toss")),
+                        const Divider(thickness: 0.7,),
+                        SizedBox(height: 2.h),
+                        Text("Settings",
+                          style: fontMedium.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColor.textColor
+                          ),),
+                        SizedBox(height: 1.h),
+                        InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, "notification_screen");
+                            },
+                            child: const ProfileOption("Notifications")),
+                        const Divider(thickness: 0.7,),
+                        SizedBox(height: 2.h),
+                        Text("About",
+                          style: fontMedium.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColor.textColor
+                          ),),
+                        SizedBox(height: 1.h),
+                        InkWell(
+                            onTap: (){
+                              _launchUrl("https://11scricket360.com/terms-conditions/");
+                            },
+                            child: const ProfileOption("Terms & conditions")),
+                        const Divider(thickness: 0.7,),
+                        InkWell(
+                            onTap: (){
+                              _launchUrl("https://11scricket360.com/privacy-policy/");
+                            },
+                            child: const ProfileOption("Privacy Policy")),
+                        const Divider(thickness: 0.7,),
+                        InkWell(
+                            onTap: (){
+                              _launchUrl("https://11scricket360.com/cancellation-refund-policy");
+                            },
+                            child: const ProfileOption("Cancellation and Refund Policy")),
+                        const Divider(thickness: 0.7,),
+                        InkWell(
+                            onTap: (){
+                              openLogoutSheet();
+                            },
+                            child: const ProfileOption("Log out")),
+                        const Divider(thickness: 0.7,),
+                        SizedBox(height: permissionGranted ? 0 : 12.h),
+                      ],
+                    ),
+                  ),
                 ),
+              ),
+            ],
+          ),
+          permissionGranted
+          ? const SizedBox()
+          : Positioned(
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 3.w,
+                vertical: 2.h,
+              ),
+              width: double.maxFinite,
+              decoration: const BoxDecoration(
+                color: Color(0xffFEF5E7),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text("Allow permission to get notified for every action on your 11s journey",
+                      style: fontMedium.copyWith(
+                        color: const Color(0xff34495E),
+                        fontSize: 11.sp
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 3.w),
+                  InkWell(
+                    onTap: () => AppSettings.openAppSettings(type: AppSettingsType.notification),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 2.w,
+                        vertical: 1.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff34495E),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Text("Go to Settings",
+                        style: fontMedium.copyWith(
+                            color: AppColor.lightColor,
+                            fontSize: 10.sp
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

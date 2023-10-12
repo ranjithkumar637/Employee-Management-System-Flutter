@@ -279,7 +279,8 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
                   widget.matchHistoryUnPaid[index].teamName.toString(),
                   widget.matchHistoryUnPaid[index].paidStatus.toString(),
                   widget.matchHistoryUnPaid[index].matchId.toString(),
-                  widget.matchHistoryUnPaid[index].teamId.toString(), widget.refresh
+                  widget.matchHistoryUnPaid[index].teamId.toString(), widget.refresh,
+                    widget.matchHistoryUnPaid[index].matchNumber.toString()
                 );
               },
             ),
@@ -305,7 +306,8 @@ class _MatchHistoryPaymentUnPaidState extends State<MatchHistoryPaymentUnPaid> {
                     filteredItems[index].teamName.toString(),
                     filteredItems[index].paidStatus.toString(),
                     filteredItems[index].matchId.toString(),
-                    filteredItems[index].teamId.toString(), widget.refresh
+                    filteredItems[index].teamId.toString(), widget.refresh,
+                    filteredItems[index].matchNumber.toString()
                 );
               },
             ),

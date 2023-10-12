@@ -222,30 +222,30 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               ),
             ),
             SizedBox(height: 3.h,),
-            todayMatches.isEmpty
-            ? Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10.h),
-                  Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
-                  SizedBox(height: 3.h),
-                  Text("You don’t have any matches",
-                    style: fontMedium.copyWith(
-                        fontSize: 12.sp,
-                        color: AppColor.redColor
-                    ),),
-                ],
-              ),
-            )
-            : loading
+            loading
             ? const Loader()
             : Expanded(
               child: MediaQuery.removePadding(
                 removeTop: true,
                 context: context,
-                child: ListView.separated(
+                child: todayMatches.isEmpty
+                    ? Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10.h),
+                      Image.asset(Images.noMatches, width: 80.w, fit: BoxFit.cover,),
+                      SizedBox(height: 3.h),
+                      Text("You don’t have any matches",
+                        style: fontMedium.copyWith(
+                            fontSize: 12.sp,
+                            color: AppColor.redColor
+                        ),),
+                    ],
+                  ),
+                )
+                    : ListView.separated(
                   separatorBuilder: (context, _) {
                     return SizedBox(height: 2.h,);
                   },
@@ -445,105 +445,95 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                             DottedLine(
                               dashColor: AppColor.hintColour.withOpacity(0.4),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 3.w,
-                              ) +
-                                  EdgeInsets.only(
-                                      top: 1.2.h, bottom: 1.5.h),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text("#${todayMatches[index].matchNumber.toString()}",
-                                      style: fontBold.copyWith(
-                                          fontSize: 9.5.sp,
-                                          color: const Color(0xff6495ED)
-                                      ),),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          padding:
-                                          EdgeInsets.symmetric(
-                                            horizontal: 1.w,
-                                            vertical: 0.5.h,
+                            Row(
+                              children: [
+                                StreamBuilder<String>(
+                                  stream: timerController.stream,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      String timeDifference = snapshot.data!;
+                                      return SizedBox(
+                                        height: 6.h,
+                                        width: 34.w,
+                                        child: ClipPath(
+                                          clipper: CustomClipperWidget(),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.only(
+                                                  bottomLeft: Radius.circular(12.0)
+                                              ),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                  AppColor.secondaryColor.withOpacity(0.8),
+                                                  AppColor.primaryColor.withOpacity(0.8),
+                                                ],
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                timeDifference,
+                                                style: fontMedium.copyWith(
+                                                    fontSize: 13.sp,
+                                                    color: AppColor.textColor),
+                                              ),
+                                            ),
                                           ),
-                                          decoration: BoxDecoration(
-                                              color: AppColor
-                                                  .secondaryColor
-                                                  .withOpacity(0.2),
-                                              shape: BoxShape.circle),
-                                          child: Icon(
-                                            Icons.access_time,
+                                        ),
+                                      );
+                                    } else {
+                                      return const Text('Loading...');
+                                    }
+                                  },
+                                ),
+                                SizedBox(width: 2.w),
+                                Expanded(
+                                  child: Text("#${todayMatches[index].matchNumber.toString()}",
+                                    style: fontBold.copyWith(
+                                        fontSize: 9.5.sp,
+                                        color: const Color(0xff6495ED)
+                                    ),),
+                                ),
+                                SizedBox(width: 1.w),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding:
+                                        EdgeInsets.symmetric(
+                                          horizontal: 1.w,
+                                          vertical: 0.5.h,
+                                        ),
+                                        decoration: BoxDecoration(
                                             color: AppColor
-                                                .secondaryColor,
-                                            size: 3.5.w,
-                                          ),
+                                                .secondaryColor
+                                                .withOpacity(0.2),
+                                            shape: BoxShape.circle),
+                                        child: Icon(
+                                          Icons.access_time,
+                                          color: AppColor
+                                              .secondaryColor,
+                                          size: 3.5.w,
                                         ),
-                                        SizedBox(width: 1.w),
-                                        Expanded(
-                                          child: Text(
-                                            todayMatches[index].teamBData!.bookingSlotStart.toString(),
-                                            style: fontMedium
-                                                .copyWith(
-                                                fontSize:
-                                                9.sp,
-                                                color: AppColor
-                                                    .textColor),
-                                          ),
+                                      ),
+                                      SizedBox(width: 1.w),
+                                      Expanded(
+                                        child: Text(
+                                          todayMatches[index].teamBData!.bookingSlotStart.toString(),
+                                          style: fontMedium
+                                              .copyWith(
+                                              fontSize:
+                                              9.sp,
+                                              color: AppColor
+                                                  .textColor),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  StreamBuilder<String>(
-                                    stream: timerController.stream,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        String timeDifference = snapshot.data!;
-                                        return Text(
-                                          timeDifference,
-                                          style: TextStyle(fontSize: 18),
-                                        );
-                                      } else {
-                                        return Text('Loading...');
-                                      }
-                                    },
-                                  )
-                                 // Row(
-                                 //   children: [
-                                 //     Container(
-                                 //       padding:
-                                 //       EdgeInsets.symmetric(
-                                 //         horizontal: 1.w,
-                                 //         vertical: 0.5.h,
-                                 //       ),
-                                 //       decoration: BoxDecoration(
-                                 //           color: AppColor
-                                 //               .secondaryColor
-                                 //               .withOpacity(0.2),
-                                 //           shape: BoxShape.circle),
-                                 //       child: Icon(
-                                 //         Icons.location_on_outlined,
-                                 //         color: AppColor
-                                 //             .secondaryColor,
-                                 //         size: 3.5.w,
-                                 //       ),
-                                 //     ),
-                                 //     SizedBox(width: 1.w),
-                                 //     Text(
-                                 //         todayMatches[index].teamAData!.cityName.toString(),
-                                 //       style: fontMedium
-                                 //           .copyWith(
-                                 //           fontSize:
-                                 //           9.sp,
-                                 //           color: AppColor
-                                 //               .textColor),
-                                 //     ),
-                                 //   ],
-                                 // )
-                                ],
-                              ),
+                                ),
+
+                              ],
                             ),
                           ],
                         ),
@@ -598,4 +588,20 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
     }
   }
 
+}
+
+class CustomClipperWidget extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width * 0.8, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

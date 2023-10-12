@@ -7,7 +7,7 @@ class Dialogs {
   static snackbar(String message, context, {bool isLong = false, bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor:
-      isError ? AppColor.redColor : AppColor.availableSlot,
+      isError ? AppColor.error : AppColor.availableSlot,
       elevation: 5,
       content: Text(
         message,

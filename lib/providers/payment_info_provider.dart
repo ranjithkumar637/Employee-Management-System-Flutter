@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:elevens_organizer/models/offing_list_model.dart';
+import 'package:elevens_organizer/models/response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,45 @@ class PaymentInfoProvider extends ChangeNotifier {
   TotalRevenueModel totalRevenueModel = TotalRevenueModel();
 
   PaymentGetModel paymentGetModel = PaymentGetModel();
+
+  ResponseModel responseModel = ResponseModel();
+
+  //request payment to captain
+  Future<ResponseModel> requestPayment(String teamId, String matchId) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? accToken = preferences.getString("access_token");
+    var body = jsonEncode({
+      'match_id': matchId,
+      'team_id': teamId,
+    });
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.requestPayment),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accToken',
+        },
+        body: body,
+      );
+      var decodedJson = json.decode(response.body);
+      print(decodedJson);
+      if (response.statusCode == 200) {
+        responseModel = ResponseModel.fromJson(decodedJson);
+        notifyListeners();
+      } else {
+        throw const HttpException('Failed to load data');
+      }
+    } on SocketException {
+      print('No internet connection');
+    } on HttpException {
+      print('Failed to load data');
+    } on FormatException {
+      print('request payment - Invalid data format');
+    } catch (e) {
+      print(e);
+    }
+    return responseModel;
+  }
 
   //payment get
   Future<PaymentGetModel> paymentGets(String matchId, String teamId) async {

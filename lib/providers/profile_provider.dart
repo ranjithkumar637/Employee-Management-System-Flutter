@@ -651,9 +651,9 @@ class ProfileProvider extends ChangeNotifier{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
-    print("$groundName $groundContact $name $dob $location $companyName");
-    print("$latitude $longitude $address $houseNo $pinCode $streetName");
-    print("$cityId $stateId $groundCityId $groundStateId $organizerPinCode");
+    print("$groundName - $groundContact - $name - $dob - $location - $companyName");
+    print("$latitude - $longitude - $address - $houseNo - $pinCode - $streetName");
+    print("$cityId - $stateId - $groundCityId - $groundStateId - $organizerPinCode");
 
     var uri = Uri.parse(AppConstants.organizerProfileUpdate);
     final request = http.MultipartRequest("POST", uri);

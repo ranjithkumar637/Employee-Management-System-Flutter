@@ -10,8 +10,8 @@ import '../../../../utils/styles.dart';
 import '../../utils/app_constants.dart';
 
 class RevenueListCard extends StatelessWidget {
-  final String image, paidPrice, totalPrice, date, time, organizer, status;
-  const RevenueListCard(this.image, this.paidPrice, this.totalPrice, this.date, this.time, this.organizer, this.status,
+  final String image, paidPrice, totalPrice, date, time, organizer, status, matchNumber;
+  const RevenueListCard(this.image, this.paidPrice, this.totalPrice, this.date, this.time, this.organizer, this.status, this.matchNumber,
       {Key? key}) : super(key: key);
 
   @override
@@ -53,6 +53,12 @@ class RevenueListCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text("#$matchNumber",
+                    style: fontBold.copyWith(
+                        fontSize: 10.sp,
+                        color: AppColor.matchNumberColor
+                    ),),
+                  SizedBox(height: 0.5.h),
                   Text(organizer,
                     style: fontMedium.copyWith(
                         fontSize: 12.sp,
@@ -61,45 +67,49 @@ class RevenueListCard extends StatelessWidget {
                   SizedBox(height: 1.h),
                   Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 0.8.w,
-                          vertical: 0.4.h,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.5.w,),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.8.w,
+                              vertical: 0.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppColor.iconBgColor,
+                                shape: BoxShape.circle
+                            ),
+                            child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.5.w,),
+                          ),
+                          SizedBox(width: 3.w),
+                          Text(date,
+                            style: fontMedium.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ],
                       ),
-                      SizedBox(width: 3.w),
-                      Text(date,
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
-                    ],
-                  ),
-                  SizedBox(height: 0.5.h),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 0.8.w,
-                          vertical: 0.4.h,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.iconBgColor,
-                            shape: BoxShape.circle
-                        ),
-                        child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.5.w,),
+                      SizedBox(width: 2.w),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 0.8.w,
+                              vertical: 0.4.h,
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppColor.iconBgColor,
+                                shape: BoxShape.circle
+                            ),
+                            child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.5.w,),
+                          ),
+                          SizedBox(width: 3.w),
+                          Text(time,
+                            style: fontMedium.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColor.textColor
+                            ),),
+                        ],
                       ),
-                      SizedBox(width: 3.w),
-                      Text(time,
-                        style: fontMedium.copyWith(
-                            fontSize: 9.sp,
-                            color: AppColor.textColor
-                        ),),
                     ],
                   ),
                   SizedBox(height: 0.5.h),

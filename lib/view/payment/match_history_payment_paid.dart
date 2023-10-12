@@ -151,7 +151,8 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
                   widget.matchHistoryPaid[index].teamName.toString(),
                   widget.matchHistoryPaid[index].paidStatus.toString(),
                   widget.matchHistoryPaid[index].matchId.toString(),
-                  widget.matchHistoryPaid[index].teamId.toString(), widget.refresh
+                  widget.matchHistoryPaid[index].teamId.toString(), widget.refresh,
+                    widget.matchHistoryPaid[index].matchNumber.toString()
                 );
               },
             ),

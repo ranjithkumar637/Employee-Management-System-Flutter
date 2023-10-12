@@ -37,6 +37,8 @@ class AppColor {
 
   static const Color textFieldBg = Color(0xffF9F8F5);
 
+  static const Color error = Color(0xffEC7063);
+
 
 
 

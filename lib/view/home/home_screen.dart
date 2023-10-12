@@ -28,15 +28,12 @@ import '../../utils/images.dart';
 import '../../utils/scale_route.dart';
 import '../../utils/styles.dart';
 import '../auth/login_screen.dart';
-import '../my_matches/match_info_screen.dart';
-import '../my_matches/upcoming_battle.dart';
-import '../my_matches/upcoming_match_card.dart';
 import '../profile/edit_profile.dart';
-import '../refer_and_earn/refer_and_earn_screen.dart';
 import '../widgets/loader.dart';
 import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
 import 'custom_date_picker.dart';
+import 'empty_list_card.dart';
 import 'home_grid_options.dart';
 import 'home_upcoming_card.dart';
 import 'notification_dot.dart';
@@ -354,52 +351,96 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                         Consumer<ProfileProvider>(
                             builder: (context, profile, child) {
-                              return profile.organizerDetails.groundApprove == 0
-                                  ? Bounceable(
-                                onTap: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return const EditProfile();
-                                    }),
-                                  ).then((value) {
-                                    getProfile();
-                                  });
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 5.w,
-                                  ) + EdgeInsets.only(
-                                      top: 2.h
+                              return profile.profileModel.groundCount.toString() == "0" ?
+                                Bounceable(
+                                  onTap: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return const EditProfile();
+                                      }),
+                                    ).then((value) {
+                                      getProfile();
+                                    });
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                    ) + EdgeInsets.only(
+                                        top: 2.h
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 3.w,
+                                      vertical: 1.2.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColor.redColor.withOpacity(0.6),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text("Currently, we're awaiting your update on the ground info!",
+                                            style: fontMedium.copyWith(
+                                                fontSize: 10.sp,
+                                                color: AppColor.lightColor
+                                            ),),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: AppColor.lightColor,
+                                          size: 6.w,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 3.w,
-                                    vertical: 1.2.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColor.redColor.withOpacity(0.6),
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text("Awaiting admin's approval, your ground will be approved very shortly",
-                                          style: fontMedium.copyWith(
-                                              fontSize: 10.sp,
-                                              color: AppColor.lightColor
-                                          ),),
+                                ) :
+                               profile.profileModel.groundCount.toString() == "1" && profile.organizerDetails.groundApprove == 0
+                                 ? Bounceable(
+                                    onTap: (){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) {
+                                          return const EditProfile();
+                                        }),
+                                      ).then((value) {
+                                        getProfile();
+                                      });
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                      ) + EdgeInsets.only(
+                                          top: 2.h
                                       ),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        color: AppColor.lightColor,
-                                        size: 6.w,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 3.w,
+                                        vertical: 1.2.h,
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                                  : const SizedBox();
-                            }
+                                      decoration: BoxDecoration(
+                                        color: AppColor.redColor.withOpacity(0.6),
+                                        borderRadius: BorderRadius.circular(5.0),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text("Awaiting admin's approval, your ground will be approved very shortly",
+                                              style: fontMedium.copyWith(
+                                                  fontSize: 10.sp,
+                                                  color: AppColor.lightColor
+                                              ),),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            color: AppColor.lightColor,
+                                            size: 6.w,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                   : const SizedBox();
+                              }
                         ),
                         Container(
                           padding: EdgeInsets.symmetric(
@@ -582,38 +623,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 3.h),
                         //in the offing title
                         offingsList.isEmpty
-                            ? Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "In The Offing",
-                                style: fontMedium.copyWith(
-                                    fontSize: 12.sp, color: AppColor.textColor),
-                              ),
-                              SizedBox(height: 2.h),
-                              Container(
-                                width: double.maxFinite,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 2.h,
-                                    horizontal: 4.w
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.redColor.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Text("No offings found",
-                                  style: fontMedium.copyWith(
-                                      color: AppColor.redColor,
-                                      fontSize: 11.sp
-                                  ),),
-                              ),
-                            ],
-                          ),
-                        )
+                            ? const EmptyListCard("In the offing", "No offings found")
                             : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Column(
@@ -685,38 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 2.h),
                         //my matches title
                         upcomingMatchList.isEmpty
-                            ? Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "My Matches",
-                                style: fontMedium.copyWith(
-                                    fontSize: 12.sp, color: AppColor.textColor),
-                              ),
-                              SizedBox(height: 2.h),
-                              Container(
-                                width: double.maxFinite,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 2.h,
-                                    horizontal: 4.w
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColor.redColor.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Text("No matches found",
-                                  style: fontMedium.copyWith(
-                                      color: AppColor.redColor,
-                                      fontSize: 11.sp
-                                  ),),
-                              ),
-                            ],
-                          ),
-                        )
+                            ? const EmptyListCard("My Matches", "No matches found")
                             : Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Column(

@@ -103,121 +103,34 @@ class _RevenueScreenState extends State<RevenueScreen> {
             }
           ),
           SizedBox(height: 2.h),
-          // revenueTeamList.isEmpty
-          //     ? const SizedBox()
-          //     : Padding(
-          //   padding: EdgeInsets.symmetric(
-          //     horizontal: 5.w,
-          //     vertical: 2.h,
-          //   ),
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         child: GestureDetector(
-          //             onTap: () async {
-          //               final DateTime? picked = await showDatePicker(
-          //                 context: context,
-          // initialEntryMode: DatePickerEntryMode.calendarOnly,
-          //                 initialDate: DateTime.now(),
-          //                 firstDate: DateTime(2000),
-          //                 lastDate: DateTime.now(),
-          //                 builder: (context, child) {
-          //                   return Theme(
-          //                     data: Theme.of(context).copyWith(
-          //                       useMaterial3: true,
-          //                       colorScheme: const ColorScheme.light(
-          //                         primary: AppColor.primaryColor,
-          //                         onPrimary: AppColor.textColor,
-          //                         onSurface: AppColor.textColor,
-          //                       ),
-          //                       textButtonTheme: TextButtonThemeData(
-          //                         style: TextButton.styleFrom(
-          //                           foregroundColor: AppColor.secondaryColor, // button text color
-          //                         ),
-          //                       ),
-          //                     ),
-          //                     child: child!,
-          //                   );
-          //                 },
-          //               );
-          //
-          //               if (picked != null) {
-          //                 setState(() {
-          //                   firstDate = DateFormat("dd-MM-yyyy").format(picked);
-          //                 });
-          //               }
-          //             },
-          //             child: DateFilterContainer(firstDate.toString() == "null" || firstDate.toString() == "" ? "Start Date" : firstDate.toString())),
-          //       ),
-          //       SizedBox(width: 3.w),
-          //       Expanded(
-          //         child: GestureDetector(
-          //             onTap: () async {
-          //               final DateTime? picked = await showDatePicker(
-          //                 context: context,
-          // initialEntryMode: DatePickerEntryMode.calendarOnly,
-          //                 initialDate: DateTime.now(),
-          //                 firstDate: DateTime(2000),
-          //                 lastDate: DateTime.now(),
-          //                 builder: (context, child) {
-          //                   return Theme(
-          //                     data: Theme.of(context).copyWith(
-          //                       useMaterial3: true,
-          //                       colorScheme: const ColorScheme.light(
-          //                         primary: AppColor.primaryColor,
-          //                         onPrimary: AppColor.textColor,
-          //                         onSurface: AppColor.textColor,
-          //                       ),
-          //                       textButtonTheme: TextButtonThemeData(
-          //                         style: TextButton.styleFrom(
-          //                           foregroundColor: AppColor.secondaryColor, // button text color
-          //                         ),
-          //                       ),
-          //                     ),
-          //                     child: child!,
-          //                   );
-          //                 },
-          //               );
-          //
-          //               if (picked != null) {
-          //                 setState(() {
-          //                   lastDate = DateFormat("dd-MM-yyyy").format(picked);
-          //                 });
-          //               }
-          //             },
-          //             child: DateFilterContainer(lastDate.toString() == "null" || lastDate.toString() == "" ? "End Date" : lastDate.toString())),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           Expanded(
-            child: revenueTeamList.isEmpty
-                ? Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 4.h),
-                  SvgPicture.asset(
-                    Images.revenueImage,
-                    width: 40.w,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(
-                    "You don’t have any revenue yet",
-                    style: fontMedium.copyWith(
-                        fontSize: 12.sp, color: AppColor.redColor),
-                  ),
-                ],
-              ),
-            )
-                : loading
+            child: loading
                 ? const Loader()
             : MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
-                child: FutureBuilder(
+                child: revenueTeamList.isEmpty
+                    ? Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 4.h),
+                      SvgPicture.asset(
+                        Images.revenueImage,
+                        width: 40.w,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 3.h),
+                      Text(
+                        "You don’t have any revenue yet",
+                        style: fontMedium.copyWith(
+                            fontSize: 12.sp, color: AppColor.redColor),
+                      ),
+                    ],
+                  ),
+                )
+                    : FutureBuilder(
                   future: futureData,
                   builder: (context, snapshot) {
                     if(snapshot.connectionState == ConnectionState.waiting){
@@ -238,6 +151,7 @@ class _RevenueScreenState extends State<RevenueScreen> {
                             revenueTeamList[index].bookingSlotStart.toString(),
                             revenueTeamList[index].teamName.toString(),
                             revenueTeamList[index].paidStatus.toString(),
+                            revenueTeamList[index].matchNumber.toString(),
                           );
                         },
                       );

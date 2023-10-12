@@ -7,6 +7,7 @@ import '../../models/upcoming_matches_payment_model.dart';
 import '../../providers/payment_info_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
+import '../widgets/loader.dart';
 
 class UpcomingBattlePayment extends StatefulWidget {
   const UpcomingBattlePayment({Key? key}) : super(key: key);
@@ -70,7 +71,9 @@ class _UpcomingBattlePaymentState extends State<UpcomingBattlePayment> with Sing
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return loading
+    ? const Loader()
+    : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(

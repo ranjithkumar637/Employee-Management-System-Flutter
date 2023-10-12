@@ -39,6 +39,7 @@ class MatchHistory {
   dynamic paidPrice;
   dynamic totalPrice;
   dynamic paidStatus;
+  dynamic matchNumber;
 
   MatchHistory(
       {matchId,
@@ -50,7 +51,8 @@ class MatchHistory {
         bookingSlotEnd,
         paidPrice,
         totalPrice,
-        paidStatus});
+        paidStatus,
+      matchNumber});
 
   MatchHistory.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
@@ -63,6 +65,7 @@ class MatchHistory {
     paidPrice = json['paid_price'];
     totalPrice = json['total_price'];
     paidStatus = json['paid_status'];
+    matchNumber = json['match_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -77,6 +80,7 @@ class MatchHistory {
     data['paid_price'] = paidPrice;
     data['total_price'] = totalPrice;
     data['paid_status'] = paidStatus;
+    data['match_number'] = matchNumber;
     return data;
   }
 }

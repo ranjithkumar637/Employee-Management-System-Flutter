@@ -4,7 +4,7 @@ class UpcomingMatchesPaymentModel {
   List<UpcomingMatches>? upcomingMatches;
 
   UpcomingMatchesPaymentModel(
-      {this.status, this.message, this.upcomingMatches});
+      {status, message, upcomingMatches});
 
   UpcomingMatchesPaymentModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -19,11 +19,11 @@ class UpcomingMatchesPaymentModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.upcomingMatches != null) {
+    data['status'] = status;
+    data['message'] = message;
+    if (upcomingMatches != null) {
       data['upcoming_matches'] =
-          this.upcomingMatches!.map((v) => v.toJson()).toList();
+          upcomingMatches!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -40,18 +40,20 @@ class UpcomingMatches {
   dynamic paidPrice;
   dynamic totalPrice;
   dynamic paidStatus;
+  dynamic matchNumber;
 
   UpcomingMatches(
-      {this.matchId,
-        this.teamId,
-        this.teamName,
-        this.logo,
-        this.bookingDate,
-        this.bookingSlotStart,
-        this.bookingSlotEnd,
-        this.paidPrice,
-        this.totalPrice,
-        this.paidStatus});
+      {matchId,
+        teamId,
+        teamName,
+        logo,
+        bookingDate,
+        bookingSlotStart,
+        bookingSlotEnd,
+        paidPrice,
+        totalPrice,
+        paidStatus,
+      matchNumber});
 
   UpcomingMatches.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
@@ -64,20 +66,22 @@ class UpcomingMatches {
     paidPrice = json['paid_price'];
     totalPrice = json['total_price'];
     paidStatus = json['paid_status'];
+    matchNumber = json['match_number'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['match_id'] = this.matchId;
-    data['team_id'] = this.teamId;
-    data['team_name'] = this.teamName;
-    data['logo'] = this.logo;
-    data['booking_date'] = this.bookingDate;
-    data['booking_slot_start'] = this.bookingSlotStart;
-    data['booking_slot_end'] = this.bookingSlotEnd;
-    data['paid_price'] = this.paidPrice;
-    data['total_price'] = this.totalPrice;
-    data['paid_status'] = this.paidStatus;
+    data['match_id'] = matchId;
+    data['team_id'] = teamId;
+    data['team_name'] = teamName;
+    data['logo'] = logo;
+    data['booking_date'] = bookingDate;
+    data['booking_slot_start'] = bookingSlotStart;
+    data['booking_slot_end'] = bookingSlotEnd;
+    data['paid_price'] = paidPrice;
+    data['total_price'] = totalPrice;
+    data['paid_status'] = paidStatus;
+    data['match_number'] = matchNumber;
     return data;
   }
 }

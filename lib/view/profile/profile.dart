@@ -733,6 +733,11 @@ class _ProfileState extends State<Profile> {
     String cityId = Provider.of<TeamProvider>(context, listen: false).organizerStateBasedCityId;
     String stateId = Provider.of<TeamProvider>(context, listen: false).organizerStateId;
 
+    if(cityId == "" && stateId == ""){
+      cityId = profile.organizerDetails.cityId.toString();
+      stateId = profile.organizerDetails.stateId.toString();
+    }
+
     if(groundNameController.text.isEmpty){
       Dialogs.snackbar("Enter ground name", context, isError: true);
     }
@@ -774,7 +779,7 @@ class _ProfileState extends State<Profile> {
       cityIdG = Provider.of<ProfileProvider>(context, listen: false).cityIdGround;
       stateIdG = Provider.of<ProfileProvider>(context, listen: false).stateIdGround;
     }
-
+    print("organizer cityid $cityId stateId $stateId");
     if (_formKey.currentState!.validate()) {
       setState(() {
         loading = true;

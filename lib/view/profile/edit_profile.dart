@@ -174,11 +174,11 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
                   children: [
-                    Image.asset(Images.offingImage, width: double.maxFinite, fit: BoxFit.cover, height: newTabIndex == 0 ? 26.h: 30.h,),
+                    Image.asset(Images.offingImage, width: double.maxFinite, fit: BoxFit.cover, height: newTabIndex == 0 ? 30.h: 26.h,),
                     Positioned(
                       child: Container(
                         width: double.maxFinite,
-                        height: newTabIndex == 0 ? 26.h: 30.h,
+                        height: newTabIndex == 0 ? 30.h: 26.h,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
@@ -212,7 +212,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         ),
                       ),
                     ),
-                    if(newTabIndex == 0)...[
+                    if(newTabIndex == 1)...[
                       Positioned(
                         top: 10.h,
                         child: Consumer<ProfileProvider>(
@@ -224,8 +224,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                     children: [
                                       imageFileProfile != null
                                           ? Container(
-                                          height: 10.h,
-                                          width: 20.w,
+                                          height: 12.h,
+                                          width: 24.w,
                                           decoration: BoxDecoration(
                                               border: Border.all(color: AppColor.imageBorderColor, width: 2),
                                               shape: BoxShape.circle,
@@ -236,13 +236,13 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                       ) :
                                       ClipOval(
                                         child: CachedNetworkImage(
-                                          height: 10.h,
-                                          width: 20.w,
+                                          height: 12.h,
+                                          width: 24.w,
                                           fit: BoxFit.cover,
                                           imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${ground.organizerDetails.profilePhoto.toString()}",
                                           errorWidget: (context, url, widget){
-                                            return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
-                                              width: newTabIndex == 0 ? 26.h: 30.h,
+                                            return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 12.h,
+                                              width: newTabIndex == 0 ? 30.h: 24.h,
                                               fit: BoxFit.cover,);
                                           },
                                         ),
@@ -299,12 +299,28 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           children: [
                             if(ground.groundDetails.mainImage.toString() == ""
                                 && imageFiles.isEmpty)...[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15.0),
-                                child: Image.asset(Images.groundBig, width: 90.w,
-                                  fit: BoxFit.cover,
-                                  height: 16.h,),
-                              ),
+                              // ClipRRect(
+                              //   borderRadius: BorderRadius.circular(15.0),
+                              //   child: Image.asset(Images.groundBig, width: 90.w,
+                              //     fit: BoxFit.cover,
+                              //     height: 16.h,),
+                              // ),
+                              Container(
+                                decoration:  BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    image: const DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(Images.groundBig))
+                                ),
+                                child: Center(
+                                  child: Text("Image will be\nuploaded soon!",
+                                    textAlign: TextAlign.center,
+                                    style: fontMedium.copyWith(
+                                        fontSize: 15.sp,
+                                        color: AppColor.lightColor
+                                    ),),
+                                ),
+                              )
                             ] else if(ground.groundDetails.mainImage.toString() == ""
                                 && imageFiles.isNotEmpty)...[
                               ClipRRect(
@@ -336,7 +352,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                         fit: BoxFit.cover,
                                         height: 16.h,
                                         errorWidget: (context, error, url) =>
-                                            Image.asset(Images.groundBig, width: 90.w,
+                                            Image.asset(Images.groundBig,
                                               fit: BoxFit.cover,
                                               height: 14.h,),
                                       ))
@@ -374,7 +390,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                                     color: AppColor.primaryColor,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
-                                  child: Text(ground.groundDetails.mainImage.toString() == "" || ground.groundDetails.mainImage == null ? "Add" : "Edit",
+                                  child: Text(ground.groundDetails.mainImage.toString() == "" || ground.groundDetails.mainImage == null ? "Add ground image" : "Edit ground image",
                                     style: fontMedium.copyWith(
                                         fontSize: 10.sp,
                                         color: AppColor.textColor
@@ -411,10 +427,10 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                     controller: tabController,
                     tabs: const [
                       Tab(
-                        text: "Profile",
+                        text: "Ground Info",
                       ),
                       Tab(
-                        text: "Information",
+                        text: "Personal Info",
                       ),
                     ]),
               ),
@@ -441,8 +457,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                   child: TabBarView(
                       controller: tabController,
                       children: [
-                        Profile(ground, profilePic),
                         Information(ground),
+                        Profile(ground, profilePic),
                       ]),
                 ),
               ),

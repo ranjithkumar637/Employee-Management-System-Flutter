@@ -645,13 +645,13 @@ class ProfileProvider extends ChangeNotifier{
     return profileModel;
   }
 
-  Future<ProfileUpdateModel> updateProfile(String groundName, String groundContact, String name, String dob, String location, String companyName,
+  Future<ProfileUpdateModel> updateProfile(String name, String dob, String location, String companyName,
       String latitude, String longitude, String address, String houseNo, String pinCode,
       String streetName, String cityId, String stateId, String groundCityId, String groundStateId, String organizerPinCode, List<String> profilePath) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
     print(accToken);
-    print("$groundName - $groundContact - $name - $dob - $location - $companyName");
+    print("$name - $dob - $location - $companyName");
     print("$latitude - $longitude - $address - $houseNo - $pinCode - $streetName");
     print("$cityId - $stateId - $groundCityId - $groundStateId - $organizerPinCode");
 
@@ -682,23 +682,21 @@ class ProfileProvider extends ChangeNotifier{
     }
 
     request.files.addAll(newList);
-    request.fields['ground_name'] = groundName;
-    request.fields['ground_contact_number'] = groundContact;
-    request.fields['latitude'] = latitude;
+    // request.fields['latitude'] = latitude;
     request.fields['company_name'] = companyName;
-    request.fields['longitude'] = longitude;
-    request.fields['address'] = address;
-    request.fields['pincode'] = pinCode;
-    request.fields['house_no'] = houseNo;
-    request.fields['street_name'] = streetName;
+    // request.fields['longitude'] = longitude;
+    // request.fields['address'] = address;
+    // request.fields['pincode'] = pinCode;
+    // request.fields['house_no'] = houseNo;
+    // request.fields['street_name'] = streetName;
     request.fields['state_id'] = stateId;
     request.fields['city_id'] = cityId;
 
     request.fields['name'] = name;
     request.fields['dob'] = dob;
-    request.fields['location'] = location.toString() == "" ? "" : int.parse(location).toString();
-    request.fields['ground_city_id'] = groundCityId;
-    request.fields['ground_state_id'] = groundStateId;
+    // request.fields['location'] = location.toString() == "" ? "" : int.parse(location).toString();
+    // request.fields['ground_city_id'] = groundCityId;
+    // request.fields['ground_state_id'] = groundStateId;
     request.fields['org_pincode'] = organizerPinCode;
 
     final res = await request.send();
@@ -782,7 +780,8 @@ class ProfileProvider extends ChangeNotifier{
 
   //update ground details
   Future<ResponseModel> updateGroundDetails(String description, List<String> main, List<String> gallery,
-      String houseNo, String floodLight, String address, String pinCode, String latitude, String longitude, String pitch, String boundaryLine, String streetName, String stateId, String cityId) async{
+      String houseNo, String floodLight, String address, String pinCode, String latitude, String longitude,
+      String pitch, String boundaryLine, String streetName, String stateId, String cityId, String groundName, String groundMobile) async{
     print("$description $houseNo $floodLight $address $pinCode $latitude $longitude  $pitch $boundaryLine $streetName");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? accToken = preferences.getString("access_token");
@@ -821,6 +820,8 @@ class ProfileProvider extends ChangeNotifier{
     }
 
     request.files.addAll(newList);
+    request.fields['ground_name'] = groundName;
+    request.fields['ground_contact_number'] = groundMobile;
     request.fields['description'] = description;
     request.fields['house_no'] = houseNo;
     request.fields['pitch'] = pitch;

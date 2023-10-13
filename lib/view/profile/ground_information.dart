@@ -35,7 +35,7 @@ class GroundInformation extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Ground Information",
+                  Text("Info",
                     style: fontMedium.copyWith(
                         color: AppColor.textColor,
                         fontSize: 12.sp
@@ -83,7 +83,7 @@ class GroundInfoRow extends StatelessWidget {
               fontSize: 11.sp
           ),),
         Text(value == "" ? '-' : value,
-          style: fontRegular.copyWith(
+          style: fontMedium.copyWith(
               color: AppColor.textColor,
               fontSize: 11.sp
           ),),

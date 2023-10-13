@@ -565,7 +565,7 @@ class FieldHeading extends StatelessWidget {
     return Text(heading,
       style: fontRegular.copyWith(
           fontSize: 10.sp,
-          color: edit ? AppColor.iconColour : AppColor.textColor
+          color: edit ? AppColor.iconColour : AppColor.textMildColor
       ),);
   }
 }

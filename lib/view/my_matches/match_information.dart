@@ -51,7 +51,22 @@ class _MatchInformationState extends State<MatchInformation> {
                     child: CachedNetworkImage(imageUrl: '${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}${widget.image}',
                       width: double.infinity, height: 16.h, fit: BoxFit.cover,
                         errorWidget: (context, url, widget){
-                          return Image.asset(Images.groundBig, width: double.infinity, height: 16.h, fit: BoxFit.cover);
+                          return Container(
+                            width: double.maxFinite,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(Images.groundBig))
+                            ),
+                            child: Center(
+                              child: Text("Image will be\nuploaded soon!",
+                                textAlign: TextAlign.center,
+                                style: fontMedium.copyWith(
+                                    fontSize: 15.sp,
+                                    color: AppColor.lightColor
+                                ),),
+                            ),
+                          );
                         })),
                 Container(
                     width: double.infinity, height: 16.h,

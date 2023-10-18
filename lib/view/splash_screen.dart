@@ -4,13 +4,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../utils/colours.dart';
 import '../utils/images.dart';
-import 'auth/enter_otp.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -22,15 +20,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   getPrefs() async {
-
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-
     await messaging.setForegroundNotificationPresentationOptions(
         sound: true,
         badge: true,
         alert: true
     );
-
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -75,25 +70,6 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
     else if(userId.isNotEmpty) {
-      // Timer(
-      //     const Duration(seconds: 2), () async {
-      //   if(isLogin == true){
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) {
-      //         return EnterOtpScreen(true, false, "", userId.toString(), mobile.toString(), true);
-      //       }),
-      //     );
-      //   } else{
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) {
-      //         return EnterOtpScreen(false, true, "", userId.toString(), mobile.toString(), true);
-      //       }),
-      //     );
-      //   }
-      // }
-      // );
       Timer(
           const Duration(seconds: 2), () async {
         Navigator.pushNamed(context, 'login_screen');

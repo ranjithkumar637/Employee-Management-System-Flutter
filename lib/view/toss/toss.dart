@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:elevens_organizer/view/toss/toss_result_dialog.dart';
 import 'package:elevens_organizer/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +100,8 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
   }
 
   tossHandle() async {
+    final player = AudioPlayer();
+    player.play(AssetSource("coin_toss.mp3"));
     _handleToss();
     await Future.delayed(const Duration(milliseconds: 120));
     setState(() {

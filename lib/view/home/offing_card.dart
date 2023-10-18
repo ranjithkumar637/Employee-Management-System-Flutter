@@ -20,8 +20,8 @@ class OffingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: length == 1 ? 90.w : 80.w,
-      height: 26.h,
+      width: length == 1 ? 90.w : 86.w,
+      height: 18.h,
       decoration: BoxDecoration(
         color: AppColor.lightColor,
         borderRadius: BorderRadius.circular(12.0),
@@ -105,57 +105,51 @@ class OffingCard extends StatelessWidget {
               children: [
                 Text("#${offing.matchNumber}",
                   style: fontBold.copyWith(
-                      fontSize: 10.sp,
+                      fontSize: 9.sp,
                       color: AppColor.matchNumberColor
                   ),),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 1.w,
-                            vertical: 0.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                              color: AppColor.secondaryColor.withOpacity(0.2),
-                              shape: BoxShape.circle
-                          ),
-                          child: SvgPicture.asset(Images.calendarIcon, color: AppColor.secondaryColor, width: 3.w,),
-                        ),
-                        SizedBox(width: 1.w),
-                        FittedBox(
-                          child: Text(offing.bookingDate.toString(),
-                            style: fontMedium.copyWith(
-                                fontSize: 8.5.sp,
-                                color: AppColor.textColor
-                            ),),
-                        ),
-                      ],
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 1.w,
+                        vertical: 0.5.h,
+                      ),
+                      decoration: BoxDecoration(
+                          color: AppColor.secondaryColor.withOpacity(0.2),
+                          shape: BoxShape.circle
+                      ),
+                      child: SvgPicture.asset(Images.calendarIcon, color: AppColor.secondaryColor, width: 3.w,),
                     ),
-                    SizedBox(height: 0.5.h),
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 1.w,
-                            vertical: 0.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                              color: AppColor.secondaryColor.withOpacity(0.2),
-                              shape: BoxShape.circle
-                          ),
-                          child: Icon(Icons.access_time, color: AppColor.secondaryColor, size: 3.w,),
-                        ),
-                        SizedBox(width: 1.w),
-                        Text(offing.bookingSlotStart.toString(),
-                          style: fontMedium.copyWith(
-                              fontSize: 8.5.sp,
-                              color: AppColor.textColor
-                          ),),
-                      ],
+                    SizedBox(width: 1.w),
+                    FittedBox(
+                      child: Text(offing.bookingDate.toString(),
+                        style: fontMedium.copyWith(
+                            fontSize: 8.5.sp,
+                            color: AppColor.textColor
+                        ),),
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 1.w,
+                        vertical: 0.5.h,
+                      ),
+                      decoration: BoxDecoration(
+                          color: AppColor.secondaryColor.withOpacity(0.2),
+                          shape: BoxShape.circle
+                      ),
+                      child: Icon(Icons.access_time, color: AppColor.secondaryColor, size: 3.w,),
+                    ),
+                    SizedBox(width: 1.w),
+                    Text(offing.bookingSlotStart.toString(),
+                      style: fontMedium.copyWith(
+                          fontSize: 8.5.sp,
+                          color: AppColor.textColor
+                      ),),
                   ],
                 ),
 

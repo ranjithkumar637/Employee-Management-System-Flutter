@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/animation/animation_preferences.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_animator/widgets/fading_entrances/fade_in_up.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -39,12 +40,6 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
       });
     }
     getSquad();
-    await Future.delayed(const Duration(seconds: 1));
-    if(mounted){
-      setState(() {
-        loading = false;
-      });
-    }
   }
 
   filterList(){
@@ -54,6 +49,7 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
       vcList = matchTeamPlayerList.where((player) => player.role.toString() == "Vice Captain").toList();
       adminList = matchTeamPlayerList.where((player) => player.role.toString() == "Admin").toList();
       playerList = matchTeamPlayerList.where((player) => player.role.toString() == "Player").toList();
+      loading = false;
     });
   }
 
@@ -78,20 +74,17 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
   Widget build(BuildContext context) {
     return Consumer<BookingProvider>(
         builder: (context, squad, child) {
-          return Container(
-            margin: EdgeInsets.only(
-              top: 2.h,
-            ),
-            decoration: const BoxDecoration(
-                color: AppColor.lightColor,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0)
-                )
-            ),
-            child: FadeInUp(
-              preferences: const AnimationPreferences(
-                  duration: Duration(milliseconds: 500)
+          return FadeIn(
+            child: Container(
+              margin: EdgeInsets.only(
+                top: 2.h,
+              ),
+              decoration: const BoxDecoration(
+                  color: AppColor.lightColor,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0)
+                  )
               ),
               child: Column(
                 children: [

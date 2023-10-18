@@ -91,188 +91,183 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
     }
-    return WillPopScope(
-      onWillPop: () {
-        return openExitSheet();
+    return GestureDetector(
+      onTap: (){
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
       },
-      child: GestureDetector(
-        onTap: (){
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Scaffold(
-          backgroundColor: AppColor.bgColor,
-          body: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 5.w,
-                ) + EdgeInsets.only(
-                  top: 7.h,
-                  bottom: 5.h
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    widget.fromSplash
-                        ? const SizedBox()
-                        : InkWell(
-                        onTap:(){
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
+      child: Scaffold(
+        backgroundColor: AppColor.bgColor,
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 5.w,
+              ) + EdgeInsets.only(
+                top: 7.h,
+                bottom: 5.h
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  widget.fromSplash
+                      ? const SizedBox()
+                      : InkWell(
+                      onTap:(){
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.arrow_back, color: AppColor.textColor, size: 7.w,)),
 
-                    Text(widget.login ? "Enter your OTP" : "Verify your mobile number",
-                      style: fontSemiBold.copyWith(
-                          color: AppColor.textColor,
-                          fontSize: widget.login ? 16.sp : 14.sp
-                      ),),
+                  Text(widget.login ? "Enter your OTP" : "Verify your mobile number",
+                    style: fontSemiBold.copyWith(
+                        color: AppColor.textColor,
+                        fontSize: widget.login ? 16.sp : 14.sp
+                    ),),
 
-                    widget.fromSplash
-                        ? const SizedBox()
-                        : Icon(Icons.arrow_back_ios_outlined, color: Colors.transparent, size: 7.w,),
-                  ],
-                ),
-              ),
-              Center(
-                child: SvgPicture.asset(Images.otpImage, width: 36.w,),
-              ),
-              SizedBox(height: 3.h),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15.w,
-                ),
-                child: Text("Please enter the 4 digit code $yourOtp sent to ${widget.mobileNumber}",
-                  textAlign: TextAlign.center,
-                  style: fontRegular.copyWith(
-                      color: AppColor.textColor,
-                      fontSize: 12.sp
-                  ),),
-              ),
-              SizedBox(height: 3.h),
-              OtpTextField(
-                keyboardType: TextInputType.number,
-                showFieldAsBox: true,
-                textStyle: fontMedium.copyWith(
-                  color: AppColor.textColor,
-                  fontSize: 14.sp
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly
+                  widget.fromSplash
+                      ? const SizedBox()
+                      : Icon(Icons.arrow_back_ios_outlined, color: Colors.transparent, size: 7.w,),
                 ],
-                showCursor: true,
-                cursorColor: AppColor.textColor,
-                numberOfFields: 4,
-                fillColor: AppColor.lightColor,
-                filled: true,
-                borderColor: Colors.transparent,
-                margin: EdgeInsets.symmetric(
-                  horizontal: 2.w
-                ),
-                onSubmit: (value) async {
+              ),
+            ),
+            Center(
+              child: SvgPicture.asset(Images.otpImage, width: 36.w,),
+            ),
+            SizedBox(height: 3.h),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 15.w,
+              ),
+              child: Text("Please enter the 4 digit code $yourOtp sent to ${widget.mobileNumber}",
+                textAlign: TextAlign.center,
+                style: fontRegular.copyWith(
+                    color: AppColor.textColor,
+                    fontSize: 12.sp
+                ),),
+            ),
+            SizedBox(height: 3.h),
+            OtpTextField(
+              keyboardType: TextInputType.number,
+              showFieldAsBox: true,
+              textStyle: fontMedium.copyWith(
+                color: AppColor.textColor,
+                fontSize: 14.sp
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly
+              ],
+              showCursor: true,
+              cursorColor: AppColor.textColor,
+              numberOfFields: 4,
+              fillColor: AppColor.lightColor,
+              filled: true,
+              borderColor: Colors.transparent,
+              margin: EdgeInsets.symmetric(
+                horizontal: 2.w
+              ),
+              onSubmit: (value) async {
+                setState((){
+                  otp = value;
+                });
+                setState((){
+                  incomplete = false;
+                });
+                SharedPreferences preferences = await SharedPreferences.getInstance();
+                String? userId = preferences.getString("user_temp_id");
+                if(widget.login){
+                  verifyLogin(userId);
+                } else if(widget.register){
+                  verifyRegister(userId);
+                }
+              },
+              onCodeChanged: (value){
+                setState((){
+                  otp = value;
+                });
+                if(value.length < 4){
                   setState((){
-                    otp = value;
+                    incomplete = true;
                   });
+                } else{
                   setState((){
                     incomplete = false;
                   });
-                  SharedPreferences preferences = await SharedPreferences.getInstance();
-                  String? userId = preferences.getString("user_temp_id");
-                  if(widget.login){
-                    verifyLogin(userId);
-                  } else if(widget.register){
-                    verifyRegister(userId);
-                  }
-                },
-                onCodeChanged: (value){
-                  setState((){
-                    otp = value;
-                  });
-                  if(value.length < 4){
-                    setState((){
-                      incomplete = true;
-                    });
-                  } else{
-                    setState((){
-                      incomplete = false;
-                    });
-                  }
-                },
-                focusedBorderColor: AppColor.primaryColor,
-                enabledBorderColor: Colors.transparent,
-                fieldWidth: 16.w,
-                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              ),
-              SizedBox(height: 3.h),
-              Text(
-                "${formatTime(_seconds)} seconds",
-                style: fontMedium.copyWith(
-                  color: AppColor.textColor,
-                    fontSize: 11.sp),
-              ),
-              SizedBox(height: 3.h),
-              _seconds > 0 ? const SizedBox() : RichText(
-                text: TextSpan(
-                    text: 'Didn\'t receive the code? ',
-                    style: fontRegular.copyWith(
-                      color: AppColor.textColor,
-                      fontSize: 11.sp,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(text: ' Resend',
-                          style: fontSemiBold.copyWith(
-                            color: _seconds > 0 ? AppColor.textMildColor : AppColor.textColor,
-                            fontSize: 11.sp,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              if(_seconds > 0){
+                }
+              },
+              focusedBorderColor: AppColor.primaryColor,
+              enabledBorderColor: Colors.transparent,
+              fieldWidth: 16.w,
+              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            ),
+            SizedBox(height: 3.h),
+            Text(
+              "${formatTime(_seconds)} seconds",
+              style: fontMedium.copyWith(
+                color: AppColor.textColor,
+                  fontSize: 11.sp),
+            ),
+            SizedBox(height: 3.h),
+            _seconds > 0 ? const SizedBox() : RichText(
+              text: TextSpan(
+                  text: 'Didn\'t receive the code? ',
+                  style: fontRegular.copyWith(
+                    color: AppColor.textColor,
+                    fontSize: 11.sp,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(text: ' Resend',
+                        style: fontSemiBold.copyWith(
+                          color: _seconds > 0 ? AppColor.textMildColor : AppColor.textColor,
+                          fontSize: 11.sp,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            if(_seconds > 0){
 
-                              } else {
-                                resendOtp(widget.userTempId);
-                              }
+                            } else {
+                              resendOtp(widget.userTempId);
                             }
-                      )
-                    ]
-                ),
+                          }
+                    )
+                  ]
               ),
-              // SizedBox(height: 5.h),
-              // if(loading)...[
-              //   const Center(
-              //     child: CircularProgressIndicator(
-              //       color: AppColor.primaryColor,
-              //     ),
-              //   )
-              // ]
-              // else...[
-              //   incomplete
-              //       ? Padding(
-              //     padding: EdgeInsets.symmetric(
-              //       horizontal: 5.w,
-              //     ),
-              //     child: CustomButton(AppColor.hintColour.withOpacity(0.2), "Verify", AppColor.textColor),
-              //   )
-              //       : Padding(
-              //     padding: EdgeInsets.symmetric(
-              //       horizontal: 5.w,
-              //     ),
-              //     child: Bounceable(
-              //         onTap: () async {
-              //           SharedPreferences preferences = await SharedPreferences.getInstance();
-              //           String? userId = preferences.getString("user_temp_id");
-              //           if(widget.login){
-              //             verifyLogin(userId);
-              //           } else if(widget.register){
-              //             verifyRegister(userId);
-              //           }
-              //         },
-              //         child: const CustomButton(AppColor.primaryColor, "Verify", AppColor.textColor)),
-              //   ),
-              // ]
-            ],
-          ),
+            ),
+            // SizedBox(height: 5.h),
+            // if(loading)...[
+            //   const Center(
+            //     child: CircularProgressIndicator(
+            //       color: AppColor.primaryColor,
+            //     ),
+            //   )
+            // ]
+            // else...[
+            //   incomplete
+            //       ? Padding(
+            //     padding: EdgeInsets.symmetric(
+            //       horizontal: 5.w,
+            //     ),
+            //     child: CustomButton(AppColor.hintColour.withOpacity(0.2), "Verify", AppColor.textColor),
+            //   )
+            //       : Padding(
+            //     padding: EdgeInsets.symmetric(
+            //       horizontal: 5.w,
+            //     ),
+            //     child: Bounceable(
+            //         onTap: () async {
+            //           SharedPreferences preferences = await SharedPreferences.getInstance();
+            //           String? userId = preferences.getString("user_temp_id");
+            //           if(widget.login){
+            //             verifyLogin(userId);
+            //           } else if(widget.register){
+            //             verifyRegister(userId);
+            //           }
+            //         },
+            //         child: const CustomButton(AppColor.primaryColor, "Verify", AppColor.textColor)),
+            //   ),
+            // ]
+          ],
         ),
       ),
     );

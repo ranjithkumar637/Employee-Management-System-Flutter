@@ -4,6 +4,7 @@ import 'package:elevens_organizer/view/menu/widgets/bottom_menu_text.dart';
 import 'package:elevens_organizer/view/more/more_screen.dart';
 import 'package:elevens_organizer/view/my_matches/my_matches.dart';
 import 'package:elevens_organizer/view/revenue/revenue_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -221,7 +222,9 @@ class _MenuScreenState extends State<MenuScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkForUpdate();
+    if(!kDebugMode){
+      checkForUpdate();
+    }
   }
 
 

@@ -327,7 +327,9 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                       bookingHistory[index].logo.toString(),
                                       bookingHistory[index].teamName.toString(),
                                       bookingHistory[index].teamId.toString(),
-                                      bookingHistory[index].matchId.toString());
+                                      bookingHistory[index].matchId.toString(),
+                                      bookingHistory[index].matchNumber.toString()
+                                  );
                                 },
                               ),
                             );
@@ -354,7 +356,9 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                               filteredItems[index].logo.toString(),
                               filteredItems[index].teamName.toString(),
                               filteredItems[index].teamId.toString(),
-                              filteredItems[index].matchId.toString());
+                              filteredItems[index].matchId.toString(),
+                              filteredItems[index].matchNumber.toString()
+                          );
                         },
                       ),
                     ),

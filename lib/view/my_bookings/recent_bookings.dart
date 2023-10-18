@@ -117,7 +117,9 @@ class _RecentBookingsState extends State<RecentBookings> {
                                 recentBooking[index].logo.toString(),
                                 recentBooking[index].teamName.toString(),
                                 recentBooking[index].teamId.toString(),
-                                recentBooking[index].matchId.toString());
+                                recentBooking[index].matchId.toString(),
+                                recentBooking[index].matchNumber.toString()
+                            );
                           },
                         );
                       } else {

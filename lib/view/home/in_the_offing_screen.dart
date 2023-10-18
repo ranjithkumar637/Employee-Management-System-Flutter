@@ -46,7 +46,7 @@ class _InTheOffingState extends State<InTheOffing> {
         loading = true;
       });
     }
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     if(mounted){
       setState(() {
         loading = false;

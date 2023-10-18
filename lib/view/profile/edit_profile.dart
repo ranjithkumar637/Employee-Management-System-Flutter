@@ -154,6 +154,10 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
       setState(() {
         newTabIndex = tabController.index;
       });
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
     });
     getProfile();
     _requestLocationPermission();

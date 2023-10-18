@@ -40,6 +40,7 @@ class BookingHistory {
   dynamic stateId;
   dynamic cityName;
   dynamic stateName;
+  dynamic matchNumber;
 
   BookingHistory(
       {matchId,
@@ -52,7 +53,8 @@ class BookingHistory {
         cityId,
         stateId,
         cityName,
-        stateName});
+        stateName,
+      matchNumber});
 
   BookingHistory.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
@@ -66,6 +68,7 @@ class BookingHistory {
     stateId = json['state_id'];
     cityName = json['city_name'];
     stateName = json['state_name'];
+    matchNumber = json['match_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +84,7 @@ class BookingHistory {
     data['state_id'] = stateId;
     data['city_name'] = cityName;
     data['state_name'] = stateName;
+    data['match_number'] = matchNumber;
     return data;
   }
 }

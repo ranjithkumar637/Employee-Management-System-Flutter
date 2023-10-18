@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:elevens_organizer/providers/auth_provider.dart';
 import 'package:elevens_organizer/providers/booking_provider.dart';
 import 'package:elevens_organizer/providers/navigation_provider.dart';
@@ -45,9 +46,9 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   if(!kDebugMode){
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
@@ -104,6 +105,8 @@ class _MyAppState extends State<MyApp> {
         print(message.notification!.body);
         print(message.notification!.title);
       }
+      final player = AudioPlayer();
+      player.play(AssetSource("notification.mp3"));
       LocalNotificationService.display(message);
     });
 

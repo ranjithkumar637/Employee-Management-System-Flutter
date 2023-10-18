@@ -71,6 +71,7 @@ class _MatchHistoryPaymentPaidState extends State<MatchHistoryPaymentPaid> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         widget.matchHistoryPaid.isEmpty
             ? const SizedBox()

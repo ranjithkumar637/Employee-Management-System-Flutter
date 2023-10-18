@@ -181,7 +181,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                    onTap: (){
+                    onTap: () async {
                       Navigator.pop(context);
                     },
                     child: Icon(Icons.arrow_back,size: 7.w,color: AppColor.textColor,)),

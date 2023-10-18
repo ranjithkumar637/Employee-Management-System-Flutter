@@ -36,6 +36,7 @@ class _NotificationsState extends State<Notifications> {
         setState(() {
           notificationList = [];
           notificationList.addAll(value);
+          loading = false;
         });
         return notificationList;
       });
@@ -49,10 +50,6 @@ class _NotificationsState extends State<Notifications> {
       loading = true;
     });
     getNotifications();
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      loading = false;
-    });
   }
 
 

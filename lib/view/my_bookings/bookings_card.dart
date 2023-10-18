@@ -10,8 +10,8 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 
 class BookingsCard extends StatelessWidget {
-  final String time, date, location, teamImage, team, teamId, matchId;
-  const BookingsCard(this.time, this.date, this.location,this.teamImage, this.team, this.teamId, this.matchId, {Key? key}) : super(key: key);
+  final String time, date, location, teamImage, team, teamId, matchId, matchNumber;
+  const BookingsCard(this.time, this.date, this.location,this.teamImage, this.team, this.teamId, this.matchId, this.matchNumber, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +56,12 @@ class BookingsCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text("#$matchNumber",
+                      style: fontBold.copyWith(
+                          fontSize: 10.sp,
+                          color: AppColor.matchNumberColor
+                      ),),
+                    SizedBox(height: 0.5.h),
                     Text(team,
                       style: fontMedium.copyWith(
                           fontSize: 12.sp,

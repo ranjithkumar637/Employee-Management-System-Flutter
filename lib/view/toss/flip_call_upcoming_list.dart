@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:elevens_organizer/providers/team_provider.dart';
@@ -189,6 +190,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
               ],
             ),
             SizedBox(height: 3.h,),
+
             todayMatches.isEmpty || checkTimePassed(todayMatches.first.teamAData!.bookingSlotStart) == 0
                 || checkTimePassed(todayMatches.first.teamAData!.bookingSlotStart) < 0
             ? const SizedBox()
@@ -295,7 +297,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
                           Dialogs.snackbar("No captain assigned in ${todayMatches[index].teamBData!.teamName
                               .toString()}", context, isError: true);
                         } else {
-                          Dialogs.snackbar("Both teams must be frozen to flip a toss", context, isError: true);
+                          Dialogs.snackbar("Squads must be frozen to flip the coin", context, isError: true);
                         }
                       },
                       child: Container(

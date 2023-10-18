@@ -22,16 +22,14 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   getPrefs() async {
-    PermissionStatus status = await Permission.notification.request();
-    if (status.isGranted) {
-      // notification permission is granted
-      print("permission already granted");
-    }
-    else {
-      print("something else");
-      // Open settings to enable notification permission
-    }
+
     FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    await messaging.setForegroundNotificationPresentationOptions(
+        sound: true,
+        badge: true,
+        alert: true
+    );
 
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,

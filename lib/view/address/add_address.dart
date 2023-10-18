@@ -641,6 +641,8 @@ class _AddAddressState extends State<AddAddress> {
                                             validator: (value) {
                                               if (value!.isEmpty) {
                                                 return 'Enter pincode';
+                                              } else if(value.length < 6){
+                                                return 'Pin code must contain 6 digits';
                                               }
                                               return null;
                                             },

@@ -542,6 +542,8 @@ class _ProfileState extends State<Profile> {
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'Enter pin code';
+                                        } else if(value.length < 6){
+                                          return 'Pin code must contain 6 digits';
                                         }
                                         return null;
                                       },

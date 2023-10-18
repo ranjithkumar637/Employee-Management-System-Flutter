@@ -78,7 +78,8 @@ dependencies:
   email_validator: ^2.1.17
   in_app_update: ^4.2.0
   app_settings: ^5.1.1
-
+  onesignal_flutter: ^5.0.0
+  audioplayers: ^5.2.0
 flutter_icons:
   android: true
   ios: true

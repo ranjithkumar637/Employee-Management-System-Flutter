@@ -282,16 +282,16 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         ),
                       ),
                     ] else...[
-                      Positioned(
-                        bottom: 1.h,
-                        child: ground.groundDetails.groundName == null || ground.groundDetails.groundName.toString() == ""
-                            ? const SizedBox()
-                            : Text(ground.groundDetails.groundName.toString(),
-                          style: fontMedium.copyWith(
-                              color: AppColor.lightColor,
-                              fontSize: 16.sp
-                          ),),
-                      ),
+                      // Positioned(
+                      //   bottom: 1.h,
+                      //   child: ground.groundDetails.groundName == null || ground.groundDetails.groundName.toString() == ""
+                      //       ? const SizedBox()
+                      //       : Text(ground.groundDetails.groundName.toString(),
+                      //     style: fontMedium.copyWith(
+                      //         color: AppColor.lightColor,
+                      //         fontSize: 14.sp
+                      //     ),),
+                      // ),
                       Positioned(
                         top: 10.h,
                         child: Stack(
@@ -306,19 +306,13 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                               //     height: 16.h,),
                               // ),
                               Container(
+                                width: 90.w,
+                                height: 16.h,
                                 decoration:  BoxDecoration(
                                     borderRadius: BorderRadius.circular(15.0),
                                     image: const DecorationImage(
                                         fit: BoxFit.cover,
                                         image: AssetImage(Images.groundBig))
-                                ),
-                                child: Center(
-                                  child: Text("Image will be\nuploaded soon!",
-                                    textAlign: TextAlign.center,
-                                    style: fontMedium.copyWith(
-                                        fontSize: 15.sp,
-                                        color: AppColor.lightColor
-                                    ),),
                                 ),
                               )
                             ] else if(ground.groundDetails.mainImage.toString() == ""

@@ -65,7 +65,10 @@ class OrganizerBattleListCard extends StatelessWidget {
                           onTap: (){
                             showPopupMenu(context, paidPrice, totalPrice, team);
                           },
-                          child: Icon(Icons.more_vert_rounded, color: AppColor.textColor, size: 5.w,))
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.more_vert_rounded, color: AppColor.textColor, size: 5.w,),
+                          ))
                           : const SizedBox(),
                     ],
                   ),
@@ -188,7 +191,9 @@ class OrganizerBattleListCard extends StatelessWidget {
                       paidPrice, totalPrice, team, matchId, teamId, refresh
                   );
                 }
-            );
+            ).then((value) {
+              Navigator.pop(context);
+            });
           },
           child: Row(
             children: [

@@ -35,7 +35,7 @@ class GroundInformation extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Info",
+                  Text("Info *",
                     style: fontMedium.copyWith(
                         color: AppColor.textColor,
                         fontSize: 12.sp

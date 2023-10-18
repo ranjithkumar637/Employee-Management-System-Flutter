@@ -24,8 +24,10 @@ import 'package:elevens_organizer/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -45,10 +47,12 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+  if(!kDebugMode){
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
   runApp(
     MultiProvider(
       providers: [
@@ -114,11 +118,18 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  static const String oneSignalAppId = "16090413-4b70-4c0b-a9f4-dd43c445ccee";
+  Future<void> initPlatformState() async {
+    OneSignal.initialize(oneSignalAppId);
+    OneSignal.Notifications.requestPermission(true);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     initiateNotifications();
+    initPlatformState();
   }
 
   @override

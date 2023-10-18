@@ -41,7 +41,11 @@ class _MoreScreenState extends State<MoreScreen> {
 
   getProfile() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-
+    await messaging.setForegroundNotificationPresentationOptions(
+        sound: true,
+        badge: true,
+        alert: true
+    );
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: false,

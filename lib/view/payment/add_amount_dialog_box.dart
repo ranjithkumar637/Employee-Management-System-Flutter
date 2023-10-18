@@ -1,5 +1,6 @@
 import 'package:elevens_organizer/providers/payment_info_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:sizer/sizer.dart';
 
@@ -21,6 +22,7 @@ class _AddAmountDialogBoxState extends State<AddAmountDialogBox> {
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController paidAmountController = TextEditingController();
   final TextEditingController balanceController = TextEditingController();
+  bool invalidPaidAmount = false;
 
   calculateBalanceAmount(){
     int balance = int.parse(totalAmountController.text.toString()) - int.parse(paidAmountController.text.toString());
@@ -28,6 +30,19 @@ class _AddAmountDialogBoxState extends State<AddAmountDialogBox> {
       Dialogs.snackbar("Enter a valid paid amount", context, isError: true);
     } else {
       balanceController.text = balance.toString();
+    }
+  }
+
+  checkPaidGreaterThanTotalAmount(int paidAmount){
+    int totalAmount = int.parse(widget.totalPrice.toString());
+    if(paidAmount > totalAmount){
+      setState(() {
+        invalidPaidAmount = true;
+      });
+    } else {
+      setState(() {
+        invalidPaidAmount = false;
+      });
     }
   }
 
@@ -83,95 +98,117 @@ class _AddAmountDialogBoxState extends State<AddAmountDialogBox> {
               padding: EdgeInsets.symmetric(
                   horizontal: 5.w
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Total amount",
-                          style: fontRegular.copyWith(
-                              fontSize: 10.sp,
-                              color: AppColor.textColor
-                          ),),
-                        SizedBox(height:1.h),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 0.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffFBFAF7),
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Center(
-                            child: TextField(
-                              controller: totalAmountController,
-                              readOnly: true,
-                              cursorColor: AppColor.secondaryColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Total amount",
                               style: fontRegular.copyWith(
                                   fontSize: 10.sp,
                                   color: AppColor.textColor
+                              ),),
+                            SizedBox(height:1.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 0.5.h,
                               ),
-                              keyboardType: TextInputType.phone,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                isDense: true,
-                                border: InputBorder.none,
-                                hintText: "9999911111",
-                                hintStyle: fontRegular.copyWith(
-                                    fontSize: 10.sp,
-                                    color: AppColor.textMildColor
-                                ),),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffFBFAF7),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Center(
+                                child: TextField(
+                                  controller: totalAmountController,
+                                  readOnly: true,
+                                  cursorColor: AppColor.secondaryColor,
+                                  style: fontRegular.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.textColor
+                                  ),
+                                  keyboardType: TextInputType.phone,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    hintText: "Total amount",
+                                    hintStyle: fontRegular.copyWith(
+                                        fontSize: 10.sp,
+                                        color: AppColor.textMildColor
+                                    ),),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(width: 3.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Paid amount",
+                              style: fontRegular.copyWith(
+                                  fontSize: 10.sp,
+                                  color: AppColor.textColor
+                              ),),
+                            SizedBox(height:1.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 0.5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffFBFAF7),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Center(
+                                child: TextFormField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  controller: paidAmountController,
+                                  cursorColor: AppColor.secondaryColor,
+                                  style: fontRegular.copyWith(
+                                      fontSize: 10.sp,
+                                      color: AppColor.textColor
+                                  ),
+                                  onChanged: (value){
+                                    checkPaidGreaterThanTotalAmount(int.parse(value.toString()));
+                                  },
+                                  keyboardType: TextInputType.phone,
+                                  textInputAction: TextInputAction.done,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    hintText: "Paid amount",
+                                    hintStyle: fontRegular.copyWith(
+                                        fontSize: 10.sp,
+                                        color: AppColor.textMildColor
+                                    ),),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 3.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Paid amount",
-                          style: fontRegular.copyWith(
-                              fontSize: 10.sp,
-                              color: AppColor.textColor
-                          ),),
-                        SizedBox(height:1.h),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 0.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffFBFAF7),
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: Center(
-                            child: TextFormField(
-                              controller: paidAmountController,
-                              cursorColor: AppColor.secondaryColor,
-                              style: fontRegular.copyWith(
-                                  fontSize: 10.sp,
-                                  color: AppColor.textColor
-                              ),
-                              keyboardType: TextInputType.phone,
-                              textInputAction: TextInputAction.done,
-                              decoration: InputDecoration(
-                                isDense: true,
-                                border: InputBorder.none,
-                                hintText: "10",
-                                hintStyle: fontRegular.copyWith(
-                                    fontSize: 10.sp,
-                                    color: AppColor.textMildColor
-                                ),),
-                            ),
-                          ),
-                        ),
-                      ],
+                  !invalidPaidAmount
+                      ? const SizedBox()
+                      : Padding(
+                    padding: EdgeInsets.only(
+                        top: 1.h
                     ),
+                    child: Text("Paid amount must be less than total amount",
+                      style: fontRegular.copyWith(
+                          fontSize: 9.sp,
+                          color: AppColor.redColor
+                      ),),
                   ),
                 ],
               ),
@@ -230,7 +267,7 @@ class _AddAmountDialogBoxState extends State<AddAmountDialogBox> {
                         decoration: InputDecoration(
                           isDense: true,
                           border: InputBorder.none,
-                          hintText: "10",
+                          hintText: "Balance amount",
                           hintStyle: fontRegular.copyWith(
                               fontSize: 10.sp,
                               color: AppColor.textMildColor
@@ -255,20 +292,24 @@ class _AddAmountDialogBoxState extends State<AddAmountDialogBox> {
                       vertical: 1.h,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColor.primaryColor, width: 1.2),
+                      border: Border.all(color: AppColor.textColor, width: 1.2),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: Center(
                       child: Text("Cancel",
                         style: fontRegular.copyWith(
-                            color: AppColor.secondaryColor,
+                            color: AppColor.textColor,
                             fontSize: 11.sp
                         ),),
                     ),
                   ),
                 ),
-                SizedBox(width: 5.w),
-                Bounceable(
+                invalidPaidAmount
+                    ? const SizedBox()
+                    : SizedBox(width: 5.w),
+                invalidPaidAmount
+                    ? const SizedBox()
+                    : Bounceable(
                   onTap: (){
                     PaymentInfoProvider().paymentUpdate(widget.matchId, widget.teamId, paidAmountController.text.toString(), totalAmountController.text.toString())
                         .then((value) {

@@ -165,6 +165,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     return Scaffold(
       body: Consumer<ProfileProvider>(
         builder: (context, ground, child) {
@@ -196,7 +199,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                       ),
                     ),
                     Positioned(
-                      top: 5.h,
+                      top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                       left: 5.w,
                       child: InkWell(
                         onTap: (){
@@ -218,7 +221,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                     ),
                     if(newTabIndex == 1)...[
                       Positioned(
-                        top: 10.h,
+                        top: isIOS ? 12.h : 10.h,
                         child: Consumer<ProfileProvider>(
                             builder: (context, profile, child) {
                               return Column(
@@ -297,7 +300,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                       //     ),),
                       // ),
                       Positioned(
-                        top: 10.h,
+                        top: isIOS ? 12.h : 10.h,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [

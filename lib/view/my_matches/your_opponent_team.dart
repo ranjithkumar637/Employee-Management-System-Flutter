@@ -51,8 +51,8 @@ class _YourOpponentTeamState extends State<YourOpponentTeam> {
       });
     }
     await Future.delayed(const Duration(seconds: 1));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookingProvider>(context, listen: false)
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<BookingProvider>(context, listen: false)
           .getPlayersListOfTeamForMatch(widget.teamId, widget.matchId)
           .then((value) {
         filterList();

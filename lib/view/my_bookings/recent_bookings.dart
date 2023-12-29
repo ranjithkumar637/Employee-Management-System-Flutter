@@ -106,7 +106,7 @@ class _RecentBookingsState extends State<RecentBookings> {
                         return ListView.separated(
                           physics: const BouncingScrollPhysics(),
                           separatorBuilder: (context, _){
-                            return SizedBox(height: 2.h);
+                            return SizedBox(height: 1.5.h);
                           },
                           itemCount: recentBooking.length,
                           itemBuilder: (context, index){

@@ -106,6 +106,7 @@ class _InformationState extends State<Information> {
                               ),
                               decoration: BoxDecoration(
                                 color: groundName == "" ? AppColor.lightColor : AppColor.textFieldBg,
+                                border: groundName != "" ? Border.all(color: AppColor.textMildColor, width: 0.5) : null,
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               child: Center(
@@ -161,6 +162,7 @@ class _InformationState extends State<Information> {
                               ),
                               decoration: BoxDecoration(
                                 color: groundMobile == "" ? AppColor.lightColor : AppColor.textFieldBg,
+                                border: groundMobile != "" ? Border.all(color: AppColor.textMildColor, width: 0.5) : null,
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               child: Center(
@@ -212,7 +214,7 @@ class _InformationState extends State<Information> {
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 5.w,
-                          vertical: 2.h,
+                          vertical: 1.5.h,
                         ),
                         child: loading
                             ? const Center(child: CircularProgressIndicator(),)

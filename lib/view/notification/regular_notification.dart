@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elevens_organizer/models/notification_list_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/app_constants.dart';
@@ -9,7 +11,8 @@ import '../../utils/styles.dart';
 
 class RegularNotification extends StatelessWidget {
   final String title, body, image, read;
-  const RegularNotification(this.title, this.body, this.image, this.read, {Key? key}) : super(key: key);
+  final NotificationList item;
+  const RegularNotification(this.title, this.body, this.image, this.read, this.item, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +31,31 @@ class RegularNotification extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ClipOval(
-            child: CachedNetworkImage(
-              imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$image",
-              height: 7.h,
-              width: 14.w,
-              fit: BoxFit.cover,
-              errorWidget: (context, url, widget){
-                return Image.asset(Images.groundSmall, fit: BoxFit.cover, height: 7.h,
-                  width: 14.w,);
-              },
+          if(item.matchId.toString() == "")...[
+            CircleAvatar(
+              radius: 30.0,
+              backgroundColor: AppColor.primaryColor.withOpacity(0.5),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 3.w
+                ),
+                child: SvgPicture.asset(Images.notification, color: AppColor.textColor,),
+              ),
             ),
-          ),
+          ] else ...[
+            ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlGallery}$image",
+                height: 7.h,
+                width: 14.w,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, widget){
+                  return Image.asset(Images.groundSmall, fit: BoxFit.cover, height: 7.h,
+                    width: 14.w,);
+                },
+              ),
+            ),
+          ],
           SizedBox(width: 3.w),
           Expanded(
             child: Column(

@@ -106,6 +106,9 @@ class _InTheOffingState extends State<InTheOffing> {
 
   @override
   Widget build(BuildContext context) {
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -124,7 +127,8 @@ class _InTheOffingState extends State<InTheOffing> {
               padding: EdgeInsets.symmetric(
                   horizontal: 3.w
               ) + EdgeInsets.only(
-                  top: 5.h, bottom: 3.h
+                  top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
+                  bottom: 3.h
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

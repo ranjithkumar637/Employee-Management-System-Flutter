@@ -133,6 +133,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: Center(
                               child: TextFormField(
                                 controller: nameController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
+                                ],
                                 cursorColor: AppColor.secondaryColor,
                                 validator: (value) {
                                   if (value!.isEmpty) {

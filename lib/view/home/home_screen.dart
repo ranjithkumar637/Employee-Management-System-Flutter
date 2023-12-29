@@ -7,12 +7,14 @@ import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lecle_yoyo_player/lecle_yoyo_player.dart';
 import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/offing_list_model.dart';
+import '../../models/slide_show_model.dart';
 import '../../models/slot_list_model.dart';
 import '../../models/upcoming_match_list_model.dart';
 import '../../providers/booking_provider.dart';
@@ -30,8 +32,10 @@ import '../profile/edit_profile.dart';
 import '../widgets/loader.dart';
 import '../widgets/slot_colour_info.dart';
 import '../widgets/snackbar.dart';
+import 'banner_list.dart';
 import 'custom_date_picker.dart';
 import 'empty_list_card.dart';
+import 'full_screen_live_stream.dart';
 import 'home_grid_options.dart';
 import 'home_upcoming_card.dart';
 import 'notification_dot.dart';
@@ -120,6 +124,25 @@ class _HomeScreenState extends State<HomeScreen> {
   bool reduceHeight = false;
   bool refreshSlots = false;
 
+  Future<List<Slides>>? futureData2;
+  List<Slides> slidesList = [];
+
+  getSlidesList() {
+    futureData2 = ProfileProvider().getSlides().then((value) {
+      setState(() {
+        slidesList = [];
+        slidesList.addAll(value);
+      });
+      print(slidesList);
+      return slidesList;
+    });
+  }
+
+  getTelecastVideo(){
+    Provider.of<ProfileProvider>(context, listen: false)
+        .getTelecast();
+  }
+
   setDelay() async {
     if(mounted){
       setState(() {
@@ -129,6 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getProfile();
       getUpcomingMatchList();
+      getSlidesList();
+      getTelecastVideo();
     });
     if(mounted){
       final profile = Provider.of<ProfileProvider>(context, listen: false);
@@ -187,6 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: loading
@@ -204,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Image.asset(Images.homeTop, fit: BoxFit.cover,),
                     ),
                     Positioned(
-                      top: 2.h + statusBarHeight,
+                      top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                       left: 5.w,
                       right: 5.w,
                       child: Row(
@@ -215,13 +242,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             child: ClipOval(
                               child: CachedNetworkImage(
-                                height: 10.h,
-                                width: 20.w,
+                                height: 8.5.h,
+                                width: 18.w,
                                 fit: BoxFit.cover,
                                 imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${profile.organizerDetails.profilePhoto.toString()}",
                                 errorWidget: (context, url, widget){
-                                  return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
-                                    width: 28.w,
+                                  return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 8.5.h,
+                                    width: 18.w,
                                     fit: BoxFit.cover,);
                                 },
                               ),
@@ -310,15 +337,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 Expanded(
-                  child: MediaQuery.removePadding(
-                    removeTop: true,
-                    context: context,
-                    child: FadeIn(
-                      child: ListView(
-                        physics: const BouncingScrollPhysics(),
+                  child: FadeIn(
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
                           SizedBox(height: 2.h),
-                          if(profile.profileModel.refPoints.toString() != "null")...[
+                          if(profile.profileModel.refPoints.toString() == "null" || profile.profileModel.totalRevenue.toString() == "null")...[
+                            const SizedBox(),
+                          ]
+                          else if(profile.profileModel.refPoints.toString() != "null")...[
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 5.w
@@ -343,10 +370,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
-
-                          ] else ...[
-                            RevenueOnly(profile.profileModel.totalRevenue.toString()),
-                          ],
+                          ]
+                          else ...[
+                              RevenueOnly(profile.profileModel.totalRevenue.toString()),
+                            ],
                           Consumer<ProfileProvider>(
                               builder: (context, profile, child) {
                                 return profile.profileModel.groundCount.toString() == "0" ?
@@ -440,6 +467,119 @@ class _HomeScreenState extends State<HomeScreen> {
                                      : const SizedBox();
                                 }
                           ),
+                          //banners
+                          profile.profileModel.slideShow.toString() == "0"
+                              ? Column(
+                                children: [
+                                  SizedBox(height: 2.h),
+                                  FutureBuilder<List<Slides>>(
+                            future: futureData2,
+                            builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColor.primaryColor,
+                                        ));
+                                  }
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return SizedBox(
+                                        width: double.infinity,
+                                        child: BannerList(list: slidesList));
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColor.primaryColor,
+                                        ));
+                                  }
+                            },
+                          ),
+                                ],
+                              )
+                              : const SizedBox(),
+                          //livestream player
+                          profile.profileModel.liveStream.toString() == "0"
+                              ? Consumer<ProfileProvider>(
+                              builder: (context, telecast, child) {
+                                return Container(
+                                  height: 25.h,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 5.w
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      YoYoPlayer(
+                                        aspectRatio: 16 / 9,
+                                        url:  telecast.telecast.iframe.toString(),
+                                        autoPlayVideoAfterInit: true,
+                                        videoStyle: const VideoStyle(
+                                          showLiveDirectButton: true,
+                                          fullScreenIconColor: Colors.transparent,
+                                          qualityStyle: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                          forwardAndBackwardBtSize: 30.0,
+                                          playButtonIconSize: 40.0,
+                                          playIcon: Icon(
+                                            Icons.play_arrow,
+                                            size: 40.0, color: Colors.white,
+                                          ),
+                                          pauseIcon: Icon(
+                                            Icons.pause_circle,
+                                            size: 40.0, color: Colors.white,
+                                          ),
+                                          videoQualityPadding: EdgeInsets.all(5.0),
+                                        ),
+                                        videoLoadingStyle: const VideoLoadingStyle(
+                                          loading: Center(
+                                            child: Text("Loading video..."),
+                                          ),
+                                        ),
+                                        allowCacheFile: true,
+                                        onCacheFileCompleted: (files) {
+                                          print('Cached file length ::: ${files?.length}');
+
+                                          if (files != null && files.isNotEmpty) {
+                                            for (var file in files) {
+                                              print('File path ::: ${file.path}');
+                                            }
+                                          }
+                                        },
+                                        onCacheFileFailed: (error) {
+                                          print('Cache file error ::: $error');
+                                        },
+                                        // onFullScreen: (value) {
+                                        //   setState(() {
+                                        //     // if (fullscreen != value) {
+                                        //     //   fullscreen = value;
+                                        //     // }
+                                        //   });
+                                        // }
+                                      ),
+                                      Positioned(
+                                        right: 1.w,
+                                        top: 0.5.h,
+                                        child: InkWell(
+                                            onTap: (){
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return FullScreenLiveStream(telecast.telecast.iframe.toString());
+                                                    }),
+                                              );
+                                            },
+                                            child: Icon(Icons.fullscreen, color: AppColor.textColor, size: 9.w,)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                          )
+                              : const SizedBox(),
                           Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 3.w,
@@ -543,7 +683,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }
                                           return Column(
                                             children: [
-                                              if(slotsList[index].booked.toString() == "0" && slotsList[index].left.toString() == "0")...[
+                                              if(slotsList[index].block.toString() == "1")...[
+                                                Text("No slots",
+                                                  style: fontRegular.copyWith(
+                                                      color: AppColor.textColor,
+                                                      fontSize: 9.sp
+                                                  ),),
+                                              ] else if(slotsList[index].booked.toString() == "0" && slotsList[index].left.toString() == "0")...[
                                                 Text("2 Left",
                                                   style: fontRegular.copyWith(
                                                       color: AppColor.textColor,

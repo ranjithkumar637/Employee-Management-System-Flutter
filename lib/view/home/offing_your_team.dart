@@ -56,8 +56,8 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
   getSquad(){
     String teamId = Provider.of<ProfileProvider>(context, listen: false).matchDetails.teamAId.toString();
     print("offing team a id $teamId");
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookingProvider>(context, listen: false).getPlayersListOfTeamForMatch(teamId, widget.matchId.toString())
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<BookingProvider>(context, listen: false).getPlayersListOfTeamForMatch(teamId, widget.matchId.toString())
           .then((value){
         filterList();
       });
@@ -87,6 +87,8 @@ class _OffingYourTeamState extends State<OffingYourTeam> {
                   )
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if(loading)...[
                     const Loader()

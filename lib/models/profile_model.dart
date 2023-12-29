@@ -5,6 +5,8 @@ class ProfileModel {
   dynamic totalRevenue;
   dynamic refPoints;
   dynamic notifyCount;
+  dynamic liveStream;
+  dynamic slideShow;
   OrganizerDetails? organizerDetails;
   List<SlotList>? slotList;
 
@@ -16,15 +18,18 @@ class ProfileModel {
         totalRevenue,
         refPoints,
         organizerDetails,
-        slotList});
+        slideShow,
+        slotList,liveStream});
 
   ProfileModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
+    liveStream = json['live_stream'];
     notifyCount = json['notify_count'];
     groundCount = json['ground_count'];
     totalRevenue = json['total_revenue'];
     refPoints = json['ref_points'];
+    slideShow = json['slide_show'];
     organizerDetails = json['organizer_details'] != null
         ? new OrganizerDetails.fromJson(json['organizer_details'])
         : null;
@@ -43,6 +48,8 @@ class ProfileModel {
     data['notify_count'] = notifyCount;
     data['ground_count'] = groundCount;
     data['total_revenue'] = totalRevenue;
+    data['live_stream'] = liveStream;
+    data['slide_show'] = slideShow;
     data['ref_points'] = refPoints;
     if (organizerDetails != null) {
       data['organizer_details'] = organizerDetails!.toJson();

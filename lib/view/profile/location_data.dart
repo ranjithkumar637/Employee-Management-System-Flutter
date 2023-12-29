@@ -54,7 +54,7 @@ class _LocationDataState extends State<LocationData> {
           ),
           margin: EdgeInsets.symmetric(
             horizontal: 5.w,
-            vertical: 1.h,
+            vertical: 0.5.h,
           ),
           decoration: BoxDecoration(
             color: AppColor.lightColor,

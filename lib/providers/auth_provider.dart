@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:elevens_organizer/models/login_submit_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -158,14 +159,35 @@ class AuthProvider extends ChangeNotifier{
     return loginSubmitModel;
   }
 
+  saveToken(String? token) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("device_token" , token.toString());
+  }
+
   //login otp verify
   Future<LoginModel> loginOtpVerify(String userId, String otp) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? token = preferences.getString("device_token");
+    String? deviceToken = preferences.getString("device_token");
+    if (deviceToken == null) {
+      try {
+        String? value = await FirebaseMessaging.instance.getToken();
+        if (value != null) {
+          debugPrint("firebase token: $value");
+          deviceToken = value;
+          saveToken(deviceToken);
+          debugPrint("device token: $deviceToken");
+        }
+      } catch (e) {
+        debugPrint("Error retrieving FCM token: $e");
+        // Handle the error accordingly
+      }
+    } else {
+      debugPrint("device token from SharedPreferences: $deviceToken");
+    }
     var body = jsonEncode({
       'user_id': userId,
       'otp': otp,
-      "device_token": token.toString()
+      "device_token": deviceToken.toString()
     });
     try {
       final response = await http.post(
@@ -273,11 +295,27 @@ class AuthProvider extends ChangeNotifier{
   //register otp verify
   Future<RegistrationModel> registerOtpVerify(String userTempId, String otp) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? token = preferences.getString("device_token");
+    String? deviceToken = preferences.getString("device_token");
+    if (deviceToken == null) {
+      try {
+        String? value = await FirebaseMessaging.instance.getToken();
+        if (value != null) {
+          debugPrint("firebase token: $value");
+          deviceToken = value;
+          saveToken(deviceToken);
+          debugPrint("device token: $deviceToken");
+        }
+      } catch (e) {
+        debugPrint("Error retrieving FCM token: $e");
+        // Handle the error accordingly
+      }
+    } else {
+      debugPrint("device token from SharedPreferences: $deviceToken");
+    }
     var body = jsonEncode({
       'user_temp_id': userTempId,
       'otp': otp,
-      "device_token": token.toString()
+      "device_token": deviceToken.toString()
     });
     try {
       final response = await http.post(

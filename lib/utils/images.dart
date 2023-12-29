@@ -103,5 +103,7 @@ class Images {
   static const String groundSmall = 'assets/images/ground_default_small.png';
   static const String groundBig = 'assets/images/ground_default_big.png';
 
+  static const String improvements = 'assets/images/improvements.svg';
+  static const String bugFix = 'assets/images/bugfix.svg';
 
 }

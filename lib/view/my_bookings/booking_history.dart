@@ -316,7 +316,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                               child: ListView.separated(
                                 physics: const BouncingScrollPhysics(),
                                 separatorBuilder: (context, _){
-                                  return SizedBox(height: 2.h);
+                                  return SizedBox(height: 1.5.h);
                                 },
                                 itemCount: bookingHistory.length,
                                 itemBuilder: (context, index){
@@ -345,7 +345,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         separatorBuilder: (context, _){
-                          return SizedBox(height: 2.h);
+                          return SizedBox(height: 1.5.h);
                         },
                         itemCount: filteredItems.length,
                         itemBuilder: (context, index){

@@ -100,6 +100,9 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -117,11 +120,11 @@ class _MatchInfoScreenState extends State<MatchInfoScreen> with SingleTickerProv
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      height: moveToTop ? 10.h : 28.h,
+                      height: moveToTop ? 12.h : 28.h,
                       child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
                     ),
                     Positioned(
-                      top: 5.h,
+                      top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                       left: 5.w,
                       right: 5.w,
                       child: Row(

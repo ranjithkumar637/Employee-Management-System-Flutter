@@ -26,6 +26,9 @@ class _PaymentInformationState extends State<PaymentInformation> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     return Scaffold(
       body: Column(
         children: [
@@ -33,7 +36,8 @@ class _PaymentInformationState extends State<PaymentInformation> with SingleTick
             padding: EdgeInsets.symmetric(
                 horizontal: 5.w
             ) + EdgeInsets.only(
-                top: 5.h, bottom: 2.h
+                top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
+                bottom: 2.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

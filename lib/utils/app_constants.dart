@@ -3,11 +3,11 @@ class AppConstants {
   // static const String baseUrl = 'https://11s-dev.rezndus.com/api';
   // static const String imageBaseUrl = 'https://11s-dev.rezndus.com/';
 
-  static const String baseUrl = "https://11s-staging.rezndus.com/api";
-  static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
-
-  // static const String baseUrl = "https://app.11scricket360.com/api";
-  // static const String imageBaseUrl = 'https://app.11scricket360.com/';
+  // static const String baseUrl = "https://11s-staging.rezndus.com/api";
+  // static const String imageBaseUrl = 'https://11s-staging.rezndus.com/';
+  //
+  static const String baseUrl = "https://app.11scricket360.com/api";
+  static const String imageBaseUrl = 'https://app.11scricket360.com/';
 
   static const String imageBaseUrlGallery = 'storage/app/public/ground/';
   static const String imageBaseUrlProfile = 'storage/app/public/profile/';
@@ -15,6 +15,9 @@ class AppConstants {
   static const String imageBaseUrlCaptain = 'storage/app/public/captain/';
 
   static const String imageBaseUrlPlayer = 'storage/app/public/player/';
+  static const String imageBaseUrlSlides = 'storage/app/public/slideshow/';
+  static const String banner = 'storage/app/public/banner/';
+
   static const String tnCityList = '$baseUrl/tamilnadu-city-list';
 
   static const String imageBaseUrlTeam = 'storage/app/public/team/';
@@ -97,6 +100,9 @@ class AppConstants {
 
   static const String readNotification = '$baseUrl/read-notification';
   static const String requestPayment = '$baseUrl/organizer/request-payment';
+
+  static const String getSlides  = '$baseUrl/slide-shows';
+  static const String getTelecast  = '$baseUrl/telecasts';
 
 
 

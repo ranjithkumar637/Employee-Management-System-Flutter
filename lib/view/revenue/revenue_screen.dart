@@ -1,8 +1,7 @@
-import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/view/revenue/revenue_list_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/revenue_team_list_model.dart';
@@ -12,7 +11,6 @@ import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/strings.dart';
 import '../../utils/styles.dart';
-import '../my_matches/match_history.dart';
 import '../widgets/loader.dart';
 import '../widgets/no_internet_view.dart';
 import '../widgets/revenue_refer_data_box.dart';
@@ -69,6 +67,9 @@ class _RevenueScreenState extends State<RevenueScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -80,7 +81,8 @@ class _RevenueScreenState extends State<RevenueScreen> {
             padding: EdgeInsets.symmetric(
                 horizontal: 5.w
             ) + EdgeInsets.only(
-                top: 5.h, bottom: 3.h
+                top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
+                bottom: 3.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,24 +138,26 @@ class _RevenueScreenState extends State<RevenueScreen> {
                     if(snapshot.connectionState == ConnectionState.waiting){
                       return const Loader();
                     } if(snapshot.connectionState == ConnectionState.done){
-                      return ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        separatorBuilder: (context, _){
-                          return SizedBox(height: 1.5.h);
-                        },
-                        itemCount: revenueTeamList.length,
-                        itemBuilder: (context, index){
-                          return RevenueListCard(
-                            revenueTeamList[index].logo.toString(),
-                            revenueTeamList[index].paidPrice.toString(),
-                            revenueTeamList[index].totalPrice.toString(),
-                            revenueTeamList[index].bookingDate.toString(),
-                            revenueTeamList[index].bookingSlotStart.toString(),
-                            revenueTeamList[index].teamName.toString(),
-                            revenueTeamList[index].paidStatus.toString(),
-                            revenueTeamList[index].matchNumber.toString(),
-                          );
-                        },
+                      return FadeIn(
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          separatorBuilder: (context, _){
+                            return SizedBox(height: 1.5.h);
+                          },
+                          itemCount: revenueTeamList.length,
+                          itemBuilder: (context, index){
+                            return RevenueListCard(
+                              revenueTeamList[index].logo.toString(),
+                              revenueTeamList[index].paidPrice.toString(),
+                              revenueTeamList[index].totalPrice.toString(),
+                              revenueTeamList[index].bookingDate.toString(),
+                              revenueTeamList[index].bookingSlotStart.toString(),
+                              revenueTeamList[index].teamName.toString(),
+                              revenueTeamList[index].paidStatus.toString(),
+                              revenueTeamList[index].matchNumber.toString(),
+                            );
+                          },
+                        ),
                       );
                     } else {
                       return const Loader();

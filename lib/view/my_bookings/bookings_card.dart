@@ -38,8 +38,8 @@ class BookingsCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(5.0),
               child: CachedNetworkImage(
                 imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlTeam}$teamImage",
-                height: 14.h,
-                width: 28.w,
+                height: 12.h,
+                width: 25.w,
                 fit: BoxFit.cover,
                 errorWidget: (context, error, url) =>
                     Image.asset(Images.createTeamBg, width: 90.w,
@@ -70,6 +70,54 @@ class BookingsCard extends StatelessWidget {
                     SizedBox(height:1.h),
                     Row(
                       children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 0.8.w,
+                                vertical: 0.4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: AppColor.iconBgColor,
+                                  shape: BoxShape.circle
+                              ),
+                              child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.w,),
+                            ),
+                            SizedBox(width: 2.w),
+                            Text(time,
+                              style: fontMedium.copyWith(
+                                  fontSize: 9.sp,
+                                  color: AppColor.textColor
+                              ),),
+                          ],
+                        ),
+                        SizedBox(width: 2.w),
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 0.8.w,
+                                vertical: 0.4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: AppColor.iconBgColor,
+                                  shape: BoxShape.circle
+                              ),
+                              child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.w,),
+                            ),
+                            SizedBox(width: 2.w),
+                            Text(date,
+                              style: fontMedium.copyWith(
+                                  fontSize: 9.sp,
+                                  color: AppColor.textColor
+                              ),),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 0.5.h),
+                    Row(
+                      children: [
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 0.8.w,
@@ -83,50 +131,6 @@ class BookingsCard extends StatelessWidget {
                         ),
                         SizedBox(width: 2.w),
                         Text(location,
-                          style: fontMedium.copyWith(
-                              fontSize: 9.sp,
-                              color: AppColor.textColor
-                          ),),
-                      ],
-                    ),
-                    SizedBox(height:0.5.h),
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 0.8.w,
-                            vertical: 0.4.h,
-                          ),
-                          decoration: BoxDecoration(
-                              color: AppColor.iconBgColor,
-                              shape: BoxShape.circle
-                          ),
-                          child: Icon(Icons.access_time, color: AppColor.iconColour, size: 3.w,),
-                        ),
-                        SizedBox(width: 2.w),
-                        Text(time,
-                          style: fontMedium.copyWith(
-                              fontSize: 9.sp,
-                              color: AppColor.textColor
-                          ),),
-                      ],
-                    ),
-                    SizedBox(height:0.5.h),
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 0.8.w,
-                            vertical: 0.4.h,
-                          ),
-                          decoration: BoxDecoration(
-                              color: AppColor.iconBgColor,
-                              shape: BoxShape.circle
-                          ),
-                          child: SvgPicture.asset(Images.calendarIcon, color: AppColor.iconColour, width: 3.w,),
-                        ),
-                        SizedBox(width: 2.w),
-                        Text(date,
                           style: fontMedium.copyWith(
                               fontSize: 9.sp,
                               color: AppColor.textColor

@@ -64,6 +64,9 @@ class _PlayerProfileState extends State<PlayerProfile> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: loading
       ? const Loader()
@@ -89,7 +92,7 @@ class _PlayerProfileState extends State<PlayerProfile> with SingleTickerProvider
                 ),
               ),
               Positioned(
-                top: 5.h,
+                top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                 left: 3.w,
                 child: Bounceable(
                   onTap: (){

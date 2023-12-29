@@ -1,6 +1,4 @@
-import 'dart:ui';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:elevens_organizer/providers/auth_provider.dart';
 import 'package:elevens_organizer/providers/booking_provider.dart';
 import 'package:elevens_organizer/providers/navigation_provider.dart';
@@ -28,15 +26,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 ///Receive message when app is in background solution for on message
 Future<void> backgroundHandler(RemoteMessage message) async{
   print(message.data.toString());
   print(message.notification!.title);
-  // LocalNotificationService.display(message);
 }
 
 Future<void> main() async {
@@ -46,14 +43,14 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  if(!kDebugMode){
+  // if(!kDebugMode){
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-  }
+  // }
   runApp(
     MultiProvider(
       providers: [
@@ -78,18 +75,21 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  initiateNotifications() async {
-    await FirebaseMessaging.instance.requestPermission(
-        sound: true,
-        badge: true,
-        alert: true
-    );
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-        sound: true,
-        badge: true,
-        alert: true
-    );
+  saveToken(String? token) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("device_token" , token.toString());
+  }
 
+  initiateNotifications() async {
+    String? fcmToken;
+    await FirebaseMessaging.instance.getToken().then((value) async {
+      if (fcmToken != "") {
+        print("firebase token: $value");
+        fcmToken = value;
+        saveToken(fcmToken);
+      }
+      return;
+    });
     //terminated state
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if(message?.notification != null){
@@ -105,8 +105,8 @@ class _MyAppState extends State<MyApp> {
         print(message.notification!.body);
         print(message.notification!.title);
       }
-      final player = AudioPlayer();
-      player.play(AssetSource("notification.mp3"));
+      // final player = AudioPlayer();
+      // player.play(AssetSource("notification.mp3"));
       LocalNotificationService.display(message);
     });
 
@@ -121,18 +121,18 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  static const String oneSignalAppId = "16090413-4b70-4c0b-a9f4-dd43c445ccee";
-  Future<void> initPlatformState() async {
-    OneSignal.initialize(oneSignalAppId);
-    OneSignal.Notifications.requestPermission(true);
-  }
+  // static const String oneSignalAppId = "16090413-4b70-4c0b-a9f4-dd43c445ccee";
+  // Future<void> initPlatformState() async {
+  //   OneSignal.initialize(oneSignalAppId);
+  //   OneSignal.Notifications.requestPermission(true);
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     initiateNotifications();
-    initPlatformState();
+    // initPlatformState();
   }
 
   @override

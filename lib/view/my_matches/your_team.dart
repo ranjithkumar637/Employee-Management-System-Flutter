@@ -50,8 +50,8 @@ class _YourTeamState extends State<YourTeam> {
       });
     }
     await Future.delayed(const Duration(seconds: 1));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookingProvider>(context, listen: false)
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<BookingProvider>(context, listen: false)
           .getPlayersListOfTeamForMatch(widget.teamId, widget.matchId)
           .then((value) {
         filterList();
@@ -158,7 +158,7 @@ class _YourTeamState extends State<YourTeam> {
                         : Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 5.w,
-                        vertical: 2.h,
+                        vertical: 1.h,
                       ),
                       child: Text("Vice Captain",
                         style: fontMedium.copyWith(
@@ -172,7 +172,6 @@ class _YourTeamState extends State<YourTeam> {
                       removeTop: true,
                       context: context,
                       child: ListView.separated(
-
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
                           separatorBuilder: (context, _){
@@ -200,7 +199,7 @@ class _YourTeamState extends State<YourTeam> {
                         : Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 5.w,
-                        vertical: 2.h,
+                        vertical: 1.h,
                       ),
                       child: Text("Admin",
                         style: fontMedium.copyWith(

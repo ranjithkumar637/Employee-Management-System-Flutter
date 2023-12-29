@@ -33,6 +33,7 @@ class Slides {
   String? image;
   String? link;
   int? active;
+  int? linkActive;
   String? createdAt;
   String? updatedAt;
 
@@ -42,6 +43,7 @@ class Slides {
         this.image,
         this.link,
         this.active,
+        this.linkActive,
         this.createdAt,
         this.updatedAt});
 
@@ -50,6 +52,7 @@ class Slides {
     title = json['title'];
     image = json['image'];
     link = json['link'];
+    linkActive = json['link_active'];
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -60,6 +63,7 @@ class Slides {
     data['id'] = this.id;
     data['title'] = this.title;
     data['image'] = this.image;
+    data['link_active'] = this.linkActive;
     data['link'] = this.link;
     data['active'] = this.active;
     data['created_at'] = this.createdAt;

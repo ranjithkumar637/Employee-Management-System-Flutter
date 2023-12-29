@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../utils/app_constants.dart';
-import '../../models/profile/slide_show_model.dart';
+import '../../models/slide_show_model.dart';
 import '../../utils/images.dart';
 import 'banner_detail_screen.dart';
 
@@ -45,12 +46,18 @@ class BannerListState extends State<BannerList> with TickerProviderStateMixin{
             return Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: (){
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return BannerDetailScreen(imageUrl);
-                          }),
-                        );
+                  if(imageUrl.linkActive == 2){
+                    _launchUrl(imageUrl.link.toString());
+                  } else if(imageUrl.linkActive == 1){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return BannerDetailScreen(imageUrl);
+                      }),
+                    );
+                  } else if(imageUrl.linkActive == 0){
+                    debugPrint("no route");
+                  }
                       },
                 child: Container(
                   width: double.infinity,
@@ -95,5 +102,12 @@ class BannerListState extends State<BannerList> with TickerProviderStateMixin{
         ),
       ],
     );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
   }
 }

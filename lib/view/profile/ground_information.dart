@@ -24,7 +24,7 @@ class GroundInformation extends StatelessWidget {
           ),
           margin: EdgeInsets.symmetric(
             horizontal: 5.w,
-            vertical: 1.5.h,
+            vertical: 1.h,
           ),
           decoration: BoxDecoration(
             color: AppColor.lightColor,
@@ -51,10 +51,19 @@ class GroundInformation extends StatelessWidget {
                             }
                         );
                       },
-                      child: SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,)),
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 2.w,
+                            vertical: 0.8.h,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColor.iconBgColor,
+                          ),
+                          child: SvgPicture.asset(Images.editIcon, color: AppColor.iconColour, width: 4.w,))),
                 ],
               ),
-              SizedBox(height: 2.h),
+              SizedBox(height: 2.5.h),
               GroundInfoRow("Pitch", ground.pitch),
               SizedBox(height: 2.h),
               GroundInfoRow("Boundary Line", ground.boundaryLine),

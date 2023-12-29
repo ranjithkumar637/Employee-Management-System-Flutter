@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../models/profile/slide_show_model.dart';
+import '../../models/slide_show_model.dart';
 import '../../utils/colours.dart';
 import '../../utils/styles.dart';
 

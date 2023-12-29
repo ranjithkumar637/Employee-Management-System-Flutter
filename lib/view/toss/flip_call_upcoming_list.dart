@@ -166,6 +166,9 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -176,7 +179,7 @@ class _FlipCallUpcomingListState extends State<FlipCallUpcomingList> {
         padding:  EdgeInsets.symmetric(horizontal: 5.w),
         child: Column(
           children: [
-            SizedBox(height: 5.h,),
+            SizedBox(height: isIOS ? statusBarHeight : 2.h + statusBarHeight,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

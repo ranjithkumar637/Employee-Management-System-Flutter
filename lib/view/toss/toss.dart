@@ -157,6 +157,9 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     return Scaffold(
       body: Column(
         children: [
@@ -212,7 +215,7 @@ class _TossState extends State<Toss> with TickerProviderStateMixin{
                 ),
               ),
               Positioned(
-                top: 7.h,
+                top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                 left: 5.w,
                 right: 5.w,
                 child: Row(

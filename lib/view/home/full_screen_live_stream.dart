@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lecle_yoyo_player/lecle_yoyo_player.dart';
 
 class FullScreenLiveStream extends StatefulWidget {
-  const FullScreenLiveStream({super.key});
+  final String link;
+  const FullScreenLiveStream(this.link, {super.key});
 
   @override
   State<FullScreenLiveStream> createState() => _FullScreenLiveStreamState();
@@ -12,10 +13,13 @@ class _FullScreenLiveStreamState extends State<FullScreenLiveStream> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: YoYoPlayer(
         aspectRatio: 16 / 9,
-        url:  "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        url:  widget.link,
         videoStyle: const VideoStyle(
+          showLiveDirectButton: true,
+          fullScreenIconColor: Colors.white,
           qualityStyle: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.w500,
@@ -24,11 +28,11 @@ class _FullScreenLiveStreamState extends State<FullScreenLiveStream> {
           forwardAndBackwardBtSize: 30.0,
           playButtonIconSize: 40.0,
           playIcon: Icon(
-            Icons.add_circle_outline_outlined,
+            Icons.play_arrow,
             size: 40.0, color: Colors.white,
           ),
           pauseIcon: Icon(
-            Icons.remove_circle_outline_outlined,
+            Icons.pause_circle,
             size: 40.0, color: Colors.white,
           ),
           videoQualityPadding: EdgeInsets.all(5.0),

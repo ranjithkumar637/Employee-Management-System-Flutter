@@ -13,7 +13,8 @@ import '../../utils/styles.dart';
 class NewUpdateBottomSheet extends StatefulWidget {
   final String heading, releaseNotes, type, versionNumber, buildNo;
   final bool priority;
-  const NewUpdateBottomSheet(this.heading, this.releaseNotes, this.priority, this.type, this.versionNumber, this.buildNo, {super.key});
+  final VoidCallback setValue;
+  const NewUpdateBottomSheet(this.heading, this.releaseNotes, this.priority, this.type, this.versionNumber, this.buildNo, this.setValue, {super.key});
 
   @override
   State<NewUpdateBottomSheet> createState() => _NewUpdateBottomSheetState();
@@ -41,7 +42,39 @@ class _NewUpdateBottomSheetState extends State<NewUpdateBottomSheet> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 5.h,),
+            SizedBox(height: 2.5.h,),
+            widget.priority ? const SizedBox() : Align(
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: (){
+                  widget.setValue();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 2.w,
+                    vertical: 0.4.h,
+                  ),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.textMildColor),
+                      borderRadius: BorderRadius.circular(30.0)
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Skip",
+                        style: fontBold.copyWith(
+                            fontSize: 10.sp,
+                            color: AppColor.textColor
+                        ),),
+                      SizedBox(width: 2.w),
+                      Icon(Icons.skip_next, color: AppColor.textColor, size: 5.w,)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 2.5.h,),
             if(widget.type.toString() == "feature")...[
               Lottie.asset("assets/update.json"),
             ] else if(widget.type.toString() == "improvements")...[
@@ -50,7 +83,7 @@ class _NewUpdateBottomSheetState extends State<NewUpdateBottomSheet> {
               SvgPicture.asset(Images.bugFix, fit: BoxFit.cover, width: 70.w,),
             ],
             SizedBox(height: 5.h,),
-            Text("v ${widget.versionNumber}.${widget.buildNo}",
+            Text("v ${widget.versionNumber}",
               style: fontBold.copyWith(
                   fontSize: 12.sp,
                   color: AppColor.textMildColor
@@ -82,8 +115,9 @@ class _NewUpdateBottomSheetState extends State<NewUpdateBottomSheet> {
             SizedBox(height: 3.h,),
             Bounceable(
               onTap: () async {
+                widget.setValue();
                 await StoreRedirect.redirect(
-                    androidAppId: "com.eleven.captain",
+                    androidAppId: "com.eleven.organizer",
                     iOSAppId: "").whenComplete(() {
                       Navigator.pop(context);
                 });
@@ -104,22 +138,6 @@ class _NewUpdateBottomSheetState extends State<NewUpdateBottomSheet> {
                       color: AppColor.textColor
                   ),),
                 ),
-              ),
-            ),
-            SizedBox(height: 2.h,),
-            !widget.priority ? const SizedBox() : Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: 1.5.h
-              ),
-              child: InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Text("Skip update",
-                  style: fontBold.copyWith(
-                      fontSize: 12.sp,
-                      color: AppColor.textColor
-                  ),),
               ),
             ),
             SizedBox(height: 3.h,),

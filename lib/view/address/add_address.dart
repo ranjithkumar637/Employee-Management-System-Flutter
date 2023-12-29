@@ -193,6 +193,9 @@ class _AddAddressState extends State<AddAddress> {
 
   @override
   Widget build(BuildContext context) {
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
+    double statusBarHeight = MediaQuery.of(context).padding.top;
     return WillPopScope(
       onWillPop: () async{
         if(!showFirst){
@@ -213,6 +216,7 @@ class _AddAddressState extends State<AddAddress> {
           }
         },
         child: SafeArea(
+          top: isIOS ? false : true,
           child: Scaffold(
             backgroundColor: AppColor.bgColor,
             body: SingleChildScrollView(
@@ -270,7 +274,7 @@ class _AddAddressState extends State<AddAddress> {
                         ),
                       ),
                       Positioned(
-                        top: 2.h,
+                        top: isIOS ? statusBarHeight : 2.h,
                         left: 5.w,
                         child: GestureDetector(
                             onTap: () {
@@ -287,7 +291,7 @@ class _AddAddressState extends State<AddAddress> {
                               size: 7.w,)),
                       ),
                       Positioned(
-                        top: 2.h,
+                        top: isIOS ? statusBarHeight : 2.h,
                         child: Text("Add Address",
                           style: fontMedium.copyWith(
                               fontSize: 16.sp,
@@ -299,7 +303,7 @@ class _AddAddressState extends State<AddAddress> {
                           Icons.my_location, color: AppColor.redColor, size: 5.w,),
                       ),
                       Positioned(
-                        top: 7.h,
+                        top: isIOS ? statusBarHeight + 5.h : 7.h,
                         left: 5.w,
                         right: 5.w,
                         child: SearchMapPlaceWidget(
@@ -395,7 +399,9 @@ class _AddAddressState extends State<AddAddress> {
                                   ],
                                 ),
                               ),
-                              Padding(
+                              trackLocation == "" ?
+                              const SizedBox()
+                              : Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 5.w
                                 ),

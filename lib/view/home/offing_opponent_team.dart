@@ -56,8 +56,8 @@ class _OffingOpponentTeamState extends State<OffingOpponentTeam> {
   getSquad(){
     String teamId = Provider.of<ProfileProvider>(context, listen: false).matchDetails.teamBId.toString();
     print("offing team b id $teamId");
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookingProvider>(context, listen: false).getPlayersListOfTeamForMatch(teamId, widget.matchId.toString())
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<BookingProvider>(context, listen: false).getPlayersListOfTeamForMatch(teamId, widget.matchId.toString())
           .then((value){
         filterList();
       });

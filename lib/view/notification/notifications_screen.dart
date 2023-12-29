@@ -62,6 +62,9 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -75,7 +78,8 @@ class _NotificationsState extends State<Notifications> {
             padding: EdgeInsets.symmetric(
                 horizontal: 5.w
             ) + EdgeInsets.only(
-              top: 5.h, bottom: 3.h
+              top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
+                bottom: 3.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -143,11 +147,12 @@ class _NotificationsState extends State<Notifications> {
                           physics: const BouncingScrollPhysics(),
                           itemCount: notificationList.length,
                           itemBuilder: (context, index){
+                            final item = notificationList[index];
                             return RegularNotification(
                                 notificationList[index].title.toString(),
                                 notificationList[index].note.toString(),
                                 notificationList[index].groundImage.toString(),
-                                notificationList[index].read.toString());
+                                notificationList[index].read.toString(), item);
                           }
                       ),
                     );

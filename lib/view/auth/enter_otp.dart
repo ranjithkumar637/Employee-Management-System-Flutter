@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -13,14 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/auth_provider.dart';
-import '../../providers/navigation_provider.dart';
-import '../../providers/profile_provider.dart';
-import '../../providers/team_provider.dart';
 import '../../utils/colours.dart';
 import '../../utils/connectivity_status.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
-import '../widgets/custom_button.dart';
 import '../widgets/no_internet_view.dart';
 import '../widgets/snackbar.dart';
 
@@ -87,6 +81,9 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -106,7 +103,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: 5.w,
               ) + EdgeInsets.only(
-                top: 7.h,
+                top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                 bottom: 5.h
               ),
               child: Row(
@@ -125,7 +122,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
                         color: AppColor.textColor,
                         fontSize: widget.login ? 16.sp : 14.sp
                     ),),
-
                   widget.fromSplash
                       ? const SizedBox()
                       : Icon(Icons.arrow_back_ios_outlined, color: Colors.transparent, size: 7.w,),
@@ -140,7 +136,7 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: 15.w,
               ),
-              child: Text("Please enter the 4 digit code $yourOtp sent to ${widget.mobileNumber}",
+              child: Text("Please enter the 4 digit code sent to ${widget.mobileNumber}",
                 textAlign: TextAlign.center,
                 style: fontRegular.copyWith(
                     color: AppColor.textColor,
@@ -315,10 +311,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     if(otp == ""){
       Dialogs.snackbar("Enter the OTP", context, isError: true);
     } else{
-      String? token = await FirebaseMessaging.instance.getToken();
-      print(token);
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("device_token" , token.toString());
       setState(() {
         loading = true;
       });
@@ -349,10 +341,6 @@ class _EnterOtpScreenState extends State<EnterOtpScreen> {
     if(otp == ""){
       Dialogs.snackbar("Enter the OTP", context, isError: true);
     } else{
-      String? token = await FirebaseMessaging.instance.getToken();
-      print(token);
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("device_token" , token.toString());
       setState(() {
         loading = true;
       });

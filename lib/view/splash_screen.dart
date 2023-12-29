@@ -52,10 +52,6 @@ class _SplashScreenState extends State<SplashScreen> {
     print("user_id $userId mobile $mobile isLoginScreen $isLogin");
 
     if(login == true){
-      String? token = await FirebaseMessaging.instance.getToken();
-      print(token);
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("device_token" , token.toString());
       Timer(
           const Duration(seconds: 2), () async {
         Navigator.pushNamed(context, 'menu_screen');
@@ -93,38 +89,35 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        backgroundColor: AppColor.lightColor,
-        body: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Align(
-                alignment: Alignment.topRight,
-                child: SvgPicture.asset(Images.splashTopImage, fit: BoxFit.cover)),
-            Align(
-                alignment: Alignment.bottomLeft,
-                child: SvgPicture.asset(Images.splashBottomImage, fit: BoxFit.cover)),
-            Column(
-              children: [
-                FadeInRight(
-                  child: Align(
-                      alignment: Alignment.topRight,
-                      child: SvgPicture.asset(Images.splashTop, fit: BoxFit.cover, width: 100.w,)),
-                ),
-                const Spacer(),
-                ZoomIn(child: Image.asset(Images.logo, width: 50.w,)),
-                const Spacer(),
-                FadeInLeft(
-                  child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: SvgPicture.asset(Images.splashBottom, fit: BoxFit.cover, width: 100.w,)),
-                ),
-              ],
-            ),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: AppColor.lightColor,
+      body: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Align(
+              alignment: Alignment.topRight,
+              child: SvgPicture.asset(Images.splashTopImage, fit: BoxFit.cover)),
+          Align(
+              alignment: Alignment.bottomLeft,
+              child: SvgPicture.asset(Images.splashBottomImage, fit: BoxFit.cover)),
+          Column(
+            children: [
+              FadeInRight(
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: SvgPicture.asset(Images.splashTop, fit: BoxFit.cover, width: 100.w,)),
+              ),
+              const Spacer(),
+              ZoomIn(child: Image.asset(Images.logo, width: 50.w,)),
+              const Spacer(),
+              FadeInLeft(
+                child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: SvgPicture.asset(Images.splashBottom, fit: BoxFit.cover, width: 100.w,)),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

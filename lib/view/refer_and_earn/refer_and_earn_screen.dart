@@ -32,6 +32,9 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
     if (connectionStatus == ConnectivityStatus.offline) {
       return const NoInternetView();
@@ -43,7 +46,8 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> with SingleTick
             padding: EdgeInsets.symmetric(
                 horizontal: 5.w
             ) + EdgeInsets.only(
-                top: 5.h, bottom: 3.h
+                top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
+                bottom: 3.h
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

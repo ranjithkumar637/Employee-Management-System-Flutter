@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elevens_organizer/providers/profile_provider.dart';
 import 'package:elevens_organizer/view/menu/widgets/bottom_menu_text.dart';
 import 'package:elevens_organizer/view/more/more_screen.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -20,9 +22,9 @@ import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../home/home_screen.dart';
 import '../my_bookings/bookings.dart';
-import '../my_team/my_teams.dart';
 import '../widgets/no_internet_view.dart';
 import '../widgets/snackbar.dart';
+import 'new_update_bottom_sheet.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -31,7 +33,7 @@ class MenuScreen extends StatefulWidget {
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
-class _MenuScreenState extends State<MenuScreen> {
+class _MenuScreenState extends State<MenuScreen> with WidgetsBindingObserver{
 
   var _currentIndex = 0;
   int index = 0;
@@ -193,37 +195,183 @@ class _MenuScreenState extends State<MenuScreen> {
         });
   }
 
-  checkForUpdate(){
-    InAppUpdate.checkForUpdate().then((updateInfo) {
-      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-        if (updateInfo.immediateUpdateAllowed) {
-          // Perform immediate update
-          InAppUpdate.performImmediateUpdate().then((appUpdateResult) {
-            if (appUpdateResult == AppUpdateResult.success) {
-              //App Update successful
-              Dialogs.snackbar("Enjoy the latest version !!", context, isError: false, isLong: true);
-            }
-          });
-        } else if (updateInfo.flexibleUpdateAllowed) {
-          //Perform flexible update
-          InAppUpdate.startFlexibleUpdate().then((appUpdateResult) {
-            if (appUpdateResult == AppUpdateResult.success) {
-              //App Update successful
-              InAppUpdate.completeFlexibleUpdate();
-              Dialogs.snackbar("Enjoy the latest version !!", context, isError: false, isLong: true);
-            }
-          });
-        }
-      }
+  // checkForUpdate(){
+  //   InAppUpdate.checkForUpdate().then((updateInfo) {
+  //     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+  //       if (updateInfo.immediateUpdateAllowed) {
+  //         // Perform immediate update
+  //         InAppUpdate.performImmediateUpdate().then((appUpdateResult) {
+  //           if (appUpdateResult == AppUpdateResult.success) {
+  //             //App Update successful
+  //             Dialogs.snackbar("Enjoy the latest version !!", context, isError: false, isLong: true);
+  //           }
+  //         });
+  //       } else if (updateInfo.flexibleUpdateAllowed) {
+  //         //Perform flexible update
+  //         InAppUpdate.startFlexibleUpdate().then((appUpdateResult) {
+  //           if (appUpdateResult == AppUpdateResult.success) {
+  //             //App Update successful
+  //             InAppUpdate.completeFlexibleUpdate();
+  //             Dialogs.snackbar("Enjoy the latest version !!", context, isError: false, isLong: true);
+  //           }
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
+
+  bool sheetOpen = false;
+
+  setSheetOpenValue(){
+    setState(() {
+      sheetOpen = false;
     });
+    print("method trigerred");
+  }
+
+  checkForUpdate() async {
+    debugPrint("checking for any new update");
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    String version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+    debugPrint(appName);
+    debugPrint(packageName);
+    debugPrint(version);
+    debugPrint(buildNumber);
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+
+    // Get the reference to the "version" collection and document "1"
+    DocumentReference docRef = fireStore.collection('version').doc('1');
+
+    // Fetch the document
+    DocumentSnapshot snapshot = await docRef.get();
+
+    String versionName = "";
+    String versionNumber = "";
+    String versionReleaseNotes = "";
+    bool versionPriority = false;
+    String versionType = "";
+    String buildNo = "";
+
+    if (snapshot.exists) {
+      // Access the data in the snapshot
+      versionName = snapshot['version_name'].toString();
+      versionNumber = snapshot['version'].toString();
+      versionReleaseNotes = snapshot['release_notes'].toString();
+      versionPriority = snapshot['priority'];
+      versionType = snapshot['type'].toString();
+      buildNo = snapshot['build_number'].toString();
+
+      // Print or use the retrieved data
+      debugPrint('Version Name: $versionName');
+      debugPrint('Version number: $versionNumber');
+      debugPrint('Build number: $buildNo');
+      debugPrint('Release Notes: $versionReleaseNotes');
+      debugPrint('Release priority: $versionPriority');
+      debugPrint('Release type: $versionType');
+    } else {
+      debugPrint('Document does not exist');
+    }
+
+    int versionCheck = compareVersions(version, versionNumber.toString(), buildNumber, buildNo);
+    print("version check value $versionCheck");
+    if(versionCheck == -1){
+      setState(() {
+        sheetOpen = true;
+      });
+      showUpdateBottomSheet(versionName, versionReleaseNotes, versionPriority, versionType, versionNumber, buildNo);
+    } else if(versionCheck == 1){
+      setState(() {
+        sheetOpen = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Dialogs.snackbar("You already have the latest version. That's good !", context);
+      });
+      debugPrint("You are already up to date");
+    }
+  }
+
+  // Function to compare version strings
+  int compareVersions(String installedVersion, String latestVersion, String installedBuildNo, String latestBuildNo) {
+    List<String> v1 = installedVersion.split('.');
+    List<String> v2 = latestVersion.split('.');
+
+    int length = v1.length > v2.length ? v1.length : v2.length;
+
+    for (int i = 0; i < length; i++) {
+      int ver1 = i < v1.length ? int.parse(v1[i]) : 0;
+      int ver2 = i < v2.length ? int.parse(v2[i]) : 0;
+
+      if (ver1 < ver2) {
+        return -1; // Version 1 is less than version 2
+      } else if (ver1 > ver2) {
+        return 1; // Version 1 is greater than version 2
+      }
+
+      // If version numbers are the same, compare build numbers
+      if (int.parse(installedBuildNo) < int.parse(latestBuildNo)) {
+        return -1; // Version 1 is less than version 2
+      } else if (int.parse(installedBuildNo) > int.parse(latestBuildNo)) {
+        return 1; // Version 1 is greater than version 2
+      }
+    }
+
+    return 0; // Versions are equal
+  }
+
+  showUpdateBottomSheet(String versionHeading, String releaseNotes, bool priority, String type, String versionNumber, String buildNo){
+    showModalBottomSheet(context: context,
+        isScrollControlled: true,
+        enableDrag: false,
+        isDismissible: false,
+        backgroundColor: Colors.transparent,
+        builder: (context)=> NewUpdateBottomSheet(versionHeading, releaseNotes, priority, type, versionNumber, buildNo, setSheetOpenValue)
+    );
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(!kDebugMode){
+    WidgetsBinding.instance.addObserver(this);
+    // if(!kDebugMode){
       checkForUpdate();
+    // }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.inactive || state == AppLifecycleState.detached){
+      return;
+    }
+
+    final isBackground = state == AppLifecycleState.paused;
+    final isResumed = state == AppLifecycleState.resumed;
+    final isInactive = state == AppLifecycleState.inactive;
+    final isDetached = state == AppLifecycleState.detached;
+
+    if(isBackground){
+      print("app went background");
+    } else if(isInactive){
+      print("app partially visible");
+    } else if(isDetached){
+      print("app destroyed");
+    }
+    else if(!sheetOpen && isResumed){
+      checkForUpdate();
+      print("app is live again");
     }
   }
 

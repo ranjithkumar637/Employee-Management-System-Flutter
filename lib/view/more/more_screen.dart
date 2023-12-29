@@ -6,8 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:provider/provider.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,13 +16,13 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/navigation_provider.dart';
 import '../../providers/profile_provider.dart';
-import '../../providers/team_provider.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/colours.dart';
 import '../../utils/images.dart';
 import '../../utils/styles.dart';
 import '../auth/login_screen.dart';
 import '../toss/flip_call_upcoming_list.dart';
+import '../widgets/loader.dart';
 import '../widgets/snackbar.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -37,7 +35,7 @@ class MoreScreen extends StatefulWidget {
 class _MoreScreenState extends State<MoreScreen> {
 
   bool permissionGranted = true;
-
+  bool loading = true;
 
   getProfile() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -78,13 +76,22 @@ class _MoreScreenState extends State<MoreScreen> {
       }
       print('User declined or has not accepted permission');
     }
-
+    setState(() {
+      loading = true;
+    });
+    await Future.delayed(const Duration(seconds: 1));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ProfileProvider().getProfile(context)
           .then((value) async {
         if(value.status == true){
+          setState(() {
+            loading = false;
+          });
           Provider.of<ProfileProvider>(context, listen: false).getProfile(context);
         } else if(value.status == false && value.message.toString() == "Unauthenticated"){
+          setState(() {
+            loading = false;
+          });
           Dialogs.snackbar("User unauthenticated", context, isError: true);
           Navigator.pushReplacement(
             context,
@@ -115,9 +122,13 @@ class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     double statusBarHeight = MediaQuery.of(context).padding.top;
+    var platform = Theme.of(context).platform;
+    bool isIOS = platform == TargetPlatform.iOS;
     return Scaffold(
       backgroundColor: AppColor.bgColor,
-      body: Stack(
+      body: loading
+          ? const Loader()
+          : Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.bottomCenter,
         children: [
@@ -129,11 +140,11 @@ class _MoreScreenState extends State<MoreScreen> {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    height: 28.h,
+                    height: isIOS ? 30.h : 28.h,
                     child: Image.asset(Images.pitchImage, fit: BoxFit.cover,),
                   ),
                   Positioned(
-                    top: 2.h + statusBarHeight,
+                    top: isIOS ? statusBarHeight : 2.h + statusBarHeight,
                     left: 5.w,
                     right: 5.w,
                     child: Center(
@@ -145,7 +156,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                   ),
                   Positioned(
-                    top: 10.h,
+                    top: isIOS ? 12.h : 10.h,
                     left: 5.w,
                     right: 5.w,
                     child: Consumer<ProfileProvider>(
@@ -155,12 +166,12 @@ class _MoreScreenState extends State<MoreScreen> {
                               ClipOval(
                                 child: CachedNetworkImage(
                                   height: 12.h,
-                                  width: 24.w,
+                                  width: 25.w,
                                   fit: BoxFit.cover,
                                   imageUrl: "${AppConstants.imageBaseUrl}${AppConstants.imageBaseUrlProfile}${profile.organizerDetails.profilePhoto.toString()}",
                                   errorWidget: (context, url, widget){
-                                    return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 14.h,
-                                      width: 28.w,
+                                    return Image.network("https://cdn-icons-png.flaticon.com/256/4389/4389644.png", height: 12.h,
+                                      width: 25.w,
                                       fit: BoxFit.cover,);
                                   },
                                 ),
